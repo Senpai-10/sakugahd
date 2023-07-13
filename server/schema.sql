@@ -22,6 +22,7 @@ CREATE TABLE studios (
 
 -- junction table for shows and studios
 CREATE TABLE shows_studios (
+    id SERIAL PRIMARY KEY NOT NULL,
     show_id VARCHAR NOT NULL REFERENCES shows(id),
     studio_name VARCHAR(255) NOT NULL REFERENCES studios(name)
 );
@@ -33,6 +34,7 @@ CREATE TABLE genres (
 
 -- junction table for shows and genres
 CREATE TABLE shows_genres (
+    id SERIAL PRIMARY KEY NOT NULL,
     show_id VARCHAR NOT NULL REFERENCES shows(id),
     genre_title VARCHAR NOT NULL REFERENCES genres(title)
 );

@@ -1,9 +1,27 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
 #[macro_use]
+extern crate diesel;
+
+#[macro_use]
 extern crate rocket;
 
+#[macro_use]
+extern crate diesel_migrations;
+
+mod db;
+mod models;
+mod schema;
+
+use db::establish_connection;
+use diesel::prelude::*;
+use models::Show;
 use rocket_seek_stream::SeekStream;
+use schema::shows::dsl::*;
+
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+
+pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations/");
 
 #[get("/")]
 fn home() -> String {
@@ -22,14 +40,28 @@ fn video<'a>(file_name: String) -> std::io::Result<SeekStream<'a>> {
 
 #[rocket::main]
 async fn main() {
-    match rocket::build()
-        .mount("/api", routes![home, video])
-        .launch()
-        .await
-    {
-        Ok(_) => (),
-        Err(e) => {
-            eprintln!("Rocket stopped unexpectedly. (Error {})", e);
-        }
-    };
+    let mut connection = establish_connection();
+    connection
+        .run_pending_migrations(MIGRATIONS)
+        .expect("Error running migrations");
+
+    let listshows = shows
+        .load::<Show>(&mut connection)
+        .expect("Error loading shows");
+
+    println!("Listing shows:");
+    for show in listshows {
+        println!("{:?}", show);
+    }
+
+    // match rocket::build()
+    //     .mount("/api", routes![home, video])
+    //     .launch()
+    //     .await
+    // {
+    //     Ok(_) => (),
+    //     Err(e) => {
+    //         eprintln!("Rocket stopped unexpectedly. (Error {})", e);
+    //     }
+    // };
 }
