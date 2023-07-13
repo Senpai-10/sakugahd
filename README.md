@@ -2,10 +2,10 @@
 
 WIP
 
-## Anime folder structure
+## Anime directory structure
 
 ```
-ANIME FOLDER
+ANIME DIRECTORY
 └── {SHOW NAME}
     │
     ├── banner.jpg ( banner for the show )
@@ -22,7 +22,7 @@ ANIME FOLDER
 
 Example:
 ------------
-ANIME FOLDER
+ANIME DIRECTORY
 └── bleach
     │
     ├── banner.jpg ( banner for the show )
