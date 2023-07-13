@@ -1,4 +1,4 @@
-use crate::models::{NewOpening, NewShow};
+use crate::models::{NewOpening, NewShow, Show};
 use crate::schema::{openings, shows};
 use diesel::prelude::*;
 use std::env;
@@ -23,7 +23,14 @@ pub fn loader(conn: &mut PgConnection) {
             Err(_) => continue,
         };
 
-        // TODO: Check if show_name already exists
+        // Check if show already exists
+        match shows::dsl::shows
+            .filter(shows::title.eq(&show_name))
+            .first::<Show>(conn)
+        {
+            Ok(_) => continue,
+            Err(_) => {}
+        };
 
         let mut new_show = NewShow {
             id: Uuid::new_v4(),
