@@ -10,6 +10,8 @@ CREATE TABLE shows (
     status show_status NOT NULL,
     season show_season NOT NULL,
     season_year INT NOT NULL,
+    -- example: bleach
+    folder_name VARCHAR NOT NULL,
     image BYTEA,
     banner BYTEA
 );
@@ -40,6 +42,9 @@ CREATE TABLE episodes (
     show_id VARCHAR NOT NULL REFERENCES shows(id),
     title VARCHAR(255) NOT NULL,
     is_filler BOOLEAN NOT NULL,
+    -- later join the anime_folder_path with 'ep' and file_name to stream the video
+    -- result = 'path/to/anime/show_name/ep/bleach 1.mp4'
+    file_name VARCHAR NOT NULL,
     thumbnail BYTEA
 );
 
@@ -49,6 +54,7 @@ CREATE TABLE movies (
     -- watch movie after n number of episodes
     watch_after INT,
     title VARCHAR(255) NOT NULL,
+    file_name VARCHAR NOT NULL,
     thumbnail BYTEA
 );
 
@@ -56,6 +62,7 @@ CREATE TABLE openings (
     id VARCHAR PRIMARY KEY NOT NULL,
     show_id VARCHAR NOT NULL REFERENCES shows(id),
     title VARCHAR(255) NOT NULL,
+    file_name VARCHAR NOT NULL,
     thumbnail BYTEA
 );
 
@@ -63,6 +70,7 @@ CREATE TABLE endings (
     id VARCHAR PRIMARY KEY NOT NULL,
     show_id VARCHAR NOT NULL REFERENCES shows(id),
     title VARCHAR(255) NOT NULL,
+    file_name VARCHAR NOT NULL,
     thumbnail BYTEA
 );
 
