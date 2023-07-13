@@ -10,11 +10,13 @@ extern crate rocket;
 extern crate diesel_migrations;
 
 mod db;
+mod loader;
 mod models;
 mod schema;
 
 use db::establish_connection;
 use diesel::prelude::*;
+use loader::loader;
 use models::Show;
 use rocket_seek_stream::SeekStream;
 use schema::shows::dsl::*;
@@ -45,14 +47,16 @@ async fn main() {
         .run_pending_migrations(MIGRATIONS)
         .expect("Error running migrations");
 
+    loader(&mut connection);
+
     let listshows = shows
         .load::<Show>(&mut connection)
         .expect("Error loading shows");
 
-    println!("Listing shows:");
-    for show in listshows {
-        println!("{:?}", show);
-    }
+    // println!("Listing shows:");
+    // for show in listshows {
+    //     println!("{:?}", show);
+    // }
 
     // match rocket::build()
     //     .mount("/api", routes![home, video])
