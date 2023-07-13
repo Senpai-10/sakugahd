@@ -32,15 +32,15 @@ pub enum ShowSeason {
 
 #[derive(Insertable)]
 #[diesel(table_name = shows)]
-pub struct NewShow<'a> {
+pub struct NewShow {
     pub id: Uuid,
-    pub title: &'a str,
-    pub description: &'a str,
+    pub title: String,
+    pub description: String,
     pub format: Option<ShowFormat>,
     pub status: Option<ShowStatus>,
     pub season: Option<ShowSeason>,
     pub season_year: Option<i32>,
-    pub folder_name: &'a str,
+    pub folder_name: String,
     pub image: Vec<u8>,
     pub banner: Vec<u8>,
 }
