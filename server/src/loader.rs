@@ -1,11 +1,11 @@
-use crate::models::{NewOpening, NewShow, Show, ShowFormat, ShowSeason, ShowStatus};
+use crate::models::{NewOpening, NewShow};
 use crate::schema::{openings, shows};
 use diesel::prelude::*;
 use std::env;
 use std::path::{Path, PathBuf};
 use uuid::Uuid;
 
-pub fn load_shows(conn: &mut PgConnection) {
+pub fn loader(conn: &mut PgConnection) {
     let env_anime_folder = env::var("ANIME_FOLDER").expect("ANIME_FOLDER must be set");
 
     let anime_folder = Path::new(&env_anime_folder);
@@ -23,18 +23,7 @@ pub fn load_shows(conn: &mut PgConnection) {
             Err(_) => continue,
         };
 
-        // Check if show_name already exists
-
-        match shows::dsl::shows
-            .filter(shows::folder_name.eq(&show_name))
-            .load::<Show>(conn)
-        {
-            Ok(_) => {
-                println!("'{}' Already exists in database", &show_name);
-                continue;
-            }
-            Err(_) => {}
-        }
+        // TODO: Check if show_name already exists
 
         let mut new_show = NewShow {
             id: Uuid::new_v4(),
