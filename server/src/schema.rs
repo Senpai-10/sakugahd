@@ -83,7 +83,7 @@ diesel::table! {
         status -> Nullable<ShowStatus>,
         season -> Nullable<ShowSeason>,
         season_year -> Nullable<Int4>,
-        folder_name -> Varchar,
+        directory_name -> Varchar,
         image -> Bytea,
         banner -> Bytea,
     }

@@ -6,16 +6,16 @@ use std::path::{Path, PathBuf};
 use uuid::Uuid;
 
 pub fn loader(conn: &mut PgConnection) {
-    let env_anime_folder = env::var("ANIME_FOLDER").expect("ANIME_FOLDER must be set");
+    let env_anime_directory = env::var("ANIME_DIRECTORY").expect("ANIME_DIRECTORY must be set");
 
-    let anime_folder = Path::new(&env_anime_folder);
+    let anime_directory = Path::new(&env_anime_directory);
 
     let mut list_of_shows: Vec<NewShow> = Vec::new();
     let mut list_of_openings: Vec<NewOpening> = Vec::new();
 
-    for show_dir in anime_folder
+    for show_dir in anime_directory
         .read_dir()
-        .expect("read_dir anime_folder failed")
+        .expect("read_dir anime_directory failed")
     {
         let show_dir = show_dir.unwrap();
         let show_name: String = match show_dir.file_name().into_string() {
@@ -40,14 +40,17 @@ pub fn loader(conn: &mut PgConnection) {
             status: None,
             season: None,
             season_year: None,
-            folder_name: show_name.clone(),
+            directory_name: show_name.clone(),
             banner: vec![],
             image: vec![],
         };
         println!("Loading show: '{}'", &show_name);
-        let show_folder = show_dir.path();
+        let show_directory = show_dir.path();
 
-        for show_entry in show_folder.read_dir().expect("read_dir show_folder failed") {
+        for show_entry in show_directory
+            .read_dir()
+            .expect("read_dir show_directory failed")
+        {
             let show_entry = show_entry.unwrap();
             let file_name: String = match show_entry.file_name().into_string() {
                 Ok(v) => v,
@@ -75,16 +78,16 @@ pub fn loader(conn: &mut PgConnection) {
                 };
                 new_show.image = bytes;
             } else if file_name == "openings" {
-                println!("openings folder");
+                println!("openings directory");
                 load_openings(show_entry.path(), new_show.id, &mut list_of_openings);
             } else if file_name == "endings" {
-                println!("endings folder");
+                println!("endings directory");
                 load_endings(show_entry.path());
             } else if file_name == "movies" {
-                println!("movies folder");
+                println!("movies directory");
                 load_movies(show_entry.path());
             } else if file_name == "eps" {
-                println!("eps folder");
+                println!("eps directory");
                 load_eps(show_entry.path());
             }
         }
@@ -111,7 +114,7 @@ pub fn loader(conn: &mut PgConnection) {
     //     status: None,
     //     season: None,
     //     season_year: None,
-    //     folder_name: "Bleach (English SUB)",
+    //     directory_name: "Bleach (English SUB)",
     //     image: vec![0],
     //     banner: vec![0],
     // };

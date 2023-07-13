@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS shows (
     season show_season,
     season_year INT,
     -- example: bleach
-    folder_name VARCHAR NOT NULL,
+    directory_name VARCHAR NOT NULL,
     image BYTEA NOT NULL,
     banner BYTEA NOT NULL
 );

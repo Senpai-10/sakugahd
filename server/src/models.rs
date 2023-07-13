@@ -40,7 +40,7 @@ pub struct NewShow {
     pub status: Option<ShowStatus>,
     pub season: Option<ShowSeason>,
     pub season_year: Option<i32>,
-    pub folder_name: String,
+    pub directory_name: String,
     pub image: Vec<u8>,
     pub banner: Vec<u8>,
 }
@@ -54,7 +54,7 @@ pub struct Show {
     pub status: Option<ShowStatus>,
     pub season: Option<ShowSeason>,
     pub season_year: Option<i32>,
-    pub folder_name: String,
+    pub directory_name: String,
     pub image: Vec<u8>,
     pub banner: Vec<u8>,
 }
