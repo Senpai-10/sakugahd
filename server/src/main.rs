@@ -11,14 +11,18 @@ mod loader;
 mod models;
 mod schema;
 
+use self::schema::episodes;
 use db::establish_connection;
 use diesel::prelude::*;
+use diesel::QueryDsl;
 use loader::loader;
+use models::episode::Episode;
 use models::show::Show;
+use rocket::serde::uuid::Uuid;
 use rocket_seek_stream::SeekStream;
-use schema::shows::dsl::*;
 
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+use schema::shows;
 
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations/");
 
@@ -27,14 +31,45 @@ fn home() -> String {
     String::from("Home page")
 }
 
-#[get("/video/<file_name>")]
-fn video<'a>(file_name: String) -> std::io::Result<SeekStream<'a>> {
-    let video_path = format!(
-        "/run/media/senpai/Toshiba external hard drive/anime/Bleach (English SUB)/{}",
-        file_name
-    );
+fn get_video_absolute_path(id: Uuid, anime_directory: String) -> String {
+    let mut conn = establish_connection();
+    let abs_path = std::path::Path::new(&anime_directory);
 
-    SeekStream::from_path(video_path)
+    let e = episodes::dsl::episodes
+        .filter(episodes::id.eq(&id))
+        .first::<Episode>(&mut conn);
+
+    if e.is_ok() {
+        let e = e.unwrap();
+
+        let file_name: String = e.file_name;
+        let show_id = e.show_id;
+
+        let s: Show = shows::dsl::shows
+            .filter(shows::id.eq(&show_id))
+            .first::<Show>(&mut conn)
+            .unwrap();
+
+        return String::from(
+            abs_path
+                .join(s.directory_name)
+                .join("episodes")
+                .join(file_name)
+                .to_str()
+                .unwrap(),
+        );
+    }
+
+    return String::new();
+}
+
+#[get("/video/<id>")]
+fn video<'a>(id: Uuid) -> std::io::Result<SeekStream<'a>> {
+    // let ep = episodes::dsl::episodes.find(id).find(&conn);
+
+    let file_path = get_video_absolute_path(id, std::env::var("ANIME_DIRECTORY").unwrap());
+
+    SeekStream::from_path(file_path)
 }
 
 #[rocket::main]
@@ -46,23 +81,14 @@ async fn main() {
 
     loader(&mut connection);
 
-    let listshows = shows
-        .load::<Show>(&mut connection)
-        .expect("Error loading shows");
-
-    // println!("Listing shows:");
-    // for show in listshows {
-    //     println!("{:?}", show);
-    // }
-
-    // match rocket::build()
-    //     .mount("/api", routes![home, video])
-    //     .launch()
-    //     .await
-    // {
-    //     Ok(_) => (),
-    //     Err(e) => {
-    //         eprintln!("Rocket stopped unexpectedly. (Error {})", e);
-    //     }
-    // };
+    match rocket::build()
+        .mount("/api", routes![home, video])
+        .launch()
+        .await
+    {
+        Ok(_) => (),
+        Err(e) => {
+            eprintln!("Rocket stopped unexpectedly. (Error {})", e);
+        }
+    };
 }

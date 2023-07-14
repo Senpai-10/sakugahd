@@ -1155,6 +1155,7 @@ dependencies = [
  "rocket_codegen",
  "rocket_http",
  "serde",
+ "serde_json",
  "state",
  "tempfile",
  "time",
@@ -1162,6 +1163,7 @@ dependencies = [
  "tokio-stream",
  "tokio-util",
  "ubyte",
+ "uuid",
  "version_check",
  "yansi 0.5.1",
 ]
@@ -1207,6 +1209,7 @@ dependencies = [
  "time",
  "tokio",
  "uncased",
+ "uuid",
 ]
 
 [[package]]
@@ -1328,6 +1331,7 @@ dependencies = [
  "dotenv",
  "rocket",
  "rocket_seek_stream",
+ "serde",
  "uuid",
 ]
 

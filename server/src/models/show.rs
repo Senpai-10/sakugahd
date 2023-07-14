@@ -1,7 +1,8 @@
 use crate::schema::shows;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq)]
+#[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq, Serialize, Deserialize)]
 #[ExistingTypePath = "crate::schema::sql_types::ShowFormat"]
 #[DbValueStyle = "UPPERCASE"]
 pub enum ShowFormat {
@@ -12,7 +13,7 @@ pub enum ShowFormat {
     SPECIAL,
 }
 
-#[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq)]
+#[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq, Serialize, Deserialize)]
 #[ExistingTypePath = "crate::schema::sql_types::ShowStatus"]
 #[DbValueStyle = "UPPERCASE"]
 pub enum ShowStatus {
@@ -20,7 +21,7 @@ pub enum ShowStatus {
     ONGOING,
 }
 
-#[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq)]
+#[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq, Serialize, Deserialize)]
 #[ExistingTypePath = "crate::schema::sql_types::ShowSeason"]
 #[DbValueStyle = "UPPERCASE"]
 pub enum ShowSeason {
@@ -30,7 +31,7 @@ pub enum ShowSeason {
     WINTER,
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, Serialize, Deserialize)]
 #[diesel(table_name = shows)]
 pub struct NewShow {
     pub id: Uuid,
@@ -45,7 +46,9 @@ pub struct NewShow {
     pub banner: Option<Vec<u8>>,
 }
 
-#[derive(Debug, Queryable, AsChangeset, Identifiable, Selectable, PartialEq)]
+#[derive(
+    Debug, Queryable, AsChangeset, Identifiable, Selectable, PartialEq, Serialize, Deserialize,
+)]
 pub struct Show {
     pub id: Uuid,
     pub title: String,
