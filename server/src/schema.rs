@@ -39,9 +39,9 @@ diesel::table! {
 }
 
 diesel::table! {
-    genres (title) {
+    genres (name) {
         #[max_length = 255]
-        title -> Varchar,
+        name -> Varchar,
     }
 }
 
@@ -93,7 +93,7 @@ diesel::table! {
     shows_genres (id) {
         id -> Int4,
         show_id -> Uuid,
-        genre_title -> Varchar,
+        genre_name -> Varchar,
     }
 }
 
@@ -117,7 +117,7 @@ diesel::joinable!(endings -> shows (show_id));
 diesel::joinable!(episodes -> shows (show_id));
 diesel::joinable!(movies -> shows (show_id));
 diesel::joinable!(openings -> shows (show_id));
-diesel::joinable!(shows_genres -> genres (genre_title));
+diesel::joinable!(shows_genres -> genres (genre_name));
 diesel::joinable!(shows_genres -> shows (show_id));
 diesel::joinable!(shows_studios -> shows (show_id));
 diesel::joinable!(shows_studios -> studios (studio_name));
