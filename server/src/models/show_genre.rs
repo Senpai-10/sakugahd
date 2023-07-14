@@ -9,9 +9,8 @@ pub struct NewShowGenre {
     pub show_id: Uuid,
     pub genre_name: String,
 }
-
 #[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
-#[table_name = "shows_genres"]
+#[diesel(table_name = shows_genres)]
 #[diesel(belongs_to(Show))]
 #[diesel(belongs_to(Genre, foreign_key = genre_name))]
 pub struct ShowGenre {

@@ -7,7 +7,7 @@ pub struct NewStudio {
 }
 
 #[derive(Queryable, Selectable, Identifiable, Debug, PartialEq)]
-#[primary_key(name)]
+#[diesel(primary_key(name))]
 pub struct Studio {
     pub name: String,
 }

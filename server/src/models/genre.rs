@@ -7,7 +7,7 @@ pub struct NewGenre {
 }
 
 #[derive(Queryable, Selectable, Identifiable, Debug, PartialEq)]
-#[primary_key(name)]
+#[diesel(primary_key(name))]
 pub struct Genre {
     pub name: String,
 }

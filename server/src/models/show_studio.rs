@@ -11,7 +11,7 @@ pub struct NewShowStudio {
 }
 
 #[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
-#[table_name = "shows_studios"]
+#[diesel(table_name = shows_studios)]
 #[diesel(belongs_to(Show))]
 #[diesel(belongs_to(Studio, foreign_key = studio_name))]
 pub struct ShowStudio {
