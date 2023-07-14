@@ -1,18 +1,34 @@
+use crate::models::ending::NewEnding;
+use crate::models::episode::NewEpisode;
+use crate::models::movie::NewMovie;
 use crate::models::opening::NewOpening;
 use crate::models::show::{NewShow, Show};
-use crate::schema::{openings, shows};
+use crate::schema::{endings, episodes, movies, openings, shows};
 use diesel::prelude::*;
 use std::env;
 use std::path::{Path, PathBuf};
 use uuid::Uuid;
+
+struct Lists {
+    shows: Vec<NewShow>,
+    openings: Vec<NewOpening>,
+    endings: Vec<NewEnding>,
+    episodes: Vec<NewEpisode>,
+    movies: Vec<NewMovie>,
+}
 
 pub fn loader(conn: &mut PgConnection) {
     let env_anime_directory = env::var("ANIME_DIRECTORY").expect("ANIME_DIRECTORY must be set");
 
     let anime_directory = Path::new(&env_anime_directory);
 
-    let mut list_of_shows: Vec<NewShow> = Vec::new();
-    let mut list_of_openings: Vec<NewOpening> = Vec::new();
+    let mut lists = Lists {
+        shows: Vec::new(),
+        openings: Vec::new(),
+        endings: Vec::new(),
+        episodes: Vec::new(),
+        movies: Vec::new(),
+    };
 
     for show_dir in anime_directory
         .read_dir()
@@ -80,60 +96,50 @@ pub fn loader(conn: &mut PgConnection) {
                 new_show.image = Some(bytes);
             } else if file_name == "openings" {
                 println!("openings directory");
-                load_openings(show_entry.path(), new_show.id, &mut list_of_openings);
+                load_openings(show_entry.path(), new_show.id, &mut lists.openings);
             } else if file_name == "endings" {
                 println!("endings directory");
-                load_endings(show_entry.path());
+                load_endings(show_entry.path(), new_show.id, &mut lists.endings);
             } else if file_name == "movies" {
                 println!("movies directory");
-                load_movies(show_entry.path());
+                load_movies(show_entry.path(), new_show.id, &mut lists.movies);
             } else if file_name == "eps" {
                 println!("eps directory");
-                load_eps(show_entry.path());
+                load_eps(show_entry.path(), new_show.id, &mut lists.episodes);
             }
         }
-        list_of_shows.push(new_show);
+        lists.shows.push(new_show);
     }
 
-    // Push list_of_shows to shows table
-
     diesel::insert_into(shows::dsl::shows)
-        .values(&list_of_shows)
+        .values(&lists.shows)
         .execute(conn)
         .expect("Error saving shows");
 
     diesel::insert_into(openings::dsl::openings)
-        .values(&list_of_openings)
+        .values(&lists.openings)
         .execute(conn)
-        .expect("Error saving shows");
+        .expect("Error saving openings");
 
-    // let new_show = NewShow {
-    //     id: Uuid::new_v4(),
-    //     title: "bleach",
-    //     description: "some description.",
-    //     format: None,
-    //     status: None,
-    //     season: None,
-    //     season_year: None,
-    //     directory_name: "Bleach (English SUB)",
-    //     image: vec![0],
-    //     banner: vec![0],
-    // };
+    diesel::insert_into(endings::dsl::endings)
+        .values(&lists.endings)
+        .execute(conn)
+        .expect("Error saving endings");
 
-    // diesel::insert_into(shows)
-    //     .values(&new_show)
-    //     .execute(&mut connection)
-    //     .expect("Error saving new show");
+    diesel::insert_into(episodes::dsl::episodes)
+        .values(&lists.episodes)
+        .execute(conn)
+        .expect("Error saving episodes");
+
+    diesel::insert_into(movies::dsl::movies)
+        .values(&lists.movies)
+        .execute(conn)
+        .expect("Error saving movies");
 }
 
 fn load_openings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewOpening>) {
     for opening in dir.read_dir().expect("read_dir openings failed") {
         let opening = opening.unwrap();
-
-        // let file_without_extension: String = match opening.path().file_stem() {
-        //     Some(v) => v.into(),
-        //     None => continue,
-        // };
 
         // TODO: rewrite this!
         let file_without_ext: String = opening
@@ -162,6 +168,68 @@ fn load_openings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewOpening>) {
         list.push(new_opening);
     }
 }
-fn load_endings(dir: PathBuf) {}
-fn load_movies(dir: PathBuf) {}
-fn load_eps(dir: PathBuf) {}
+
+fn load_endings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEnding>) {
+    for ending in dir.read_dir().expect("read_dir endings failed") {
+        let ending = ending.unwrap();
+
+        // TODO: rewrite this!
+        let file_without_ext: String = ending
+            .path()
+            .file_stem()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string();
+
+        let file_name_: String = match ending.file_name().into_string() {
+            Ok(v) => v,
+            Err(_) => continue,
+        };
+
+        let new_ending = NewEnding {
+            id: Uuid::new_v4(),
+            show_id: show_id_,
+            title: file_without_ext,
+            file_name: file_name_.clone(),
+            thumbnail: None,
+        };
+
+        // TODO: Find a way to genrate a thumbnail
+
+        list.push(new_ending);
+    }
+}
+fn load_movies(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewMovie>) {
+    for movie in dir.read_dir().expect("read_dir movies failed") {
+        let movie = movie.unwrap();
+
+        // TODO: rewrite this!
+        let file_without_ext: String = movie
+            .path()
+            .file_stem()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string();
+
+        let file_name_: String = match movie.file_name().into_string() {
+            Ok(v) => v,
+            Err(_) => continue,
+        };
+
+        let new_movie = NewMovie {
+            id: Uuid::new_v4(),
+            show_id: show_id_,
+            watch_after: 0,
+            title: file_without_ext,
+            file_name: file_name_.clone(),
+            thumbnail: None,
+        };
+
+        // TODO: Find a way to genrate a thumbnail
+
+        list.push(new_movie);
+    }
+}
+fn load_eps(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {}
