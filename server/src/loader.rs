@@ -103,9 +103,9 @@ pub fn loader(conn: &mut PgConnection) {
             } else if file_name == "movies" {
                 println!("movies directory");
                 load_movies(show_entry.path(), new_show.id, &mut lists.movies);
-            } else if file_name == "eps" {
-                println!("eps directory");
-                load_eps(show_entry.path(), new_show.id, &mut lists.episodes);
+            } else if file_name == "episodes" {
+                println!("episodes directory");
+                load_episodes(show_entry.path(), new_show.id, &mut lists.episodes);
             }
         }
         lists.shows.push(new_show);
@@ -232,7 +232,7 @@ fn load_movies(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewMovie>) {
         list.push(new_movie);
     }
 }
-fn load_eps(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
+fn load_episodes(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
     for ep in dir.read_dir().expect("read_dir movies failed") {
         let ep = ep.unwrap();
 
