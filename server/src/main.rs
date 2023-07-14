@@ -17,7 +17,7 @@ mod schema;
 use db::establish_connection;
 use diesel::prelude::*;
 use loader::loader;
-use models::Show;
+use models::show::Show;
 use rocket_seek_stream::SeekStream;
 use schema::shows::dsl::*;
 

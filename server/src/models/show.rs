@@ -1,4 +1,4 @@
-use crate::schema::{openings, shows};
+use crate::schema::shows;
 use uuid::Uuid;
 
 #[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq)]
@@ -57,24 +57,4 @@ pub struct Show {
     pub directory_name: String,
     pub image: Option<Vec<u8>>,
     pub banner: Option<Vec<u8>>,
-}
-
-#[derive(Insertable)]
-#[diesel(table_name = openings)]
-pub struct NewOpening {
-    pub id: Uuid,
-    pub show_id: Uuid,
-    pub title: String,
-    pub file_name: String,
-    pub thumbnail: Option<Vec<u8>>,
-}
-
-#[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
-#[diesel(belongs_to(Show))]
-pub struct Opening {
-    pub id: Uuid,
-    pub show_id: Uuid,
-    pub title: String,
-    pub file_name: String,
-    pub thumbnail: Option<Vec<u8>>,
 }

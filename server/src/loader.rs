@@ -1,4 +1,5 @@
-use crate::models::{NewOpening, NewShow, Show};
+use crate::models::opening::NewOpening;
+use crate::models::show::{NewShow, Show};
 use crate::schema::{openings, shows};
 use diesel::prelude::*;
 use std::env;
