@@ -1,2 +1,9 @@
+pub mod ending;
+pub mod episode;
+pub mod genre;
+pub mod movie;
 pub mod opening;
 pub mod show;
+pub mod show_genre;
+pub mod show_studio;
+pub mod studio;
