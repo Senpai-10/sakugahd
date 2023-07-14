@@ -232,4 +232,52 @@ fn load_movies(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewMovie>) {
         list.push(new_movie);
     }
 }
-fn load_eps(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {}
+fn load_eps(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
+    for ep in dir.read_dir().expect("read_dir movies failed") {
+        let ep = ep.unwrap();
+
+        // TODO: rewrite this!
+        let file_without_ext: String = ep.path().file_stem().unwrap().to_str().unwrap().to_string();
+
+        let file_name_: String = match ep.file_name().into_string() {
+            Ok(v) => v,
+            Err(_) => continue,
+        };
+
+        let mut ep_number = match file_without_ext.parse::<i32>() {
+            Ok(n) => n,
+            Err(_) => continue,
+        };
+        let mut is_filler = false;
+        let mut title = file_without_ext.clone();
+
+        if file_without_ext.contains(" ") {
+            let split: Vec<&str> = file_without_ext.split(" ").collect();
+
+            for string in split {
+                if string.chars().all(char::is_numeric) {
+                    title = string.into();
+                    ep_number = string.parse::<i32>().unwrap();
+                } else {
+                    if string == "(Filler)" {
+                        is_filler = true
+                    }
+                }
+            }
+        }
+
+        let new_episode = NewEpisode {
+            id: Uuid::new_v4(),
+            show_id: show_id_,
+            title,
+            number: ep_number,
+            is_filler,
+            file_name: file_name_.clone(),
+            thumbnail: None,
+        };
+
+        // TODO: Find a way to genrate a thumbnail
+
+        list.push(new_episode);
+    }
+}
