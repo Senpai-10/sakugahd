@@ -6,9 +6,6 @@ extern crate diesel;
 #[macro_use]
 extern crate rocket;
 
-#[macro_use]
-extern crate diesel_migrations;
-
 mod db;
 mod loader;
 mod models;
