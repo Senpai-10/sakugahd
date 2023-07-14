@@ -41,8 +41,8 @@ pub struct NewShow {
     pub season: Option<ShowSeason>,
     pub season_year: Option<i32>,
     pub directory_name: String,
-    pub image: Vec<u8>,
-    pub banner: Vec<u8>,
+    pub image: Option<Vec<u8>>,
+    pub banner: Option<Vec<u8>>,
 }
 
 #[derive(Debug, Queryable, AsChangeset, Identifiable, Selectable, PartialEq)]
@@ -55,8 +55,8 @@ pub struct Show {
     pub season: Option<ShowSeason>,
     pub season_year: Option<i32>,
     pub directory_name: String,
-    pub image: Vec<u8>,
-    pub banner: Vec<u8>,
+    pub image: Option<Vec<u8>>,
+    pub banner: Option<Vec<u8>>,
 }
 
 #[derive(Insertable)]
@@ -66,7 +66,7 @@ pub struct NewOpening {
     pub show_id: Uuid,
     pub title: String,
     pub file_name: String,
-    pub thumbnail: Vec<u8>,
+    pub thumbnail: Option<Vec<u8>>,
 }
 
 #[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
@@ -76,5 +76,5 @@ pub struct Opening {
     pub show_id: Uuid,
     pub title: String,
     pub file_name: String,
-    pub thumbnail: Vec<u8>,
+    pub thumbnail: Option<Vec<u8>>,
 }

@@ -41,8 +41,8 @@ pub fn loader(conn: &mut PgConnection) {
             season: None,
             season_year: None,
             directory_name: show_name.clone(),
-            banner: vec![],
-            image: vec![],
+            banner: None,
+            image: None,
         };
         println!("Loading show: '{}'", &show_name);
         let show_directory = show_dir.path();
@@ -66,7 +66,7 @@ pub fn loader(conn: &mut PgConnection) {
                         continue;
                     }
                 };
-                new_show.banner = bytes;
+                new_show.banner = Some(bytes);
             } else if file_name.starts_with("image") {
                 println!("Found image! '{}'", file_name);
                 let bytes = match std::fs::read(show_entry.path()) {
@@ -76,7 +76,7 @@ pub fn loader(conn: &mut PgConnection) {
                         continue;
                     }
                 };
-                new_show.image = bytes;
+                new_show.image = Some(bytes);
             } else if file_name == "openings" {
                 println!("openings directory");
                 load_openings(show_entry.path(), new_show.id, &mut list_of_openings);
@@ -153,7 +153,7 @@ fn load_openings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewOpening>) {
             show_id: show_id_,
             title: file_without_ext,
             file_name: file_name_.clone(),
-            thumbnail: vec![],
+            thumbnail: None,
         };
 
         // TODO: Find a way to genrate a thumbnail

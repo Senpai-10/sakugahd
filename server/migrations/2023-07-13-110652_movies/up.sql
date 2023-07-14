@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS movies (
     watch_after INT,
     title VARCHAR(255) NOT NULL,
     file_name VARCHAR NOT NULL,
-    thumbnail BYTEA NOT NULL
+    thumbnail BYTEA
 );

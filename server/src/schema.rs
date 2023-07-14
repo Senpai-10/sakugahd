@@ -21,7 +21,7 @@ diesel::table! {
         #[max_length = 255]
         title -> Varchar,
         file_name -> Varchar,
-        thumbnail -> Bytea,
+        thumbnail -> Nullable<Bytea>,
     }
 }
 
@@ -34,7 +34,7 @@ diesel::table! {
         number -> Int4,
         is_filler -> Bool,
         file_name -> Varchar,
-        thumbnail -> Bytea,
+        thumbnail -> Nullable<Bytea>,
     }
 }
 
@@ -53,7 +53,7 @@ diesel::table! {
         #[max_length = 255]
         title -> Varchar,
         file_name -> Varchar,
-        thumbnail -> Bytea,
+        thumbnail -> Nullable<Bytea>,
     }
 }
 
@@ -64,7 +64,7 @@ diesel::table! {
         #[max_length = 255]
         title -> Varchar,
         file_name -> Varchar,
-        thumbnail -> Bytea,
+        thumbnail -> Nullable<Bytea>,
     }
 }
 
@@ -84,8 +84,8 @@ diesel::table! {
         season -> Nullable<ShowSeason>,
         season_year -> Nullable<Int4>,
         directory_name -> Varchar,
-        image -> Bytea,
-        banner -> Bytea,
+        image -> Nullable<Bytea>,
+        banner -> Nullable<Bytea>,
     }
 }
 
