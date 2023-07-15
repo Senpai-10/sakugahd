@@ -6,12 +6,12 @@ extern crate diesel;
 #[macro_use]
 extern crate rocket;
 
+mod cors;
 mod db;
 mod loader;
 mod models;
 mod schema;
 
-use self::schema::episodes;
 use db::establish_connection;
 use diesel::prelude::*;
 use diesel::QueryDsl;
@@ -23,7 +23,6 @@ use models::opening::Opening;
 use models::show::Show;
 use rocket::serde::json::Json;
 use rocket::serde::uuid::Uuid;
-use rocket::Response;
 use rocket_seek_stream::SeekStream;
 
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
@@ -170,6 +169,7 @@ async fn main() {
     loader(&mut connection);
 
     match rocket::build()
+        .attach(cors::Cors)
         .mount("/api", routes![home, video, shows])
         .launch()
         .await
