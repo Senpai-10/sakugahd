@@ -244,10 +244,7 @@ fn load_episodes(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
             Err(_) => continue,
         };
 
-        let mut ep_number = match file_without_ext.parse::<i32>() {
-            Ok(n) => n,
-            Err(_) => continue,
-        };
+        let mut ep_number = 0;
         let mut is_filler = false;
         let mut title = file_without_ext.clone();
 
@@ -264,6 +261,8 @@ fn load_episodes(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
                     }
                 }
             }
+        } else {
+            ep_number = file_without_ext.parse::<i32>().unwrap()
         }
 
         let new_episode = NewEpisode {
