@@ -37,7 +37,15 @@ async fn main() {
         .attach(cors::Cors)
         .mount(
             "/api",
-            routes![home, routes::video::video, routes::shows::shows],
+            routes![
+                home,
+                routes::video::video,
+                routes::shows::shows,
+                routes::episodes::episodes,
+                routes::movies::movies,
+                routes::openings::openings,
+                routes::endings::endings,
+            ],
         )
         .launch()
         .await
