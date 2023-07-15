@@ -21,14 +21,12 @@ use models::episode::Episode;
 use models::movie::Movie;
 use models::opening::Opening;
 use models::show::Show;
+use rocket::serde::json::Json;
 use rocket::serde::uuid::Uuid;
+use rocket::Response;
 use rocket_seek_stream::SeekStream;
 
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
-use schema::endings;
-use schema::movies;
-use schema::openings;
-use schema::shows;
 
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations/");
 
@@ -41,16 +39,16 @@ fn get_video_absolute_path(id: Uuid, anime_directory: String) -> String {
     let mut conn = establish_connection();
     let abs_path = std::path::Path::new(&anime_directory);
 
-    match episodes::dsl::episodes
-        .filter(episodes::id.eq(&id))
+    match schema::episodes::dsl::episodes
+        .filter(schema::episodes::id.eq(&id))
         .first::<Episode>(&mut conn)
     {
         Ok(e) => {
             let file_name: String = e.file_name;
             let show_id = e.show_id;
 
-            let s: Show = shows::dsl::shows
-                .filter(shows::id.eq(&show_id))
+            let s: Show = schema::shows::dsl::shows
+                .filter(schema::shows::id.eq(&show_id))
                 .first::<Show>(&mut conn)
                 .unwrap();
 
@@ -66,16 +64,16 @@ fn get_video_absolute_path(id: Uuid, anime_directory: String) -> String {
         Err(_) => {}
     };
 
-    match movies::dsl::movies
-        .filter(movies::id.eq(&id))
+    match schema::movies::dsl::movies
+        .filter(schema::movies::id.eq(&id))
         .first::<Movie>(&mut conn)
     {
         Ok(v) => {
             let file_name: String = v.file_name;
             let show_id = v.show_id;
 
-            let s: Show = shows::dsl::shows
-                .filter(shows::id.eq(&show_id))
+            let s: Show = schema::shows::dsl::shows
+                .filter(schema::shows::id.eq(&show_id))
                 .first::<Show>(&mut conn)
                 .unwrap();
 
@@ -91,16 +89,16 @@ fn get_video_absolute_path(id: Uuid, anime_directory: String) -> String {
         Err(_) => {}
     };
 
-    match openings::dsl::openings
-        .filter(openings::id.eq(&id))
+    match schema::openings::dsl::openings
+        .filter(schema::openings::id.eq(&id))
         .first::<Opening>(&mut conn)
     {
         Ok(v) => {
             let file_name: String = v.file_name;
             let show_id = v.show_id;
 
-            let s: Show = shows::dsl::shows
-                .filter(shows::id.eq(&show_id))
+            let s: Show = schema::shows::dsl::shows
+                .filter(schema::shows::id.eq(&show_id))
                 .first::<Show>(&mut conn)
                 .unwrap();
 
@@ -116,16 +114,16 @@ fn get_video_absolute_path(id: Uuid, anime_directory: String) -> String {
         Err(_) => {}
     };
 
-    match endings::dsl::endings
-        .filter(endings::id.eq(&id))
+    match schema::endings::dsl::endings
+        .filter(schema::endings::id.eq(&id))
         .first::<Ending>(&mut conn)
     {
         Ok(v) => {
             let file_name: String = v.file_name;
             let show_id = v.show_id;
 
-            let s: Show = shows::dsl::shows
-                .filter(shows::id.eq(&show_id))
+            let s: Show = schema::shows::dsl::shows
+                .filter(schema::shows::id.eq(&show_id))
                 .first::<Show>(&mut conn)
                 .unwrap();
 
@@ -151,6 +149,17 @@ fn video<'a>(id: Uuid) -> std::io::Result<SeekStream<'a>> {
     SeekStream::from_path(file_path)
 }
 
+#[get("/shows")]
+fn shows() -> Json<Vec<Show>> {
+    let mut conn = establish_connection();
+
+    Json(
+        schema::shows::dsl::shows
+            .load(&mut conn)
+            .expect("Can't load shows"),
+    )
+}
+
 #[rocket::main]
 async fn main() {
     let mut connection = establish_connection();
@@ -161,7 +170,7 @@ async fn main() {
     loader(&mut connection);
 
     match rocket::build()
-        .mount("/api", routes![home, video])
+        .mount("/api", routes![home, video, shows])
         .launch()
         .await
     {
