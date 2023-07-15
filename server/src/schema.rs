@@ -49,7 +49,7 @@ diesel::table! {
     movies (id) {
         id -> Uuid,
         show_id -> Uuid,
-        watch_after -> Nullable<Int4>,
+        watch_after -> Int4,
         #[max_length = 255]
         title -> Varchar,
         file_name -> Varchar,
