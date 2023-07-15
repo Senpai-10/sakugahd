@@ -16,12 +16,18 @@ use db::establish_connection;
 use diesel::prelude::*;
 use diesel::QueryDsl;
 use loader::loader;
+use models::ending::Ending;
 use models::episode::Episode;
+use models::movie::Movie;
+use models::opening::Opening;
 use models::show::Show;
 use rocket::serde::uuid::Uuid;
 use rocket_seek_stream::SeekStream;
 
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+use schema::endings;
+use schema::movies;
+use schema::openings;
 use schema::shows;
 
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations/");
@@ -35,30 +41,105 @@ fn get_video_absolute_path(id: Uuid, anime_directory: String) -> String {
     let mut conn = establish_connection();
     let abs_path = std::path::Path::new(&anime_directory);
 
-    let e = episodes::dsl::episodes
+    match episodes::dsl::episodes
         .filter(episodes::id.eq(&id))
-        .first::<Episode>(&mut conn);
+        .first::<Episode>(&mut conn)
+    {
+        Ok(e) => {
+            let file_name: String = e.file_name;
+            let show_id = e.show_id;
 
-    if e.is_ok() {
-        let e = e.unwrap();
+            let s: Show = shows::dsl::shows
+                .filter(shows::id.eq(&show_id))
+                .first::<Show>(&mut conn)
+                .unwrap();
 
-        let file_name: String = e.file_name;
-        let show_id = e.show_id;
+            return String::from(
+                abs_path
+                    .join(s.directory_name)
+                    .join("episodes")
+                    .join(file_name)
+                    .to_str()
+                    .unwrap(),
+            );
+        }
+        Err(_) => {}
+    };
 
-        let s: Show = shows::dsl::shows
-            .filter(shows::id.eq(&show_id))
-            .first::<Show>(&mut conn)
-            .unwrap();
+    match movies::dsl::movies
+        .filter(movies::id.eq(&id))
+        .first::<Movie>(&mut conn)
+    {
+        Ok(v) => {
+            let file_name: String = v.file_name;
+            let show_id = v.show_id;
 
-        return String::from(
-            abs_path
-                .join(s.directory_name)
-                .join("episodes")
-                .join(file_name)
-                .to_str()
-                .unwrap(),
-        );
-    }
+            let s: Show = shows::dsl::shows
+                .filter(shows::id.eq(&show_id))
+                .first::<Show>(&mut conn)
+                .unwrap();
+
+            return String::from(
+                abs_path
+                    .join(s.directory_name)
+                    .join("movies")
+                    .join(file_name)
+                    .to_str()
+                    .unwrap(),
+            );
+        }
+        Err(_) => {}
+    };
+
+    match openings::dsl::openings
+        .filter(openings::id.eq(&id))
+        .first::<Opening>(&mut conn)
+    {
+        Ok(v) => {
+            let file_name: String = v.file_name;
+            let show_id = v.show_id;
+
+            let s: Show = shows::dsl::shows
+                .filter(shows::id.eq(&show_id))
+                .first::<Show>(&mut conn)
+                .unwrap();
+
+            return String::from(
+                abs_path
+                    .join(s.directory_name)
+                    .join("openings")
+                    .join(file_name)
+                    .to_str()
+                    .unwrap(),
+            );
+        }
+        Err(_) => {}
+    };
+
+    match endings::dsl::endings
+        .filter(endings::id.eq(&id))
+        .first::<Ending>(&mut conn)
+    {
+        Ok(v) => {
+            let file_name: String = v.file_name;
+            let show_id = v.show_id;
+
+            let s: Show = shows::dsl::shows
+                .filter(shows::id.eq(&show_id))
+                .first::<Show>(&mut conn)
+                .unwrap();
+
+            return String::from(
+                abs_path
+                    .join(s.directory_name)
+                    .join("endings")
+                    .join(file_name)
+                    .to_str()
+                    .unwrap(),
+            );
+        }
+        Err(_) => {}
+    };
 
     return String::new();
 }
