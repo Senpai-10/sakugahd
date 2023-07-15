@@ -1,8 +1,9 @@
 use crate::models::show::Show;
 use crate::schema::episodes;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Insertable)]
+#[derive(Insertable, Serialize, Deserialize)]
 #[diesel(table_name = episodes)]
 pub struct NewEpisode {
     pub id: Uuid,
@@ -14,7 +15,9 @@ pub struct NewEpisode {
     pub thumbnail: Option<Vec<u8>>,
 }
 
-#[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
+#[derive(
+    Queryable, Selectable, Identifiable, Associations, Debug, PartialEq, Serialize, Deserialize,
+)]
 #[diesel(belongs_to(Show))]
 pub struct Episode {
     pub id: Uuid,

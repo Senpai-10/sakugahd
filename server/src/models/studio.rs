@@ -1,12 +1,13 @@
 use crate::schema::studios;
+use serde::{Deserialize, Serialize};
 
-#[derive(Insertable)]
+#[derive(Insertable, Serialize, Deserialize)]
 #[diesel(table_name = studios)]
 pub struct NewStudio {
     pub name: String,
 }
 
-#[derive(Queryable, Selectable, Identifiable, Debug, PartialEq)]
+#[derive(Queryable, Selectable, Identifiable, Debug, PartialEq, Serialize, Deserialize)]
 #[diesel(primary_key(name))]
 pub struct Studio {
     pub name: String,
