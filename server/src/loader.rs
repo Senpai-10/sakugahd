@@ -155,6 +155,11 @@ fn load_openings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewOpening>) {
             Err(_) => continue,
         };
 
+        if !file_name_.ends_with(".mp4") {
+            eprintln!("Error only .mp4 files are allowed! {}", file_name_);
+            continue;
+        }
+
         let new_opening = NewOpening {
             id: Uuid::new_v4(),
             show_id: show_id_,
@@ -187,6 +192,11 @@ fn load_endings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEnding>) {
             Err(_) => continue,
         };
 
+        if !file_name_.ends_with(".mp4") {
+            eprintln!("Error only .mp4 files are allowed! {}", file_name_);
+            continue;
+        }
+
         let new_ending = NewEnding {
             id: Uuid::new_v4(),
             show_id: show_id_,
@@ -218,6 +228,11 @@ fn load_movies(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewMovie>) {
             Err(_) => continue,
         };
 
+        if !file_name_.ends_with(".mp4") {
+            eprintln!("Error only .mp4 files are allowed! {}", file_name_);
+            continue;
+        }
+
         let new_movie = NewMovie {
             id: Uuid::new_v4(),
             show_id: show_id_,
@@ -243,6 +258,11 @@ fn load_episodes(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
             Ok(v) => v,
             Err(_) => continue,
         };
+
+        if !file_name_.ends_with(".mp4") {
+            eprintln!("Error only .mp4 files are allowed! {}", file_name_);
+            continue;
+        }
 
         let mut ep_number = 0;
         let mut is_filler = false;
