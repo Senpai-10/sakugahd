@@ -146,8 +146,6 @@ fn get_video_absolute_path(id: Uuid, anime_directory: String) -> String {
 
 #[get("/video/<id>")]
 fn video<'a>(id: Uuid) -> std::io::Result<SeekStream<'a>> {
-    // let ep = episodes::dsl::episodes.find(id).find(&conn);
-
     let file_path = get_video_absolute_path(id, std::env::var("ANIME_DIRECTORY").unwrap());
 
     SeekStream::from_path(file_path)
