@@ -160,7 +160,7 @@ pub fn loader(conn: &mut PgConnection) {
         .expect("Error saving movies");
 }
 
-fn load_openings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewOpening>) {
+fn load_openings(dir: PathBuf, show_title_: String, list: &mut Vec<NewOpening>) {
     for opening in dir.read_dir().expect("read_dir openings failed") {
         let opening = opening.unwrap();
 
@@ -183,12 +183,30 @@ fn load_openings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewOpening>) {
             continue;
         }
 
+        let mut title = file_without_ext;
+        let mut opening_number = 0;
+
+        if file_without_ext.contains(" ") {
+            let split: Vec<&str> = file_without_ext.split(" ").collect();
+
+            for string in split {
+                if string.chars().all(char::is_numeric) {
+                    opening_number = string.parse::<i32>().unwrap();
+                } else {
+                    title = string.to_string();
+                }
+            }
+        } else {
+            opening_number = file_without_ext.parse::<i32>().unwrap()
+        }
+
         let thumbnail = generate_thumbnail(opening, FFMPEG_BINARY);
 
         let new_opening = NewOpening {
             id: Uuid::new_v4(),
-            show_id: show_id_,
+            show_title: show_title_,
             title: file_without_ext,
+            number: opening_number,
             file_name: file_name_.clone(),
             thumbnail: Some(thumbnail),
         };
@@ -197,7 +215,7 @@ fn load_openings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewOpening>) {
     }
 }
 
-fn load_endings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEnding>) {
+fn load_endings(dir: PathBuf, show_title_: String, list: &mut Vec<NewEnding>) {
     for ending in dir.read_dir().expect("read_dir endings failed") {
         let ending = ending.unwrap();
 
@@ -220,12 +238,30 @@ fn load_endings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEnding>) {
             continue;
         }
 
+        let mut title = file_without_ext;
+        let mut ending_number = 0;
+
+        if file_without_ext.contains(" ") {
+            let split: Vec<&str> = file_without_ext.split(" ").collect();
+
+            for string in split {
+                if string.chars().all(char::is_numeric) {
+                    ending_number = string.parse::<i32>().unwrap();
+                } else {
+                    title = string.to_string();
+                }
+            }
+        } else {
+            ending_number = file_without_ext.parse::<i32>().unwrap()
+        }
+
         let thumbnail = generate_thumbnail(ending, FFMPEG_BINARY);
 
         let new_ending = NewEnding {
             id: Uuid::new_v4(),
-            show_id: show_id_,
+            show_title: show_title_,
             title: file_without_ext,
+            number: ending_number,
             file_name: file_name_.clone(),
             thumbnail: Some(thumbnail),
         };
@@ -233,7 +269,7 @@ fn load_endings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEnding>) {
         list.push(new_ending);
     }
 }
-fn load_movies(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewMovie>) {
+fn load_movies(dir: PathBuf, show_title_: String, list: &mut Vec<NewMovie>) {
     for movie in dir.read_dir().expect("read_dir movies failed") {
         let movie = movie.unwrap();
 
@@ -256,13 +292,31 @@ fn load_movies(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewMovie>) {
             continue;
         }
 
+        let mut title = file_without_ext;
+        let mut movie_number = 0;
+
+        if file_without_ext.contains(" ") {
+            let split: Vec<&str> = file_without_ext.split(" ").collect();
+
+            for string in split {
+                if string.chars().all(char::is_numeric) {
+                    movie_number = string.parse::<i32>().unwrap();
+                } else {
+                    title = string.to_string();
+                }
+            }
+        } else {
+            movie_number = file_without_ext.parse::<i32>().unwrap()
+        }
+
         let thumbnail = generate_thumbnail(movie, FFMPEG_BINARY);
 
         let new_movie = NewMovie {
             id: Uuid::new_v4(),
-            show_id: show_id_,
+            show_title: show_title_,
             watch_after: 0,
             title: file_without_ext,
+            number: movie_number,
             file_name: file_name_.clone(),
             thumbnail: Some(thumbnail),
         };
@@ -270,7 +324,7 @@ fn load_movies(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewMovie>) {
         list.push(new_movie);
     }
 }
-fn load_episodes(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
+fn load_episodes(dir: PathBuf, show_title_: String, list: &mut Vec<NewEpisode>) {
     for ep in dir.read_dir().expect("read_dir movies failed") {
         let ep = ep.unwrap();
 
@@ -312,7 +366,7 @@ fn load_episodes(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
 
         let new_episode = NewEpisode {
             id: Uuid::new_v4(),
-            show_id: show_id_,
+            show_title: show_title_,
             title,
             number: ep_number,
             is_filler,
