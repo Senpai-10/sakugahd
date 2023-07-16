@@ -73,14 +73,12 @@ pub fn loader(conn: &mut PgConnection) {
         };
 
         let mut new_show = NewShow {
-            id: Uuid::new_v4(),
             title: show_name.clone(),
             description: String::from("no description."),
             format: None,
             status: None,
             season: None,
             season_year: None,
-            directory_name: show_name.clone(),
             banner: None,
             image: None,
         };
