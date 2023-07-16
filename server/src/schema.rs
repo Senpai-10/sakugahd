@@ -17,7 +17,9 @@ pub mod sql_types {
 diesel::table! {
     endings (id) {
         id -> Uuid,
-        show_id -> Uuid,
+        #[max_length = 255]
+        show_title -> Varchar,
+        number -> Int4,
         #[max_length = 255]
         title -> Varchar,
         file_name -> Varchar,
@@ -28,7 +30,8 @@ diesel::table! {
 diesel::table! {
     episodes (id) {
         id -> Uuid,
-        show_id -> Uuid,
+        #[max_length = 255]
+        show_title -> Varchar,
         #[max_length = 255]
         title -> Varchar,
         number -> Int4,
@@ -48,10 +51,12 @@ diesel::table! {
 diesel::table! {
     movies (id) {
         id -> Uuid,
-        show_id -> Uuid,
+        #[max_length = 255]
+        show_title -> Varchar,
         watch_after -> Int4,
         #[max_length = 255]
         title -> Varchar,
+        number -> Int4,
         file_name -> Varchar,
         thumbnail -> Nullable<Bytea>,
     }
@@ -60,9 +65,11 @@ diesel::table! {
 diesel::table! {
     openings (id) {
         id -> Uuid,
-        show_id -> Uuid,
+        #[max_length = 255]
+        show_title -> Varchar,
         #[max_length = 255]
         title -> Varchar,
+        number -> Int4,
         file_name -> Varchar,
         thumbnail -> Nullable<Bytea>,
     }
@@ -74,8 +81,7 @@ diesel::table! {
     use super::sql_types::ShowStatus;
     use super::sql_types::ShowSeason;
 
-    shows (id) {
-        id -> Uuid,
+    shows (title) {
         #[max_length = 255]
         title -> Varchar,
         description -> Text,
@@ -83,7 +89,6 @@ diesel::table! {
         status -> Nullable<ShowStatus>,
         season -> Nullable<ShowSeason>,
         season_year -> Nullable<Int4>,
-        directory_name -> Varchar,
         image -> Nullable<Bytea>,
         banner -> Nullable<Bytea>,
     }
@@ -92,7 +97,8 @@ diesel::table! {
 diesel::table! {
     shows_genres (id) {
         id -> Int4,
-        show_id -> Uuid,
+        #[max_length = 255]
+        show_title -> Varchar,
         genre_name -> Varchar,
     }
 }
@@ -100,7 +106,8 @@ diesel::table! {
 diesel::table! {
     shows_studios (id) {
         id -> Int4,
-        show_id -> Uuid,
+        #[max_length = 255]
+        show_title -> Varchar,
         #[max_length = 255]
         studio_name -> Varchar,
     }
@@ -113,13 +120,13 @@ diesel::table! {
     }
 }
 
-diesel::joinable!(endings -> shows (show_id));
-diesel::joinable!(episodes -> shows (show_id));
-diesel::joinable!(movies -> shows (show_id));
-diesel::joinable!(openings -> shows (show_id));
+diesel::joinable!(endings -> shows (show_title));
+diesel::joinable!(episodes -> shows (show_title));
+diesel::joinable!(movies -> shows (show_title));
+diesel::joinable!(openings -> shows (show_title));
 diesel::joinable!(shows_genres -> genres (genre_name));
-diesel::joinable!(shows_genres -> shows (show_id));
-diesel::joinable!(shows_studios -> shows (show_id));
+diesel::joinable!(shows_genres -> shows (show_title));
+diesel::joinable!(shows_studios -> shows (show_title));
 diesel::joinable!(shows_studios -> studios (studio_name));
 
 diesel::allow_tables_to_appear_in_same_query!(
