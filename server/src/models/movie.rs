@@ -12,7 +12,7 @@ pub struct NewMovie {
     pub number: i32,
     pub title: String,
     pub file_name: String,
-    pub thumbnail: Option<Vec<u8>>,
+    pub thumbnail: Vec<u8>,
 }
 
 #[derive(
@@ -22,9 +22,9 @@ pub struct NewMovie {
 pub struct Movie {
     pub id: Uuid,
     pub show_title: String,
-    pub number: i32,
     pub watch_after: i32,
     pub title: String,
+    pub number: i32,
     pub file_name: String,
-    pub thumbnail: Option<Vec<u8>>,
+    pub thumbnail: Vec<u8>,
 }

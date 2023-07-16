@@ -11,7 +11,7 @@ pub struct NewOpening {
     pub title: String,
     pub number: i32,
     pub file_name: String,
-    pub thumbnail: Option<Vec<u8>>,
+    pub thumbnail: Vec<u8>,
 }
 
 #[derive(
@@ -24,5 +24,5 @@ pub struct Opening {
     pub title: String,
     pub number: i32,
     pub file_name: String,
-    pub thumbnail: Option<Vec<u8>>,
+    pub thumbnail: Vec<u8>,
 }
