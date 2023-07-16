@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS episodes (
     id UUID PRIMARY KEY NOT NULL,
-    show_id UUID NOT NULL REFERENCES shows(id),
+    show_title VARCHAR(255) NOT NULL REFERENCES shows(title),
     title VARCHAR(255) NOT NULL,
     -- episode number
     number INT NOT NULL,

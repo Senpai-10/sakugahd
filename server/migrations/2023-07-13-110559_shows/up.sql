@@ -7,15 +7,12 @@ EXCEPTION
 END $$;
 
 CREATE TABLE IF NOT EXISTS shows (
-    id UUID PRIMARY KEY NOT NULL,
-    title VARCHAR(255) NOT NULL,
+    title VARCHAR(255) PRIMARY KEY NOT NULL,
     description TEXT NOT NULL,
     format show_format,
     status show_status,
     season show_season,
     season_year INT,
-    -- example: bleach
-    directory_name VARCHAR NOT NULL,
     image BYTEA,
     banner BYTEA
 );
