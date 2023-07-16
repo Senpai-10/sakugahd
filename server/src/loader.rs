@@ -117,16 +117,16 @@ pub fn loader(conn: &mut PgConnection) {
                 new_show.image = Some(bytes);
             } else if file_name == "openings" {
                 println!("openings directory");
-                load_openings(show_entry.path(), new_show.id, &mut lists.openings);
+                load_openings(show_entry.path(), new_show.title, &mut lists.openings);
             } else if file_name == "endings" {
                 println!("endings directory");
-                load_endings(show_entry.path(), new_show.id, &mut lists.endings);
+                load_endings(show_entry.path(), new_show.title, &mut lists.endings);
             } else if file_name == "movies" {
                 println!("movies directory");
-                load_movies(show_entry.path(), new_show.id, &mut lists.movies);
+                load_movies(show_entry.path(), new_show.title, &mut lists.movies);
             } else if file_name == "episodes" {
                 println!("episodes directory");
-                load_episodes(show_entry.path(), new_show.id, &mut lists.episodes);
+                load_episodes(show_entry.path(), new_show.title, &mut lists.episodes);
             }
         }
         lists.shows.push(new_show);
