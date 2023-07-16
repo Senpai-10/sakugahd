@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS episodes (
     -- later join the anime_directory_path with 'ep' and file_name to stream the video
     -- result = 'path/to/anime/show_name/ep/bleach 1.mp4'
     file_name VARCHAR NOT NULL,
-    thumbnail BYTEA
+    thumbnail BYTEA NOT NULL
 );

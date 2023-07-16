@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS openings (
     title VARCHAR(255) NOT NULL,
     number INT NOT NULL,
     file_name VARCHAR NOT NULL,
-    thumbnail BYTEA
+    thumbnail BYTEA NOT NULL
 );

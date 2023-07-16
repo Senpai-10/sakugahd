@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS endings (
     number INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     file_name VARCHAR NOT NULL,
-    thumbnail BYTEA
+    thumbnail BYTEA NOT NULL
 );
