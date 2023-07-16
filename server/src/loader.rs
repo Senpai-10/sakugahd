@@ -4,10 +4,13 @@ use crate::models::movie::NewMovie;
 use crate::models::opening::NewOpening;
 use crate::models::show::{NewShow, Show};
 use crate::schema::{endings, episodes, movies, openings, shows};
+use crate::thumbnail::generate_thumbnail;
 use diesel::prelude::*;
 use std::env;
 use std::path::{Path, PathBuf};
 use uuid::Uuid;
+
+const FFMPEG_BINARY: &str = "ffmpeg";
 
 struct Lists {
     shows: Vec<NewShow>,
@@ -21,6 +24,26 @@ pub fn loader(conn: &mut PgConnection) {
     let env_anime_directory = env::var("ANIME_DIRECTORY").expect("ANIME_DIRECTORY must be set");
 
     let anime_directory = Path::new(&env_anime_directory);
+
+    match std::process::Command::new(FFMPEG_BINARY)
+        .arg("-version")
+        .output()
+    {
+        Ok(_) => {}
+        Err(e) => {
+            if let std::io::ErrorKind::NotFound = e.kind() {
+                eprintln!(
+                    "`{}` was not found! Can't generate thumbnails.",
+                    FFMPEG_BINARY
+                )
+            } else {
+                eprintln!("Some error occurred when checking for ffmpeg {e}");
+            }
+
+            eprintln!("Exiting..");
+            std::process::exit(1);
+        }
+    }
 
     let mut lists = Lists {
         shows: Vec::new(),
@@ -160,15 +183,15 @@ fn load_openings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewOpening>) {
             continue;
         }
 
+        let thumbnail = generate_thumbnail(opening, FFMPEG_BINARY);
+
         let new_opening = NewOpening {
             id: Uuid::new_v4(),
             show_id: show_id_,
             title: file_without_ext,
             file_name: file_name_.clone(),
-            thumbnail: None,
+            thumbnail: Some(thumbnail),
         };
-
-        // TODO: Find a way to genrate a thumbnail
 
         list.push(new_opening);
     }
@@ -197,15 +220,15 @@ fn load_endings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEnding>) {
             continue;
         }
 
+        let thumbnail = generate_thumbnail(ending, FFMPEG_BINARY);
+
         let new_ending = NewEnding {
             id: Uuid::new_v4(),
             show_id: show_id_,
             title: file_without_ext,
             file_name: file_name_.clone(),
-            thumbnail: None,
+            thumbnail: Some(thumbnail),
         };
-
-        // TODO: Find a way to genrate a thumbnail
 
         list.push(new_ending);
     }
@@ -233,16 +256,16 @@ fn load_movies(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewMovie>) {
             continue;
         }
 
+        let thumbnail = generate_thumbnail(movie, FFMPEG_BINARY);
+
         let new_movie = NewMovie {
             id: Uuid::new_v4(),
             show_id: show_id_,
             watch_after: 0,
             title: file_without_ext,
             file_name: file_name_.clone(),
-            thumbnail: None,
+            thumbnail: Some(thumbnail),
         };
-
-        // TODO: Find a way to genrate a thumbnail
 
         list.push(new_movie);
     }
@@ -285,6 +308,8 @@ fn load_episodes(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
             ep_number = file_without_ext.parse::<i32>().unwrap()
         }
 
+        let thumbnail = generate_thumbnail(ep, FFMPEG_BINARY);
+
         let new_episode = NewEpisode {
             id: Uuid::new_v4(),
             show_id: show_id_,
@@ -292,10 +317,8 @@ fn load_episodes(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
             number: ep_number,
             is_filler,
             file_name: file_name_.clone(),
-            thumbnail: None,
+            thumbnail: Some(thumbnail),
         };
-
-        // TODO: Find a way to genrate a thumbnail
 
         list.push(new_episode);
     }
