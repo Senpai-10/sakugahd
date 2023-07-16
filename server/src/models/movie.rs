@@ -7,8 +7,9 @@ use uuid::Uuid;
 #[diesel(table_name = movies)]
 pub struct NewMovie {
     pub id: Uuid,
-    pub show_id: Uuid,
+    pub show_title: String,
     pub watch_after: i32,
+    pub number: i32,
     pub title: String,
     pub file_name: String,
     pub thumbnail: Option<Vec<u8>>,
@@ -17,10 +18,11 @@ pub struct NewMovie {
 #[derive(
     Queryable, Selectable, Identifiable, Associations, Debug, PartialEq, Serialize, Deserialize,
 )]
-#[diesel(belongs_to(Show))]
+#[diesel(belongs_to(Show, foreign_key = show_title))]
 pub struct Movie {
     pub id: Uuid,
-    pub show_id: Uuid,
+    pub show_title: String,
+    pub number: i32,
     pub watch_after: i32,
     pub title: String,
     pub file_name: String,

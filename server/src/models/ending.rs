@@ -7,8 +7,9 @@ use uuid::Uuid;
 #[diesel(table_name = endings)]
 pub struct NewEnding {
     pub id: Uuid,
-    pub show_id: Uuid,
+    pub show_title: String,
     pub title: String,
+    pub number: i32,
     pub file_name: String,
     pub thumbnail: Option<Vec<u8>>,
 }
@@ -16,11 +17,12 @@ pub struct NewEnding {
 #[derive(
     Queryable, Selectable, Identifiable, Associations, Debug, PartialEq, Serialize, Deserialize,
 )]
-#[diesel(belongs_to(Show))]
+#[diesel(belongs_to(Show, foreign_key = show_title))]
 pub struct Ending {
     pub id: Uuid,
-    pub show_id: Uuid,
+    pub show_title: String,
     pub title: String,
+    pub number: i32,
     pub file_name: String,
     pub thumbnail: Option<Vec<u8>>,
 }
