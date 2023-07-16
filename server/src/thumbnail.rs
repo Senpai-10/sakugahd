@@ -21,7 +21,16 @@ pub fn generate_thumbnail(file: DirEntry, ffmpeg_binary: &str) -> Vec<u8> {
     }
 
     let thumbnail_file = thumbnails_dir.join(format!(
-        "{}.jpg",
+        "{}-{}.jpg",
+        file.path()
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap(),
         file.path().file_stem().unwrap().to_str().unwrap()
     ));
 
