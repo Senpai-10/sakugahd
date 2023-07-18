@@ -5,11 +5,16 @@ use std::process::Command;
 /// Generate a thumbnail for a video
 pub fn generate_thumbnail(file: DirEntry, ffmpeg_binary: &str) -> Vec<u8> {
     let cache_dir: PathBuf = dirs::cache_dir().unwrap();
-    let thumbnails_dir = cache_dir.join("ffmpeg_thumbnails");
+    let thumbnails_dir = cache_dir.join("sakugahd_thumbnails");
 
     if thumbnails_dir.exists() == false {
         match std::fs::create_dir_all(&thumbnails_dir) {
-            Ok(_) => {}
+            Ok(_) => {
+                println!(
+                    "INFO Created thumbnail cache directory in '{}'",
+                    &thumbnails_dir.to_str().unwrap()
+                )
+            }
             Err(e) => {
                 eprintln!(
                     "Can't create '{}', Error: {e}",
@@ -21,7 +26,7 @@ pub fn generate_thumbnail(file: DirEntry, ffmpeg_binary: &str) -> Vec<u8> {
     }
 
     let thumbnail_file = thumbnails_dir.join(format!(
-        "{}-{}.jpg",
+        "{}_{}.jpg",
         file.path()
             .parent()
             .unwrap()
