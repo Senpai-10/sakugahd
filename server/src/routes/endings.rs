@@ -3,15 +3,14 @@ use crate::models::ending::Ending;
 use crate::schema::endings::dsl;
 use diesel::prelude::*;
 use rocket::serde::json::Json;
-use rocket::serde::uuid::Uuid;
 
-#[get("/endings/<id>")]
-pub fn endings(id: Uuid) -> Json<Vec<Ending>> {
+#[get("/shows/<title>/endings")]
+pub fn endings(title: String) -> Json<Vec<Ending>> {
     let mut conn = establish_connection();
 
     Json(
         dsl::endings
-            .filter(dsl::show_id.eq(id))
+            .filter(dsl::show_title.eq(title))
             .order(dsl::title)
             .load(&mut conn)
             .expect("Can't load openings"),

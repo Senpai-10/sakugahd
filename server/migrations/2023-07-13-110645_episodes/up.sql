@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS episodes (
     id UUID PRIMARY KEY NOT NULL,
-    show_id UUID NOT NULL REFERENCES shows(id),
+    show_title VARCHAR(255) NOT NULL REFERENCES shows(title),
     title VARCHAR(255) NOT NULL,
     -- episode number
     number INT NOT NULL,
@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS episodes (
     -- later join the anime_directory_path with 'ep' and file_name to stream the video
     -- result = 'path/to/anime/show_name/ep/bleach 1.mp4'
     file_name VARCHAR NOT NULL,
-    thumbnail BYTEA
+    thumbnail BYTEA NOT NULL
 );

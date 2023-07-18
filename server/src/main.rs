@@ -40,7 +40,10 @@ async fn main() {
             "/api",
             routes![
                 home,
-                routes::video::video,
+                routes::video::video_episodes,
+                routes::video::video_movies,
+                routes::video::video_openings,
+                routes::video::video_endings,
                 routes::shows::shows,
                 routes::episodes::episodes,
                 routes::movies::movies,

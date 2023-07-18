@@ -73,14 +73,12 @@ pub fn loader(conn: &mut PgConnection) {
         };
 
         let mut new_show = NewShow {
-            id: Uuid::new_v4(),
             title: show_name.clone(),
             description: String::from("no description."),
             format: None,
             status: None,
             season: None,
             season_year: None,
-            directory_name: show_name.clone(),
             banner: None,
             image: None,
         };
@@ -119,16 +117,16 @@ pub fn loader(conn: &mut PgConnection) {
                 new_show.image = Some(bytes);
             } else if file_name == "openings" {
                 println!("openings directory");
-                load_openings(show_entry.path(), new_show.id, &mut lists.openings);
+                load_openings(show_entry.path(), &new_show.title, &mut lists.openings);
             } else if file_name == "endings" {
                 println!("endings directory");
-                load_endings(show_entry.path(), new_show.id, &mut lists.endings);
+                load_endings(show_entry.path(), &new_show.title, &mut lists.endings);
             } else if file_name == "movies" {
                 println!("movies directory");
-                load_movies(show_entry.path(), new_show.id, &mut lists.movies);
+                load_movies(show_entry.path(), &new_show.title, &mut lists.movies);
             } else if file_name == "episodes" {
                 println!("episodes directory");
-                load_episodes(show_entry.path(), new_show.id, &mut lists.episodes);
+                load_episodes(show_entry.path(), &new_show.title, &mut lists.episodes);
             }
         }
         lists.shows.push(new_show);
@@ -160,7 +158,7 @@ pub fn loader(conn: &mut PgConnection) {
         .expect("Error saving movies");
 }
 
-fn load_openings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewOpening>) {
+fn load_openings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewOpening>) {
     for opening in dir.read_dir().expect("read_dir openings failed") {
         let opening = opening.unwrap();
 
@@ -183,21 +181,35 @@ fn load_openings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewOpening>) {
             continue;
         }
 
+        let mut title = file_without_ext.clone();
+        let number;
+
+        if file_without_ext.contains(" ") {
+            let mut split: Vec<&str> = file_without_ext.split(" ").collect();
+
+            number = split[0].parse::<i32>().unwrap();
+            split.remove(0);
+            title = split.join(" ");
+        } else {
+            number = file_without_ext.parse::<i32>().unwrap()
+        }
+
         let thumbnail = generate_thumbnail(opening, FFMPEG_BINARY);
 
         let new_opening = NewOpening {
             id: Uuid::new_v4(),
-            show_id: show_id_,
-            title: file_without_ext,
+            show_title: show_title_.clone(),
+            title,
+            number,
             file_name: file_name_.clone(),
-            thumbnail: Some(thumbnail),
+            thumbnail,
         };
 
         list.push(new_opening);
     }
 }
 
-fn load_endings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEnding>) {
+fn load_endings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEnding>) {
     for ending in dir.read_dir().expect("read_dir endings failed") {
         let ending = ending.unwrap();
 
@@ -220,20 +232,34 @@ fn load_endings(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEnding>) {
             continue;
         }
 
+        let mut title = file_without_ext.clone();
+        let number;
+
+        if file_without_ext.contains(" ") {
+            let mut split: Vec<&str> = file_without_ext.split(" ").collect();
+
+            number = split[0].parse::<i32>().unwrap();
+            split.remove(0);
+            title = split.join(" ");
+        } else {
+            number = file_without_ext.parse::<i32>().unwrap()
+        }
+
         let thumbnail = generate_thumbnail(ending, FFMPEG_BINARY);
 
         let new_ending = NewEnding {
             id: Uuid::new_v4(),
-            show_id: show_id_,
-            title: file_without_ext,
+            show_title: show_title_.clone(),
+            title,
+            number,
             file_name: file_name_.clone(),
-            thumbnail: Some(thumbnail),
+            thumbnail,
         };
 
         list.push(new_ending);
     }
 }
-fn load_movies(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewMovie>) {
+fn load_movies(dir: PathBuf, show_title_: &String, list: &mut Vec<NewMovie>) {
     for movie in dir.read_dir().expect("read_dir movies failed") {
         let movie = movie.unwrap();
 
@@ -256,21 +282,35 @@ fn load_movies(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewMovie>) {
             continue;
         }
 
+        let mut title = file_without_ext.clone();
+        let number;
+
+        if file_without_ext.contains(" ") {
+            let mut split: Vec<&str> = file_without_ext.split(" ").collect();
+
+            number = split[0].parse::<i32>().unwrap();
+            split.remove(0);
+            title = split.join(" ");
+        } else {
+            number = file_without_ext.parse::<i32>().unwrap()
+        }
+
         let thumbnail = generate_thumbnail(movie, FFMPEG_BINARY);
 
         let new_movie = NewMovie {
             id: Uuid::new_v4(),
-            show_id: show_id_,
+            show_title: show_title_.clone(),
             watch_after: 0,
-            title: file_without_ext,
+            title,
+            number,
             file_name: file_name_.clone(),
-            thumbnail: Some(thumbnail),
+            thumbnail,
         };
 
         list.push(new_movie);
     }
 }
-fn load_episodes(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
+fn load_episodes(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEpisode>) {
     for ep in dir.read_dir().expect("read_dir movies failed") {
         let ep = ep.unwrap();
 
@@ -312,12 +352,12 @@ fn load_episodes(dir: PathBuf, show_id_: Uuid, list: &mut Vec<NewEpisode>) {
 
         let new_episode = NewEpisode {
             id: Uuid::new_v4(),
-            show_id: show_id_,
+            show_title: show_title_.clone(),
             title,
             number: ep_number,
             is_filler,
             file_name: file_name_.clone(),
-            thumbnail: Some(thumbnail),
+            thumbnail,
         };
 
         list.push(new_episode);
