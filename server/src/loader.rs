@@ -63,6 +63,11 @@ pub fn loader(conn: &mut PgConnection) {
             Err(_) => continue,
         };
 
+        if show_dir.path().is_file() {
+            // Skip files in the root of the anime dir
+            continue;
+        }
+
         // Check if show already exists
         match shows::dsl::shows
             .filter(shows::title.eq(&show_name))
@@ -162,6 +167,11 @@ fn load_openings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewOpening>)
     for opening in dir.read_dir().expect("read_dir openings failed") {
         let opening = opening.unwrap();
 
+        if opening.path().is_dir() {
+            // Skip directories
+            continue;
+        }
+
         // TODO: rewrite this!
         let file_without_ext: String = opening
             .path()
@@ -213,6 +223,11 @@ fn load_endings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEnding>) {
     for ending in dir.read_dir().expect("read_dir endings failed") {
         let ending = ending.unwrap();
 
+        if ending.path().is_dir() {
+            // Skip directories
+            continue;
+        }
+
         // TODO: rewrite this!
         let file_without_ext: String = ending
             .path()
@@ -262,6 +277,11 @@ fn load_endings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEnding>) {
 fn load_movies(dir: PathBuf, show_title_: &String, list: &mut Vec<NewMovie>) {
     for movie in dir.read_dir().expect("read_dir movies failed") {
         let movie = movie.unwrap();
+
+        if movie.path().is_dir() {
+            // Skip directories
+            continue;
+        }
 
         // TODO: rewrite this!
         let file_without_ext: String = movie
@@ -313,6 +333,11 @@ fn load_movies(dir: PathBuf, show_title_: &String, list: &mut Vec<NewMovie>) {
 fn load_episodes(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEpisode>) {
     for ep in dir.read_dir().expect("read_dir movies failed") {
         let ep = ep.unwrap();
+
+        if ep.path().is_dir() {
+            // Skip directories
+            continue;
+        }
 
         // TODO: rewrite this!
         let file_without_ext: String = ep.path().file_stem().unwrap().to_str().unwrap().to_string();
