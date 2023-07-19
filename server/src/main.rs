@@ -19,7 +19,8 @@ mod thumbnail;
 
 use db::establish_connection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
-use loader::loader;
+use loader::Loader;
+use std::path::Path;
 
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations/");
 
@@ -39,7 +40,11 @@ async fn main() {
         .run_pending_migrations(MIGRATIONS)
         .expect("Error running migrations");
 
-    loader(&mut connection);
+    let env_anime_directory =
+        std::env::var("ANIME_DIRECTORY").expect("ANIME_DIRECTORY must be set");
+    let anime_directory = Path::new(&env_anime_directory);
+
+    Loader::new(anime_directory, &mut connection).run();
 
     match rocket::build()
         .attach(cors::Cors)
