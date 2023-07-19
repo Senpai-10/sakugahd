@@ -32,15 +32,15 @@ pub fn loader(conn: &mut PgConnection) {
         Ok(_) => {}
         Err(e) => {
             if let std::io::ErrorKind::NotFound = e.kind() {
-                eprintln!(
+                error!(
                     "`{}` was not found! Can't generate thumbnails.",
                     FFMPEG_BINARY
                 )
             } else {
-                eprintln!("Some error occurred when checking for ffmpeg {e}");
+                error!("Some error occurred when checking for ffmpeg {e}");
             }
 
-            eprintln!("Exiting..");
+            error!("Exiting..");
             std::process::exit(1);
         }
     }
@@ -87,7 +87,7 @@ pub fn loader(conn: &mut PgConnection) {
             banner: None,
             image: None,
         };
-        println!("Loading show: '{}'", &show_name);
+        info!("Loading show: '{}'", &show_name);
         let show_directory = show_dir.path();
 
         for show_entry in show_directory
@@ -101,36 +101,36 @@ pub fn loader(conn: &mut PgConnection) {
             };
 
             if file_name.starts_with("banner") {
-                println!("Found banner! '{}'", file_name);
+                info!("Found banner! '{}'", file_name);
                 let bytes = match std::fs::read(show_entry.path()) {
                     Ok(bytes) => bytes,
                     Err(e) => {
-                        eprintln!("Failed to read {file_name}, {e}");
+                        error!("Failed to read {file_name}, {e}");
                         continue;
                     }
                 };
                 new_show.banner = Some(bytes);
             } else if file_name.starts_with("image") {
-                println!("Found image! '{}'", file_name);
+                info!("Found image! '{}'", file_name);
                 let bytes = match std::fs::read(show_entry.path()) {
                     Ok(bytes) => bytes,
                     Err(e) => {
-                        eprintln!("Failed to read {file_name}, {e}");
+                        error!("Failed to read {file_name}, {e}");
                         continue;
                     }
                 };
                 new_show.image = Some(bytes);
             } else if file_name == "openings" {
-                println!("openings directory");
+                info!("Loading openings for '{}'", new_show.title);
                 load_openings(show_entry.path(), &new_show.title, &mut lists.openings);
             } else if file_name == "endings" {
-                println!("endings directory");
+                info!("Loading endings for '{}'", new_show.title);
                 load_endings(show_entry.path(), &new_show.title, &mut lists.endings);
             } else if file_name == "movies" {
-                println!("movies directory");
+                info!("Loading movies for '{}'", new_show.title);
                 load_movies(show_entry.path(), &new_show.title, &mut lists.movies);
             } else if file_name == "episodes" {
-                println!("episodes directory");
+                info!("Loading episodes for '{}'", new_show.title);
                 load_episodes(show_entry.path(), &new_show.title, &mut lists.episodes);
             }
         }
@@ -187,7 +187,7 @@ fn load_openings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewOpening>)
         };
 
         if !file_name_.ends_with(".mp4") {
-            eprintln!("Error only .mp4 files are allowed! {}", file_name_);
+            error!("Error only .mp4 files are allowed! {}", file_name_);
             continue;
         }
 
@@ -204,7 +204,7 @@ fn load_openings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewOpening>)
             number = file_without_ext.parse::<i32>().unwrap()
         }
 
-        let thumbnail = generate_thumbnail(opening, FFMPEG_BINARY);
+        let thumbnail = generate_thumbnail(show_title_, opening, FFMPEG_BINARY);
 
         let new_opening = NewOpening {
             id: Uuid::new_v4(),
@@ -243,7 +243,7 @@ fn load_endings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEnding>) {
         };
 
         if !file_name_.ends_with(".mp4") {
-            eprintln!("Error only .mp4 files are allowed! {}", file_name_);
+            error!("Error only .mp4 files are allowed! {}", file_name_);
             continue;
         }
 
@@ -260,7 +260,7 @@ fn load_endings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEnding>) {
             number = file_without_ext.parse::<i32>().unwrap()
         }
 
-        let thumbnail = generate_thumbnail(ending, FFMPEG_BINARY);
+        let thumbnail = generate_thumbnail(show_title_, ending, FFMPEG_BINARY);
 
         let new_ending = NewEnding {
             id: Uuid::new_v4(),
@@ -298,7 +298,7 @@ fn load_movies(dir: PathBuf, show_title_: &String, list: &mut Vec<NewMovie>) {
         };
 
         if !file_name_.ends_with(".mp4") {
-            eprintln!("Error only .mp4 files are allowed! {}", file_name_);
+            error!("Error only .mp4 files are allowed! {}", file_name_);
             continue;
         }
 
@@ -315,7 +315,7 @@ fn load_movies(dir: PathBuf, show_title_: &String, list: &mut Vec<NewMovie>) {
             number = file_without_ext.parse::<i32>().unwrap()
         }
 
-        let thumbnail = generate_thumbnail(movie, FFMPEG_BINARY);
+        let thumbnail = generate_thumbnail(show_title_, movie, FFMPEG_BINARY);
 
         let new_movie = NewMovie {
             id: Uuid::new_v4(),
@@ -348,7 +348,7 @@ fn load_episodes(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEpisode>)
         };
 
         if !file_name_.ends_with(".mp4") {
-            eprintln!("Error only .mp4 files are allowed! {}", file_name_);
+            error!("Error only .mp4 files are allowed! {}", file_name_);
             continue;
         }
 
@@ -373,7 +373,7 @@ fn load_episodes(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEpisode>)
             ep_number = file_without_ext.parse::<i32>().unwrap()
         }
 
-        let thumbnail = generate_thumbnail(ep, FFMPEG_BINARY);
+        let thumbnail = generate_thumbnail(show_title_, ep, FFMPEG_BINARY);
 
         let new_episode = NewEpisode {
             id: Uuid::new_v4(),

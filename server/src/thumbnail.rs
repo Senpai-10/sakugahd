@@ -3,23 +3,20 @@ use std::path::PathBuf;
 use std::process::Command;
 
 /// Generate a thumbnail for a video
-pub fn generate_thumbnail(file: DirEntry, ffmpeg_binary: &str) -> Vec<u8> {
+pub fn generate_thumbnail(show_title: &str, file: DirEntry, ffmpeg_binary: &str) -> Vec<u8> {
     let cache_dir: PathBuf = dirs::cache_dir().unwrap();
     let thumbnails_dir = cache_dir.join("sakugahd_thumbnails");
 
     if thumbnails_dir.exists() == false {
         match std::fs::create_dir_all(&thumbnails_dir) {
             Ok(_) => {
-                println!(
-                    "INFO Created thumbnail cache directory in '{}'",
+                info!(
+                    "Created thumbnail cache directory in '{}'",
                     &thumbnails_dir.to_str().unwrap()
                 )
             }
             Err(e) => {
-                eprintln!(
-                    "Can't create '{}', Error: {e}",
-                    thumbnails_dir.to_str().unwrap()
-                );
+                error!("Can't create '{}', {e}", thumbnails_dir.to_str().unwrap());
                 std::process::exit(1);
             }
         };
@@ -27,26 +24,18 @@ pub fn generate_thumbnail(file: DirEntry, ffmpeg_binary: &str) -> Vec<u8> {
 
     let thumbnail_file = thumbnails_dir.join(format!(
         "{}_{}.jpg",
-        file.path()
-            .parent()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .file_name()
-            .unwrap()
-            .to_str()
-            .unwrap(),
+        show_title,
         file.path().file_stem().unwrap().to_str().unwrap()
     ));
 
     if thumbnail_file.exists() == true {
-        println!(
-            "[INFO] thumbnail Found for {}!",
+        info!(
+            "Thumbnail Found for ({show_title}) {}!",
             file.file_name().to_str().unwrap()
         )
     } else {
-        println!(
-            "[INFO] Generating thumbnail for '{}'",
+        info!(
+            "Generating thumbnail for ({show_title}) '{}'",
             file.file_name().to_str().unwrap()
         );
 
@@ -69,7 +58,7 @@ pub fn generate_thumbnail(file: DirEntry, ffmpeg_binary: &str) -> Vec<u8> {
     let thumbnail: Vec<u8> = match std::fs::read(&thumbnail_file) {
         Ok(bytes) => bytes,
         Err(e) => {
-            eprintln!(
+            error!(
                 "Failed to read thumbnail file (video file might be broken) '{}', {e}",
                 thumbnail_file.to_str().unwrap()
             );
