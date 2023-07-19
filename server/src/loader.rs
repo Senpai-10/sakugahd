@@ -1,8 +1,8 @@
 use crate::models::ending::NewEnding;
-use crate::models::episode::{Episode, NewEpisode};
+use crate::models::episode::NewEpisode;
 use crate::models::movie::NewMovie;
 use crate::models::opening::NewOpening;
-use crate::models::show::{NewShow, Show};
+use crate::models::show::NewShow;
 use crate::schema::{endings, episodes, movies, openings, shows};
 use diesel::dsl::exists;
 use diesel::dsl::select;
@@ -80,7 +80,7 @@ impl<'a> Loader<'a> {
         let cache_dir: PathBuf = dirs::cache_dir().unwrap();
         let thumbnails_dir = cache_dir.join("sakugahd_thumbnails");
 
-        if thumbnails_dir.exists() == false {
+        if !thumbnails_dir.exists() {
             match std::fs::create_dir_all(&thumbnails_dir) {
                 Ok(_) => {
                     info!(
@@ -141,7 +141,7 @@ impl<'a> Loader<'a> {
             }
         };
 
-        return thumbnail;
+        thumbnail
     }
 
     fn insert_into_database(&mut self) {
