@@ -127,6 +127,7 @@ impl<'a> Loader<'a> {
 
         return thumbnail;
     }
+
     fn insert_into_database(&mut self) {
         diesel::insert_into(shows::dsl::shows)
             .values(&self.lists.shows)
