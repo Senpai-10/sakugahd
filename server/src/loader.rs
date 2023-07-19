@@ -4,12 +4,21 @@ use crate::models::movie::NewMovie;
 use crate::models::opening::NewOpening;
 use crate::models::show::{NewShow, Show};
 use crate::schema::{endings, episodes, movies, openings, shows};
+use diesel::dsl::exists;
+use diesel::dsl::select;
 use diesel::prelude::*;
 use std::env;
 use std::fs::DirEntry;
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process;
 use uuid::Uuid;
+
+const SHOW_BANNER_FILE_NAME_START: &str = "banner";
+const SHOW_IMAGE_FILE_NAME_START: &str = "image";
+const EPISODES_DIR_NAME: &str = "episodes";
+const MOVIES_DIR_NAME: &str = "movies";
+const OPENINGS_DIR_NAME: &str = "openings";
+const ENDINGS_DIR_NAME: &str = "endings";
 
 pub struct List {
     shows: Vec<NewShow>,
@@ -31,7 +40,10 @@ impl<'a> Loader<'a> {
         let ffmpeg_binary = env::var("FFMPEG_BINARY").unwrap_or("ffmpeg".into());
 
         // Check if ffmpeg exists
-        match Command::new(&ffmpeg_binary).arg("-version").output() {
+        match process::Command::new(&ffmpeg_binary)
+            .arg("-version")
+            .output()
+        {
             Ok(_) => {}
             Err(e) => {
                 if let std::io::ErrorKind::NotFound = e.kind() {
@@ -44,7 +56,7 @@ impl<'a> Loader<'a> {
                 }
 
                 error!("Exiting..");
-                std::process::exit(1);
+                process::exit(1);
             }
         }
 
@@ -98,7 +110,7 @@ impl<'a> Loader<'a> {
                 file.file_name().to_str().unwrap()
             );
 
-            Command::new(&self.ffmpeg_binary)
+            process::Command::new(&self.ffmpeg_binary)
                 .args([
                     "-nostdin",
                     "-y",
@@ -155,7 +167,69 @@ impl<'a> Loader<'a> {
             .expect("Error saving movies");
     }
 
-    pub fn run(self) {
-        // Load Shows
+    /// Check if a show exists
+    fn show_exists(&mut self, title: &String) -> bool {
+        select(exists(shows::dsl::shows.filter(shows::title.eq(title))))
+            .get_result::<bool>(self.db_connection)
+            .expect("Failed to check if show exists")
     }
+
+    pub fn run(mut self) {
+        // Load Shows
+
+        // check if anime_directory exists
+        if self.anime_directory.exists() == false {
+            error!(
+                "Anime directory '{}' does not exists!",
+                self.anime_directory.to_str().unwrap()
+            );
+
+            process::exit(1);
+        }
+
+        for show_dir in self
+            .anime_directory
+            .read_dir()
+            .expect("read_dir anime_directory failed")
+        {
+            let show_dir = show_dir.unwrap();
+            let show_name: String = match show_dir.file_name().into_string() {
+                Ok(v) => v,
+                Err(_) => continue,
+            };
+
+            if show_dir.path().is_file() {
+                // Skip files in the root of the anime dir
+                continue;
+            }
+
+            let show_exists = self.show_exists(&show_name);
+
+            if show_exists {
+                // check if theres a new episode/movies/openings/endings
+            } else {
+                // add episodes/movies/openings/endings
+            }
+
+            info!("\"{show_name}\" Loading Episodes");
+            self.load_episodes(&show_dir, show_exists);
+
+            info!("\"{show_name}\" Loading Movies");
+            self.load_movies(&show_dir, show_exists);
+
+            info!("\"{show_name}\" Loading Openings");
+            self.load_openings(&show_dir, show_exists);
+
+            info!("\"{show_name}\" Loading Endings");
+            self.load_endings(&show_dir, show_exists);
+        }
+    }
+
+    fn load_episodes(&mut self, show_path: &DirEntry, check_new: bool) {}
+
+    fn load_movies(&mut self, show_path: &DirEntry, check_new: bool) {}
+
+    fn load_openings(&mut self, show_path: &DirEntry, check_new: bool) {}
+
+    fn load_endings(&mut self, show_path: &DirEntry, check_new: bool) {}
 }
