@@ -6,6 +6,9 @@ extern crate diesel;
 #[macro_use]
 extern crate rocket;
 
+#[macro_use]
+extern crate log;
+
 mod cors;
 mod db;
 mod loader;
@@ -27,6 +30,10 @@ fn home() -> String {
 
 #[rocket::main]
 async fn main() {
+    pretty_env_logger::formatted_builder()
+        .filter(None, log::LevelFilter::Info)
+        .init();
+
     let mut connection = establish_connection();
     connection
         .run_pending_migrations(MIGRATIONS)
@@ -56,7 +63,7 @@ async fn main() {
     {
         Ok(_) => (),
         Err(e) => {
-            eprintln!("Rocket stopped unexpectedly. (Error {})", e);
+            error!("Rocket stopped unexpectedly. (Error {})", e);
         }
     };
 }
