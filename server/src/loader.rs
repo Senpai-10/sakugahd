@@ -328,10 +328,9 @@ impl<'a> Loader<'a> {
 
             if check_new && !file_names.contains(&file_name) {
                 info!("New episode detected: '{}'", file_name);
-                self.lists.episodes.push(new_episode);
-            } else {
-                self.lists.episodes.push(new_episode);
             }
+
+            self.lists.episodes.push(new_episode);
         }
 
         if check_new && self.lists.episodes.is_empty() {
@@ -339,9 +338,265 @@ impl<'a> Loader<'a> {
         }
     }
 
-    fn load_movies(&mut self, show_path: &DirEntry, check_new: bool) {}
+    fn load_movies(&mut self, show_path: &DirEntry, check_new: bool) {
+        let movies_directory = show_path.path().join(MOVIES_DIR_NAME);
 
-    fn load_openings(&mut self, show_path: &DirEntry, check_new: bool) {}
+        if !movies_directory.exists() {
+            warn!("'{}' Does not exists'", movies_directory.to_str().unwrap());
+            return;
+        }
 
-    fn load_endings(&mut self, show_path: &DirEntry, check_new: bool) {}
+        if check_new {
+            info!("({}) Checking for new movies", self.current_show);
+        } else {
+            info!("({}) Loading Movies", self.current_show);
+        }
+
+        let file_names: Vec<String> = movies::dsl::movies
+            .filter(movies::show_title.eq(&self.current_show))
+            .select(movies::file_name)
+            .load(self.db_connection)
+            .expect("Can't load movies file_names");
+
+        for movie in movies_directory
+            .read_dir()
+            .expect("Failed to read movies directory")
+        {
+            let movie = movie.unwrap();
+
+            if movie.path().is_dir() {
+                // skip this entry. we only need files
+                continue;
+            }
+
+            let file_name: String = movie.file_name().into_string().unwrap();
+
+            if check_new && file_names.contains(&file_name) {
+                continue;
+            }
+
+            let file_name_without_extension: String = movie
+                .path()
+                .file_stem()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string();
+
+            if !file_name.ends_with(".mp4") {
+                warn!("'{}' is not a .mp4", &file_name);
+                continue;
+            }
+
+            let mut title = file_name_without_extension.clone();
+            let number;
+
+            if file_name_without_extension.contains(' ') {
+                let mut split: Vec<&str> = file_name_without_extension.split(' ').collect();
+
+                number = split[0].parse::<i32>().unwrap();
+                split.remove(0);
+                title = split.join(" ");
+            } else {
+                number = file_name_without_extension.parse::<i32>().unwrap()
+            }
+
+            let thumbnail = self.generate_thumbnail(movie);
+
+            let new_movie = NewMovie {
+                id: Uuid::new_v4(),
+                show_title: self.current_show.clone(),
+                title,
+                watch_after: 0,
+                number,
+                file_name: file_name.clone(),
+                thumbnail,
+            };
+
+            if check_new && !file_names.contains(&file_name) {
+                info!("New movie detected: '{}'", file_name);
+            }
+
+            self.lists.movies.push(new_movie);
+        }
+
+        if check_new && self.lists.movies.is_empty() {
+            info!("Nothing new.")
+        }
+    }
+
+    fn load_openings(&mut self, show_path: &DirEntry, check_new: bool) {
+        let openings_directory = show_path.path().join(OPENINGS_DIR_NAME);
+
+        if !openings_directory.exists() {
+            warn!(
+                "'{}' Does not exists'",
+                openings_directory.to_str().unwrap()
+            );
+            return;
+        }
+
+        if check_new {
+            info!("({}) Checking for new openings", self.current_show);
+        } else {
+            info!("({}) Loading Openings", self.current_show);
+        }
+
+        let file_names: Vec<String> = openings::dsl::openings
+            .filter(openings::show_title.eq(&self.current_show))
+            .select(openings::file_name)
+            .load(self.db_connection)
+            .expect("Can't load openings file_names");
+
+        for opening in openings_directory
+            .read_dir()
+            .expect("Failed to read openings directory")
+        {
+            let opening = opening.unwrap();
+
+            if opening.path().is_dir() {
+                // skip this entry. we only need files
+                continue;
+            }
+
+            let file_name: String = opening.file_name().into_string().unwrap();
+
+            if check_new && file_names.contains(&file_name) {
+                continue;
+            }
+
+            let file_name_without_extension: String = opening
+                .path()
+                .file_stem()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string();
+
+            if !file_name.ends_with(".mp4") {
+                warn!("'{}' is not a .mp4", &file_name);
+                continue;
+            }
+
+            let mut title = file_name_without_extension.clone();
+            let number;
+
+            if file_name_without_extension.contains(' ') {
+                let mut split: Vec<&str> = file_name_without_extension.split(' ').collect();
+
+                number = split[0].parse::<i32>().unwrap();
+                split.remove(0);
+                title = split.join(" ");
+            } else {
+                number = file_name_without_extension.parse::<i32>().unwrap()
+            }
+
+            let thumbnail = self.generate_thumbnail(opening);
+
+            let new_opening = NewOpening {
+                id: Uuid::new_v4(),
+                show_title: self.current_show.clone(),
+                title,
+                number,
+                file_name: file_name.clone(),
+                thumbnail,
+            };
+
+            if check_new && !file_names.contains(&file_name) {
+                info!("New opening detected: '{}'", file_name);
+            }
+
+            self.lists.openings.push(new_opening);
+        }
+
+        if check_new && self.lists.openings.is_empty() {
+            info!("Nothing new.")
+        }
+    }
+
+    fn load_endings(&mut self, show_path: &DirEntry, check_new: bool) {
+        let endings_directory = show_path.path().join(ENDINGS_DIR_NAME);
+
+        if !endings_directory.exists() {
+            warn!("'{}' Does not exists'", endings_directory.to_str().unwrap());
+            return;
+        }
+
+        if check_new {
+            info!("({}) Checking for new endings", self.current_show);
+        } else {
+            info!("({}) Loading endings", self.current_show);
+        }
+
+        let file_names: Vec<String> = endings::dsl::endings
+            .filter(endings::show_title.eq(&self.current_show))
+            .select(endings::file_name)
+            .load(self.db_connection)
+            .expect("Can't load endings file_names");
+
+        for ending in endings_directory
+            .read_dir()
+            .expect("Failed to read endings directory")
+        {
+            let ending = ending.unwrap();
+
+            if ending.path().is_dir() {
+                // skip this entry. we only need files
+                continue;
+            }
+
+            let file_name: String = ending.file_name().into_string().unwrap();
+
+            if check_new && file_names.contains(&file_name) {
+                continue;
+            }
+
+            let file_name_without_extension: String = ending
+                .path()
+                .file_stem()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string();
+
+            if !file_name.ends_with(".mp4") {
+                warn!("'{}' is not a .mp4", &file_name);
+                continue;
+            }
+
+            let mut title = file_name_without_extension.clone();
+            let number;
+
+            if file_name_without_extension.contains(' ') {
+                let mut split: Vec<&str> = file_name_without_extension.split(' ').collect();
+
+                number = split[0].parse::<i32>().unwrap();
+                split.remove(0);
+                title = split.join(" ");
+            } else {
+                number = file_name_without_extension.parse::<i32>().unwrap()
+            }
+
+            let thumbnail = self.generate_thumbnail(ending);
+
+            let new_ending = NewEnding {
+                id: Uuid::new_v4(),
+                show_title: self.current_show.clone(),
+                title,
+                number,
+                file_name: file_name.clone(),
+                thumbnail,
+            };
+
+            if check_new && !file_names.contains(&file_name) {
+                info!("New ending detected: '{}'", file_name);
+            }
+
+            self.lists.endings.push(new_ending);
+        }
+
+        if check_new && self.lists.endings.is_empty() {
+            info!("Nothing new.")
+        }
+    }
 }
