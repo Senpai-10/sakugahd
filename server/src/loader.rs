@@ -1,18 +1,26 @@
 use crate::models::ending::NewEnding;
-use crate::models::episode::NewEpisode;
+use crate::models::episode::{Episode, NewEpisode};
 use crate::models::movie::NewMovie;
 use crate::models::opening::NewOpening;
 use crate::models::show::{NewShow, Show};
 use crate::schema::{endings, episodes, movies, openings, shows};
-use crate::thumbnail::generate_thumbnail;
+use diesel::dsl::exists;
+use diesel::dsl::select;
 use diesel::prelude::*;
 use std::env;
+use std::fs::DirEntry;
 use std::path::{Path, PathBuf};
+use std::process;
 use uuid::Uuid;
 
-const FFMPEG_BINARY: &str = "ffmpeg";
+const SHOW_BANNER_FILE_NAME_START: &str = "banner";
+const SHOW_IMAGE_FILE_NAME_START: &str = "image";
+const EPISODES_DIR_NAME: &str = "episodes";
+const MOVIES_DIR_NAME: &str = "movies";
+const OPENINGS_DIR_NAME: &str = "openings";
+const ENDINGS_DIR_NAME: &str = "endings";
 
-struct Lists {
+pub struct List {
     shows: Vec<NewShow>,
     openings: Vec<NewOpening>,
     endings: Vec<NewEnding>,
@@ -20,371 +28,575 @@ struct Lists {
     movies: Vec<NewMovie>,
 }
 
-pub fn loader(conn: &mut PgConnection) {
-    let env_anime_directory = env::var("ANIME_DIRECTORY").expect("ANIME_DIRECTORY must be set");
+pub struct Loader<'a> {
+    ffmpeg_binary: String,
+    anime_directory: &'a Path,
+    db_connection: &'a mut PgConnection,
+    current_show: String,
+    lists: List,
+}
 
-    let anime_directory = Path::new(&env_anime_directory);
+impl<'a> Loader<'a> {
+    pub fn new(anime_directory: &'a Path, db_connection: &'a mut PgConnection) -> Self {
+        let ffmpeg_binary = env::var("FFMPEG_BINARY").unwrap_or("ffmpeg".into());
 
-    match std::process::Command::new(FFMPEG_BINARY)
-        .arg("-version")
-        .output()
-    {
-        Ok(_) => {}
-        Err(e) => {
-            if let std::io::ErrorKind::NotFound = e.kind() {
-                error!(
-                    "`{}` was not found! Can't generate thumbnails.",
-                    FFMPEG_BINARY
-                )
-            } else {
-                error!("Some error occurred when checking for ffmpeg {e}");
+        // Check if ffmpeg exists
+        match process::Command::new(&ffmpeg_binary)
+            .arg("-version")
+            .output()
+        {
+            Ok(_) => {}
+            Err(e) => {
+                if let std::io::ErrorKind::NotFound = e.kind() {
+                    error!(
+                        "`{}` was not found! Can't generate thumbnails.",
+                        &ffmpeg_binary
+                    )
+                } else {
+                    error!("Some error occurred when checking for ffmpeg {e}");
+                }
+
+                error!("Exiting..");
+                process::exit(1);
             }
+        }
 
-            error!("Exiting..");
-            std::process::exit(1);
+        Self {
+            ffmpeg_binary,
+            anime_directory,
+            db_connection,
+            current_show: String::new(),
+            lists: List {
+                shows: Vec::new(),
+                openings: Vec::new(),
+                endings: Vec::new(),
+                episodes: Vec::new(),
+                movies: Vec::new(),
+            },
         }
     }
 
-    let mut lists = Lists {
-        shows: Vec::new(),
-        openings: Vec::new(),
-        endings: Vec::new(),
-        episodes: Vec::new(),
-        movies: Vec::new(),
-    };
+    fn generate_thumbnail(&self, file: DirEntry) -> Vec<u8> {
+        let cache_dir: PathBuf = dirs::cache_dir().unwrap();
+        let thumbnails_dir = cache_dir.join("sakugahd_thumbnails");
 
-    for show_dir in anime_directory
-        .read_dir()
-        .expect("read_dir anime_directory failed")
-    {
-        let show_dir = show_dir.unwrap();
-        let show_name: String = match show_dir.file_name().into_string() {
-            Ok(v) => v,
-            Err(_) => continue,
-        };
-
-        if show_dir.path().is_file() {
-            // Skip files in the root of the anime dir
-            continue;
+        if thumbnails_dir.exists() == false {
+            match std::fs::create_dir_all(&thumbnails_dir) {
+                Ok(_) => {
+                    info!(
+                        "Created thumbnail cache directory in '{}'",
+                        &thumbnails_dir.to_str().unwrap()
+                    )
+                }
+                Err(e) => {
+                    error!("Can't create '{}', {e}", thumbnails_dir.to_str().unwrap());
+                    std::process::exit(1);
+                }
+            };
         }
 
-        // Check if show already exists
-        match shows::dsl::shows
-            .filter(shows::title.eq(&show_name))
-            .first::<Show>(conn)
-        {
-            Ok(_) => continue,
-            Err(_) => {}
+        let thumbnail_file = thumbnails_dir.join(format!(
+            "{}_{}.jpg",
+            self.current_show,
+            file.path().file_stem().unwrap().to_str().unwrap()
+        ));
+
+        if thumbnail_file.exists() {
+            info!(
+                "Thumbnail Found for ({}) {}!",
+                self.current_show,
+                file.file_name().to_str().unwrap()
+            )
+        } else {
+            info!(
+                "Generating thumbnail for ({}) '{}'",
+                self.current_show,
+                file.file_name().to_str().unwrap()
+            );
+
+            process::Command::new(&self.ffmpeg_binary)
+                .args([
+                    "-nostdin",
+                    "-y",
+                    "-i",
+                    file.path().to_str().unwrap(),
+                    "-vf",
+                    "thumbnail",
+                    "-frames:v",
+                    "1",
+                    thumbnail_file.to_str().unwrap(),
+                ])
+                .output()
+                .expect("Failed to generate thumbnail!");
+        }
+
+        let thumbnail: Vec<u8> = match std::fs::read(&thumbnail_file) {
+            Ok(bytes) => bytes,
+            Err(e) => {
+                error!(
+                    "Failed to read thumbnail file (video file might be broken) '{}', {e}",
+                    thumbnail_file.to_str().unwrap()
+                );
+                return Vec::new();
+            }
         };
 
-        let mut new_show = NewShow {
-            title: show_name.clone(),
-            description: String::from("no description."),
-            format: None,
-            status: None,
-            season: None,
-            season_year: None,
-            banner: None,
-            image: None,
-        };
-        info!("Loading show: '{}'", &show_name);
-        let show_directory = show_dir.path();
+        return thumbnail;
+    }
 
-        for show_entry in show_directory
+    fn insert_into_database(&mut self) {
+        diesel::insert_into(shows::dsl::shows)
+            .values(&self.lists.shows)
+            .execute(self.db_connection)
+            .expect("Error saving shows");
+
+        diesel::insert_into(openings::dsl::openings)
+            .values(&self.lists.openings)
+            .execute(self.db_connection)
+            .expect("Error saving openings");
+
+        diesel::insert_into(endings::dsl::endings)
+            .values(&self.lists.endings)
+            .execute(self.db_connection)
+            .expect("Error saving endings");
+
+        diesel::insert_into(episodes::dsl::episodes)
+            .values(&self.lists.episodes)
+            .execute(self.db_connection)
+            .expect("Error saving episodes");
+
+        diesel::insert_into(movies::dsl::movies)
+            .values(&self.lists.movies)
+            .execute(self.db_connection)
+            .expect("Error saving movies");
+    }
+
+    /// Check if a show exists
+    fn show_exists(&mut self) -> bool {
+        select(exists(
+            shows::dsl::shows.filter(shows::title.eq(&self.current_show)),
+        ))
+        .get_result::<bool>(self.db_connection)
+        .expect("Failed to check if show exists")
+    }
+
+    pub fn run(mut self) {
+        // Load Shows
+
+        // check if anime_directory exists
+        if !self.anime_directory.exists() {
+            error!(
+                "Anime directory '{}' does not exists!",
+                self.anime_directory.to_str().unwrap()
+            );
+
+            process::exit(1);
+        }
+
+        for show_dir in self
+            .anime_directory
             .read_dir()
-            .expect("read_dir show_directory failed")
+            .expect("read_dir anime_directory failed")
         {
-            let show_entry = show_entry.unwrap();
-            let file_name: String = match show_entry.file_name().into_string() {
+            let show_dir = show_dir.unwrap();
+            let show_name: String = match show_dir.file_name().into_string() {
                 Ok(v) => v,
                 Err(_) => continue,
             };
 
-            if file_name.starts_with("banner") {
-                info!("Found banner! '{}'", file_name);
-                let bytes = match std::fs::read(show_entry.path()) {
-                    Ok(bytes) => bytes,
-                    Err(e) => {
-                        error!("Failed to read {file_name}, {e}");
-                        continue;
-                    }
-                };
-                new_show.banner = Some(bytes);
-            } else if file_name.starts_with("image") {
-                info!("Found image! '{}'", file_name);
-                let bytes = match std::fs::read(show_entry.path()) {
-                    Ok(bytes) => bytes,
-                    Err(e) => {
-                        error!("Failed to read {file_name}, {e}");
-                        continue;
-                    }
-                };
-                new_show.image = Some(bytes);
-            } else if file_name == "openings" {
-                info!("Loading openings for '{}'", new_show.title);
-                load_openings(show_entry.path(), &new_show.title, &mut lists.openings);
-            } else if file_name == "endings" {
-                info!("Loading endings for '{}'", new_show.title);
-                load_endings(show_entry.path(), &new_show.title, &mut lists.endings);
-            } else if file_name == "movies" {
-                info!("Loading movies for '{}'", new_show.title);
-                load_movies(show_entry.path(), &new_show.title, &mut lists.movies);
-            } else if file_name == "episodes" {
-                info!("Loading episodes for '{}'", new_show.title);
-                load_episodes(show_entry.path(), &new_show.title, &mut lists.episodes);
+            if show_dir.path().is_file() {
+                // Skip files in the root of the anime dir
+                continue;
             }
+
+            self.current_show = show_name;
+
+            let show_exists = self.show_exists();
+
+            if !show_exists {
+                // TODO: Get image/banner
+
+                println!("current show: {}", self.current_show);
+
+                let new_show = NewShow {
+                    title: self.current_show.clone(),
+                    description: String::from("no description."),
+                    format: None,
+                    status: None,
+                    season: None,
+                    season_year: None,
+                    banner: None,
+                    image: None,
+                };
+
+                self.lists.shows.push(new_show);
+            }
+
+            self.load_episodes(&show_dir, show_exists);
+            self.load_movies(&show_dir, show_exists);
+            self.load_openings(&show_dir, show_exists);
+            self.load_endings(&show_dir, show_exists);
         }
-        lists.shows.push(new_show);
+        self.insert_into_database();
     }
 
-    diesel::insert_into(shows::dsl::shows)
-        .values(&lists.shows)
-        .execute(conn)
-        .expect("Error saving shows");
+    fn load_episodes(&mut self, show_path: &DirEntry, check_new: bool) {
+        let episodes_directory = show_path.path().join(EPISODES_DIR_NAME);
 
-    diesel::insert_into(openings::dsl::openings)
-        .values(&lists.openings)
-        .execute(conn)
-        .expect("Error saving openings");
-
-    diesel::insert_into(endings::dsl::endings)
-        .values(&lists.endings)
-        .execute(conn)
-        .expect("Error saving endings");
-
-    diesel::insert_into(episodes::dsl::episodes)
-        .values(&lists.episodes)
-        .execute(conn)
-        .expect("Error saving episodes");
-
-    diesel::insert_into(movies::dsl::movies)
-        .values(&lists.movies)
-        .execute(conn)
-        .expect("Error saving movies");
-}
-
-fn load_openings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewOpening>) {
-    for opening in dir.read_dir().expect("read_dir openings failed") {
-        let opening = opening.unwrap();
-
-        if opening.path().is_dir() {
-            // Skip directories
-            continue;
+        if !episodes_directory.exists() {
+            warn!(
+                "'{}' Does not exists'",
+                episodes_directory.to_str().unwrap()
+            );
+            return;
         }
 
-        // TODO: rewrite this!
-        let file_without_ext: String = opening
-            .path()
-            .file_stem()
-            .unwrap()
-            .to_str()
-            .unwrap()
-            .to_string();
-
-        let file_name_: String = match opening.file_name().into_string() {
-            Ok(v) => v,
-            Err(_) => continue,
-        };
-
-        if !file_name_.ends_with(".mp4") {
-            error!("Error only .mp4 files are allowed! {}", file_name_);
-            continue;
-        }
-
-        let mut title = file_without_ext.clone();
-        let number;
-
-        if file_without_ext.contains(" ") {
-            let mut split: Vec<&str> = file_without_ext.split(" ").collect();
-
-            number = split[0].parse::<i32>().unwrap();
-            split.remove(0);
-            title = split.join(" ");
+        if check_new {
+            info!("({}) Checking for new episodes", self.current_show);
         } else {
-            number = file_without_ext.parse::<i32>().unwrap()
+            info!("({}) Loading Episodes", self.current_show);
         }
 
-        let thumbnail = generate_thumbnail(show_title_, opening, FFMPEG_BINARY);
+        let file_names: Vec<String> = episodes::dsl::episodes
+            .filter(episodes::show_title.eq(&self.current_show))
+            .select(episodes::file_name)
+            .load(self.db_connection)
+            .expect("Can't load episode file_names");
 
-        let new_opening = NewOpening {
-            id: Uuid::new_v4(),
-            show_title: show_title_.clone(),
-            title,
-            number,
-            file_name: file_name_.clone(),
-            thumbnail,
-        };
+        for episode in episodes_directory
+            .read_dir()
+            .expect("Failed to read episodes directory")
+        {
+            let episode = episode.unwrap();
 
-        list.push(new_opening);
-    }
-}
+            if episode.path().is_dir() {
+                // skip this entry. we only need files
+                continue;
+            }
 
-fn load_endings(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEnding>) {
-    for ending in dir.read_dir().expect("read_dir endings failed") {
-        let ending = ending.unwrap();
+            let file_name: String = episode.file_name().into_string().unwrap();
 
-        if ending.path().is_dir() {
-            // Skip directories
-            continue;
-        }
+            if check_new && file_names.contains(&file_name) {
+                continue;
+            }
 
-        // TODO: rewrite this!
-        let file_without_ext: String = ending
-            .path()
-            .file_stem()
-            .unwrap()
-            .to_str()
-            .unwrap()
-            .to_string();
+            let file_name_without_extension: String = episode
+                .path()
+                .file_stem()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string();
 
-        let file_name_: String = match ending.file_name().into_string() {
-            Ok(v) => v,
-            Err(_) => continue,
-        };
+            if !file_name.ends_with(".mp4") {
+                warn!("'{}' is not a .mp4", &file_name);
+                continue;
+            }
 
-        if !file_name_.ends_with(".mp4") {
-            error!("Error only .mp4 files are allowed! {}", file_name_);
-            continue;
-        }
+            // Parse episode file name
+            let mut episode_number = 0;
+            let mut is_filler = false;
+            let mut title = file_name_without_extension.clone();
 
-        let mut title = file_without_ext.clone();
-        let number;
+            if file_name_without_extension.contains(' ') {
+                let parts: Vec<_> = file_name_without_extension.split_whitespace().collect();
 
-        if file_without_ext.contains(" ") {
-            let mut split: Vec<&str> = file_without_ext.split(" ").collect();
-
-            number = split[0].parse::<i32>().unwrap();
-            split.remove(0);
-            title = split.join(" ");
-        } else {
-            number = file_without_ext.parse::<i32>().unwrap()
-        }
-
-        let thumbnail = generate_thumbnail(show_title_, ending, FFMPEG_BINARY);
-
-        let new_ending = NewEnding {
-            id: Uuid::new_v4(),
-            show_title: show_title_.clone(),
-            title,
-            number,
-            file_name: file_name_.clone(),
-            thumbnail,
-        };
-
-        list.push(new_ending);
-    }
-}
-fn load_movies(dir: PathBuf, show_title_: &String, list: &mut Vec<NewMovie>) {
-    for movie in dir.read_dir().expect("read_dir movies failed") {
-        let movie = movie.unwrap();
-
-        if movie.path().is_dir() {
-            // Skip directories
-            continue;
-        }
-
-        // TODO: rewrite this!
-        let file_without_ext: String = movie
-            .path()
-            .file_stem()
-            .unwrap()
-            .to_str()
-            .unwrap()
-            .to_string();
-
-        let file_name_: String = match movie.file_name().into_string() {
-            Ok(v) => v,
-            Err(_) => continue,
-        };
-
-        if !file_name_.ends_with(".mp4") {
-            error!("Error only .mp4 files are allowed! {}", file_name_);
-            continue;
-        }
-
-        let mut title = file_without_ext.clone();
-        let number;
-
-        if file_without_ext.contains(" ") {
-            let mut split: Vec<&str> = file_without_ext.split(" ").collect();
-
-            number = split[0].parse::<i32>().unwrap();
-            split.remove(0);
-            title = split.join(" ");
-        } else {
-            number = file_without_ext.parse::<i32>().unwrap()
-        }
-
-        let thumbnail = generate_thumbnail(show_title_, movie, FFMPEG_BINARY);
-
-        let new_movie = NewMovie {
-            id: Uuid::new_v4(),
-            show_title: show_title_.clone(),
-            watch_after: 0,
-            title,
-            number,
-            file_name: file_name_.clone(),
-            thumbnail,
-        };
-
-        list.push(new_movie);
-    }
-}
-fn load_episodes(dir: PathBuf, show_title_: &String, list: &mut Vec<NewEpisode>) {
-    for ep in dir.read_dir().expect("read_dir movies failed") {
-        let ep = ep.unwrap();
-
-        if ep.path().is_dir() {
-            // Skip directories
-            continue;
-        }
-
-        // TODO: rewrite this!
-        let file_without_ext: String = ep.path().file_stem().unwrap().to_str().unwrap().to_string();
-
-        let file_name_: String = match ep.file_name().into_string() {
-            Ok(v) => v,
-            Err(_) => continue,
-        };
-
-        if !file_name_.ends_with(".mp4") {
-            error!("Error only .mp4 files are allowed! {}", file_name_);
-            continue;
-        }
-
-        let mut ep_number = 0;
-        let mut is_filler = false;
-        let mut title = file_without_ext.clone();
-
-        if file_without_ext.contains(" ") {
-            let split: Vec<&str> = file_without_ext.split(" ").collect();
-
-            for string in split {
-                if string.chars().all(char::is_numeric) {
-                    title = string.into();
-                    ep_number = string.parse::<i32>().unwrap();
-                } else {
-                    if string == "(Filler)" {
+                for part in parts {
+                    if part.chars().all(char::is_numeric) {
+                        title = part.to_string();
+                        episode_number = part.parse::<i32>().unwrap();
+                    } else if part == "(Filler)" {
                         is_filler = true
                     }
                 }
+            } else {
+                episode_number = file_name_without_extension.parse::<i32>().unwrap();
             }
-        } else {
-            ep_number = file_without_ext.parse::<i32>().unwrap()
+            // end of parsing
+
+            let thumbnail = self.generate_thumbnail(episode);
+
+            let new_episode = NewEpisode {
+                id: Uuid::new_v4(),
+                show_title: self.current_show.clone(),
+                title,
+                number: episode_number,
+                is_filler,
+                file_name: file_name.clone(),
+                thumbnail,
+            };
+
+            if check_new && !file_names.contains(&file_name) {
+                info!("New episode detected: '{}'", file_name);
+            }
+
+            self.lists.episodes.push(new_episode);
         }
 
-        let thumbnail = generate_thumbnail(show_title_, ep, FFMPEG_BINARY);
+        if check_new && self.lists.episodes.is_empty() {
+            info!("Nothing new.")
+        }
+    }
 
-        let new_episode = NewEpisode {
-            id: Uuid::new_v4(),
-            show_title: show_title_.clone(),
-            title,
-            number: ep_number,
-            is_filler,
-            file_name: file_name_.clone(),
-            thumbnail,
-        };
+    fn load_movies(&mut self, show_path: &DirEntry, check_new: bool) {
+        let movies_directory = show_path.path().join(MOVIES_DIR_NAME);
 
-        list.push(new_episode);
+        if !movies_directory.exists() {
+            warn!("'{}' Does not exists'", movies_directory.to_str().unwrap());
+            return;
+        }
+
+        if check_new {
+            info!("({}) Checking for new movies", self.current_show);
+        } else {
+            info!("({}) Loading Movies", self.current_show);
+        }
+
+        let file_names: Vec<String> = movies::dsl::movies
+            .filter(movies::show_title.eq(&self.current_show))
+            .select(movies::file_name)
+            .load(self.db_connection)
+            .expect("Can't load movies file_names");
+
+        for movie in movies_directory
+            .read_dir()
+            .expect("Failed to read movies directory")
+        {
+            let movie = movie.unwrap();
+
+            if movie.path().is_dir() {
+                // skip this entry. we only need files
+                continue;
+            }
+
+            let file_name: String = movie.file_name().into_string().unwrap();
+
+            if check_new && file_names.contains(&file_name) {
+                continue;
+            }
+
+            let file_name_without_extension: String = movie
+                .path()
+                .file_stem()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string();
+
+            if !file_name.ends_with(".mp4") {
+                warn!("'{}' is not a .mp4", &file_name);
+                continue;
+            }
+
+            let mut title = file_name_without_extension.clone();
+            let number;
+
+            if file_name_without_extension.contains(' ') {
+                let mut split: Vec<&str> = file_name_without_extension.split(' ').collect();
+
+                number = split[0].parse::<i32>().unwrap();
+                split.remove(0);
+                title = split.join(" ");
+            } else {
+                number = file_name_without_extension.parse::<i32>().unwrap()
+            }
+
+            let thumbnail = self.generate_thumbnail(movie);
+
+            let new_movie = NewMovie {
+                id: Uuid::new_v4(),
+                show_title: self.current_show.clone(),
+                title,
+                watch_after: 0,
+                number,
+                file_name: file_name.clone(),
+                thumbnail,
+            };
+
+            if check_new && !file_names.contains(&file_name) {
+                info!("New movie detected: '{}'", file_name);
+            }
+
+            self.lists.movies.push(new_movie);
+        }
+
+        if check_new && self.lists.movies.is_empty() {
+            info!("Nothing new.")
+        }
+    }
+
+    fn load_openings(&mut self, show_path: &DirEntry, check_new: bool) {
+        let openings_directory = show_path.path().join(OPENINGS_DIR_NAME);
+
+        if !openings_directory.exists() {
+            warn!(
+                "'{}' Does not exists'",
+                openings_directory.to_str().unwrap()
+            );
+            return;
+        }
+
+        if check_new {
+            info!("({}) Checking for new openings", self.current_show);
+        } else {
+            info!("({}) Loading Openings", self.current_show);
+        }
+
+        let file_names: Vec<String> = openings::dsl::openings
+            .filter(openings::show_title.eq(&self.current_show))
+            .select(openings::file_name)
+            .load(self.db_connection)
+            .expect("Can't load openings file_names");
+
+        for opening in openings_directory
+            .read_dir()
+            .expect("Failed to read openings directory")
+        {
+            let opening = opening.unwrap();
+
+            if opening.path().is_dir() {
+                // skip this entry. we only need files
+                continue;
+            }
+
+            let file_name: String = opening.file_name().into_string().unwrap();
+
+            if check_new && file_names.contains(&file_name) {
+                continue;
+            }
+
+            let file_name_without_extension: String = opening
+                .path()
+                .file_stem()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string();
+
+            if !file_name.ends_with(".mp4") {
+                warn!("'{}' is not a .mp4", &file_name);
+                continue;
+            }
+
+            let mut title = file_name_without_extension.clone();
+            let number;
+
+            if file_name_without_extension.contains(' ') {
+                let mut split: Vec<&str> = file_name_without_extension.split(' ').collect();
+
+                number = split[0].parse::<i32>().unwrap();
+                split.remove(0);
+                title = split.join(" ");
+            } else {
+                number = file_name_without_extension.parse::<i32>().unwrap()
+            }
+
+            let thumbnail = self.generate_thumbnail(opening);
+
+            let new_opening = NewOpening {
+                id: Uuid::new_v4(),
+                show_title: self.current_show.clone(),
+                title,
+                number,
+                file_name: file_name.clone(),
+                thumbnail,
+            };
+
+            if check_new && !file_names.contains(&file_name) {
+                info!("New opening detected: '{}'", file_name);
+            }
+
+            self.lists.openings.push(new_opening);
+        }
+
+        if check_new && self.lists.openings.is_empty() {
+            info!("Nothing new.")
+        }
+    }
+
+    fn load_endings(&mut self, show_path: &DirEntry, check_new: bool) {
+        let endings_directory = show_path.path().join(ENDINGS_DIR_NAME);
+
+        if !endings_directory.exists() {
+            warn!("'{}' Does not exists'", endings_directory.to_str().unwrap());
+            return;
+        }
+
+        if check_new {
+            info!("({}) Checking for new endings", self.current_show);
+        } else {
+            info!("({}) Loading endings", self.current_show);
+        }
+
+        let file_names: Vec<String> = endings::dsl::endings
+            .filter(endings::show_title.eq(&self.current_show))
+            .select(endings::file_name)
+            .load(self.db_connection)
+            .expect("Can't load endings file_names");
+
+        for ending in endings_directory
+            .read_dir()
+            .expect("Failed to read endings directory")
+        {
+            let ending = ending.unwrap();
+
+            if ending.path().is_dir() {
+                // skip this entry. we only need files
+                continue;
+            }
+
+            let file_name: String = ending.file_name().into_string().unwrap();
+
+            if check_new && file_names.contains(&file_name) {
+                continue;
+            }
+
+            let file_name_without_extension: String = ending
+                .path()
+                .file_stem()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string();
+
+            if !file_name.ends_with(".mp4") {
+                warn!("'{}' is not a .mp4", &file_name);
+                continue;
+            }
+
+            let mut title = file_name_without_extension.clone();
+            let number;
+
+            if file_name_without_extension.contains(' ') {
+                let mut split: Vec<&str> = file_name_without_extension.split(' ').collect();
+
+                number = split[0].parse::<i32>().unwrap();
+                split.remove(0);
+                title = split.join(" ");
+            } else {
+                number = file_name_without_extension.parse::<i32>().unwrap()
+            }
+
+            let thumbnail = self.generate_thumbnail(ending);
+
+            let new_ending = NewEnding {
+                id: Uuid::new_v4(),
+                show_title: self.current_show.clone(),
+                title,
+                number,
+                file_name: file_name.clone(),
+                thumbnail,
+            };
+
+            if check_new && !file_names.contains(&file_name) {
+                info!("New ending detected: '{}'", file_name);
+            }
+
+            self.lists.endings.push(new_ending);
+        }
+
+        if check_new && self.lists.endings.is_empty() {
+            info!("Nothing new.")
+        }
     }
 }
