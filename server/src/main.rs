@@ -15,7 +15,6 @@ mod loader;
 mod models;
 mod routes;
 mod schema;
-mod thumbnail;
 
 use db::establish_connection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
