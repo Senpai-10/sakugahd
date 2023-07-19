@@ -2,32 +2,16 @@
 
 WIP
 
-## Anime directory structure
+## Anime directory structure example
 
 ```
-ANIME DIRECTORY
-└── {SHOW NAME}
-    │
-    ├── banner.jpg ( banner for the show )
-    ├── image.png  ( image for the show )
-    ├── eps
-    │   ├── {EPISODE NUMBER}.mp4
-    │   ├── {EPISODE NUMBER} (Filler).mp4
-    ├── movies
-    │   ├── {MOVIE NUMBER} {MOVIE NAME}.mkv
-    ├── openings
-    │   └── {OPENING NUMBER} {SONG NAME}.mp4
-    └── endings
-        └── {ENDING NAME} {SONG NAME}.mp4
-
-Example:
-------------
 ANIME DIRECTORY
 └── bleach
     │
     ├── banner.jpg ( banner for the show )
     ├── image.png  ( image for the show )
-    ├── eps
+    ├── episodes
+    │   │
     │   ├── 1.mp4
     │   ├── 2.mp4
     │   ├── ...
@@ -38,13 +22,16 @@ ANIME DIRECTORY
     │   ├── 34.mp4
     │   └── 35.mp4
     ├── movies
-    │   ├── 1 Memories of Nobody.mkv
-    │   ├── 2 The DiamondDust Rebellion.mkv
-    │   ├── 3 Fade to Black.mkv
-    │   └── 4 Hell Verse.mkv
+    │   │
+    │   ├── 1 Memories of Nobody.mp4
+    │   ├── 2 The DiamondDust Rebellion.mp4
+    │   ├── 3 Fade to Black.mp4
+    │   └── 4 Hell Verse.mp4
     ├── openings
+    │   │
     │   └── 1 asterisk.mp4
     └── endings
+        │
         └── 1 life is like a boat.mp4
 ```
 
