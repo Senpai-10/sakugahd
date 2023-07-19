@@ -30,7 +30,7 @@ fn home() -> String {
 
 #[rocket::main]
 async fn main() {
-    pretty_env_logger::formatted_builder()
+    env_logger::builder()
         .filter(None, log::LevelFilter::Info)
         .init();
 
