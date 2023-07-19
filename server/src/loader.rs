@@ -205,12 +205,6 @@ impl<'a> Loader<'a> {
 
             let show_exists = self.show_exists(&show_name);
 
-            if show_exists {
-                // check if theres a new episode/movies/openings/endings
-            } else {
-                // add episodes/movies/openings/endings
-            }
-
             info!("\"{show_name}\" Loading Episodes");
             self.load_episodes(&show_dir, show_exists);
 
