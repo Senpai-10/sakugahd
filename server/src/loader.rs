@@ -99,7 +99,7 @@ impl<'a> Loader<'a> {
             file.path().file_stem().unwrap().to_str().unwrap()
         ));
 
-        if thumbnail_file.exists() == true {
+        if thumbnail_file.exists() {
             info!(
                 "Thumbnail Found for ({show_title}) {}!",
                 file.file_name().to_str().unwrap()
@@ -178,7 +178,7 @@ impl<'a> Loader<'a> {
         // Load Shows
 
         // check if anime_directory exists
-        if self.anime_directory.exists() == false {
+        if !self.anime_directory.exists() {
             error!(
                 "Anime directory '{}' does not exists!",
                 self.anime_directory.to_str().unwrap()
