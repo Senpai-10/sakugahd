@@ -216,8 +216,6 @@ impl<'a> Loader<'a> {
             if !show_exists {
                 // TODO: Get image/banner
 
-                println!("current show: {}", self.current_show);
-
                 let new_show = NewShow {
                     title: self.current_show.clone(),
                     description: String::from("no description."),
