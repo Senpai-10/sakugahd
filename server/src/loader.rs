@@ -14,7 +14,6 @@ use std::process;
 use uuid::Uuid;
 
 const SHOW_BANNER_FILE_NAME_START: &str = "banner";
-const SHOW_IMAGE_FILE_NAME_START: &str = "image";
 const EPISODES_DIR_NAME: &str = "episodes";
 const MOVIES_DIR_NAME: &str = "movies";
 const OPENINGS_DIR_NAME: &str = "openings";
@@ -214,9 +213,10 @@ impl<'a> Loader<'a> {
             let show_exists = self.show_exists();
 
             if !show_exists {
-                // TODO: Get image/banner
+                let image = show_dir.path().join("image.png");
+                let banner = show_dir.path().join("banner.png");
 
-                let new_show = NewShow {
+                let mut new_show = NewShow {
                     title: self.current_show.clone(),
                     description: String::from("no description."),
                     format: None,
@@ -225,6 +225,22 @@ impl<'a> Loader<'a> {
                     season_year: None,
                     banner: None,
                     image: None,
+                };
+
+                new_show.image = match std::fs::read(image) {
+                    Ok(bytes) => {
+                        info!("Detected show image");
+                        Some(bytes)
+                    }
+                    Err(_) => Some(Vec::new()),
+                };
+
+                new_show.banner = match std::fs::read(banner) {
+                    Ok(bytes) => {
+                        info!("Detected show banner image");
+                        Some(bytes)
+                    }
+                    Err(_) => Some(Vec::new()),
                 };
 
                 self.lists.shows.push(new_show);
