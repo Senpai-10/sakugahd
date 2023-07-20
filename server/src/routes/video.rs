@@ -1,9 +1,9 @@
 use crate::db::establish_connection;
-use crate::models::ending::Ending;
-use crate::models::episode::Episode;
-use crate::models::movie::Movie;
-use crate::models::opening::Opening;
-use crate::schema;
+use common::models::ending::Ending;
+use common::models::episode::Episode;
+use common::models::movie::Movie;
+use common::models::opening::Opening;
+use common::schema;
 use diesel::prelude::*;
 use diesel::QueryDsl;
 use rocket_seek_stream::SeekStream;

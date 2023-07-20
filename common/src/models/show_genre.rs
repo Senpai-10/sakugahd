@@ -1,6 +1,7 @@
 use crate::models::genre::Genre;
 use crate::models::show::Show;
 use crate::schema::shows_genres;
+use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Insertable, Serialize, Deserialize)]

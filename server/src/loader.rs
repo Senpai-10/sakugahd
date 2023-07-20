@@ -1,9 +1,9 @@
-use crate::models::ending::NewEnding;
-use crate::models::episode::NewEpisode;
-use crate::models::movie::NewMovie;
-use crate::models::opening::NewOpening;
-use crate::models::show::NewShow;
-use crate::schema::{endings, episodes, movies, openings, shows};
+use common::models::ending::NewEnding;
+use common::models::episode::NewEpisode;
+use common::models::movie::NewMovie;
+use common::models::opening::NewOpening;
+use common::models::show::NewShow;
+use common::schema::{endings, episodes, movies, openings, shows};
 use diesel::dsl::exists;
 use diesel::dsl::select;
 use diesel::prelude::*;

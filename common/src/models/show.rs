@@ -1,4 +1,5 @@
 use crate::schema::shows;
+use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq, Serialize, Deserialize)]

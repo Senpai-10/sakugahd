@@ -1,4 +1,5 @@
 use crate::schema::genres;
+use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Insertable, Serialize, Deserialize)]

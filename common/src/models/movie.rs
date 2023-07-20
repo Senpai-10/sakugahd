@@ -1,5 +1,6 @@
 use crate::models::show::Show;
 use crate::schema::movies;
+use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 

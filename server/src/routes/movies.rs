@@ -1,6 +1,6 @@
 use crate::db::establish_connection;
-use crate::models::movie::Movie;
-use crate::schema::movies::dsl;
+use common::models::movie::Movie;
+use common::schema::movies::dsl;
 use diesel::prelude::*;
 use rocket::serde::json::Json;
 

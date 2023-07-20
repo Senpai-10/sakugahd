@@ -1,6 +1,7 @@
 use crate::models::show::Show;
 use crate::models::studio::Studio;
 use crate::schema::shows_studios;
+use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Insertable, Serialize, Deserialize)]

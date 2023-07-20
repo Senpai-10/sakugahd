@@ -1,6 +1,6 @@
 use crate::db::establish_connection;
-use crate::models::show::Show;
-use crate::schema;
+use common::models::show::Show;
+use common::schema;
 use diesel::prelude::*;
 use rocket::serde::json::Json;
 

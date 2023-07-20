@@ -12,9 +12,7 @@ extern crate log;
 mod cors;
 mod db;
 mod loader;
-mod models;
 mod routes;
-mod schema;
 
 use db::establish_connection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
