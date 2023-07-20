@@ -13,7 +13,6 @@ use std::path::{Path, PathBuf};
 use std::process;
 use uuid::Uuid;
 
-const SHOW_BANNER_FILE_NAME_START: &str = "banner";
 const EPISODES_DIR_NAME: &str = "episodes";
 const MOVIES_DIR_NAME: &str = "movies";
 const OPENINGS_DIR_NAME: &str = "openings";
