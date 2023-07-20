@@ -1,0 +1,5 @@
+[] Add thumbnails table (id, video_id(fk), thumbnail_file_name)
+[] Remove thumbnail column from episodes/movies/openings/endings
+[] Add endpoint /api/thumbnail/video_id
+    use video to get thumbnail_file_name from thumbnails table
+    and join it with thumbnails_cache_dir and return the file to client
