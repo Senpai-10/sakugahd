@@ -13,6 +13,5 @@ CREATE TABLE IF NOT EXISTS shows (
     status show_status,
     season show_season,
     season_year INT,
-    image BYTEA,
-    banner BYTEA
+    cover BYTEA
 );

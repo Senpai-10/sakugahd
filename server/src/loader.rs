@@ -207,8 +207,7 @@ impl<'a> Loader<'a> {
             let show_exists = self.show_exists();
 
             if !show_exists {
-                let image = show_dir.path().join("image.png");
-                let banner = show_dir.path().join("banner.png");
+                let cover = show_dir.path().join("cover.png");
 
                 let mut new_show = NewShow {
                     title: self.current_show.clone(),
@@ -217,21 +216,12 @@ impl<'a> Loader<'a> {
                     status: None,
                     season: None,
                     season_year: None,
-                    banner: None,
-                    image: None,
+                    cover: None,
                 };
 
-                new_show.image = match std::fs::read(image) {
+                new_show.cover = match std::fs::read(cover) {
                     Ok(bytes) => {
-                        info!("Detected show image");
-                        Some(bytes)
-                    }
-                    Err(_) => Some(Vec::new()),
-                };
-
-                new_show.banner = match std::fs::read(banner) {
-                    Ok(bytes) => {
-                        info!("Detected show banner image");
+                        info!("Detected show cover image");
                         Some(bytes)
                     }
                     Err(_) => Some(Vec::new()),

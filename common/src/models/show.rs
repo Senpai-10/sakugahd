@@ -43,8 +43,7 @@ pub struct NewShow {
     pub status: Option<ShowStatus>,
     pub season: Option<ShowSeason>,
     pub season_year: Option<i32>,
-    pub image: Option<Vec<u8>>,
-    pub banner: Option<Vec<u8>>,
+    pub cover: Option<Vec<u8>>,
 }
 
 #[derive(
@@ -58,6 +57,5 @@ pub struct Show {
     pub status: Option<ShowStatus>,
     pub season: Option<ShowSeason>,
     pub season_year: Option<i32>,
-    pub image: Option<Vec<u8>>,
-    pub banner: Option<Vec<u8>>,
+    pub cover: Option<Vec<u8>>,
 }

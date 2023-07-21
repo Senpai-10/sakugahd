@@ -8,8 +8,7 @@ WIP
 ANIME DIRECTORY
 └── bleach
     │
-    ├── banner.png ( banner for the show )
-    ├── image.png  ( image for the show )
+    ├── cover.png  ( cover image for the show )
     ├── episodes
     │   │
     │   ├── 1.mp4
