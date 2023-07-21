@@ -1,4 +1,2 @@
 [] Move to sqlite3
-[] Add endpoint /api/thumbnail/<thumbnail_file_name>
-    use thumbnail_file_name to find the thumbnail in the thumbnails directory and return it
-    NOTE: stop storing show.image, show.banner in the database and only store the file_name
+[] Stop storing show.image, show.banner in the database and only store the file_name
