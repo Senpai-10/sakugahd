@@ -1,5 +1,4 @@
-[] Add thumbnails table (id, video_id(fk), thumbnail_file_name)
-[] Remove thumbnail column from episodes/movies/openings/endings
-[] Add endpoint /api/thumbnail/video_id
-    use video to get thumbnail_file_name from thumbnails table
-    and join it with thumbnails_cache_dir and return the file to client
+[] Move to sqlite3
+[] Add endpoint /api/thumbnail/<thumbnail_file_name>
+    use thumbnail_file_name to find the thumbnail in the thumbnails directory and return it
+    NOTE: stop storing show.image, show.banner in the database and only store the file_name

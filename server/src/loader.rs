@@ -74,7 +74,7 @@ impl<'a> Loader<'a> {
         }
     }
 
-    fn generate_thumbnail(&self, file: DirEntry) -> Vec<u8> {
+    fn generate_thumbnail(&self, file: DirEntry) -> String {
         let cache_dir: PathBuf = dirs::cache_dir().unwrap();
         let thumbnails_dir = cache_dir.join("sakugahd_thumbnails");
 
@@ -128,18 +128,12 @@ impl<'a> Loader<'a> {
                 .expect("Failed to generate thumbnail!");
         }
 
-        let thumbnail: Vec<u8> = match std::fs::read(&thumbnail_file) {
-            Ok(bytes) => bytes,
-            Err(e) => {
-                error!(
-                    "Failed to read thumbnail file (video file might be broken) '{}', {e}",
-                    thumbnail_file.to_str().unwrap()
-                );
-                return Vec::new();
-            }
-        };
-
-        thumbnail
+        thumbnail_file
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string()
     }
 
     fn insert_into_database(&mut self) {
@@ -327,7 +321,7 @@ impl<'a> Loader<'a> {
             }
             // end of parsing
 
-            let thumbnail = self.generate_thumbnail(episode);
+            let thumbnail_file_name = self.generate_thumbnail(episode);
 
             let new_episode = NewEpisode {
                 id: Uuid::new_v4(),
@@ -336,7 +330,7 @@ impl<'a> Loader<'a> {
                 number: episode_number,
                 is_filler,
                 file_name: file_name.clone(),
-                thumbnail,
+                thumbnail_file_name,
             };
 
             if check_new && !file_names.contains(&file_name) {
@@ -414,7 +408,7 @@ impl<'a> Loader<'a> {
                 number = file_name_without_extension.parse::<i32>().unwrap()
             }
 
-            let thumbnail = self.generate_thumbnail(movie);
+            let thumbnail_file_name = self.generate_thumbnail(movie);
 
             let new_movie = NewMovie {
                 id: Uuid::new_v4(),
@@ -423,7 +417,7 @@ impl<'a> Loader<'a> {
                 watch_after: 0,
                 number,
                 file_name: file_name.clone(),
-                thumbnail,
+                thumbnail_file_name,
             };
 
             if check_new && !file_names.contains(&file_name) {
@@ -504,7 +498,7 @@ impl<'a> Loader<'a> {
                 number = file_name_without_extension.parse::<i32>().unwrap()
             }
 
-            let thumbnail = self.generate_thumbnail(opening);
+            let thumbnail_file_name = self.generate_thumbnail(opening);
 
             let new_opening = NewOpening {
                 id: Uuid::new_v4(),
@@ -512,7 +506,7 @@ impl<'a> Loader<'a> {
                 title,
                 number,
                 file_name: file_name.clone(),
-                thumbnail,
+                thumbnail_file_name,
             };
 
             if check_new && !file_names.contains(&file_name) {
@@ -590,7 +584,7 @@ impl<'a> Loader<'a> {
                 number = file_name_without_extension.parse::<i32>().unwrap()
             }
 
-            let thumbnail = self.generate_thumbnail(ending);
+            let thumbnail_file_name = self.generate_thumbnail(ending);
 
             let new_ending = NewEnding {
                 id: Uuid::new_v4(),
@@ -598,7 +592,7 @@ impl<'a> Loader<'a> {
                 title,
                 number,
                 file_name: file_name.clone(),
-                thumbnail,
+                thumbnail_file_name,
             };
 
             if check_new && !file_names.contains(&file_name) {

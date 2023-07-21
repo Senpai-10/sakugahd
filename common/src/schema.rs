@@ -23,7 +23,7 @@ diesel::table! {
         #[max_length = 255]
         title -> Varchar,
         file_name -> Varchar,
-        thumbnail -> Bytea,
+        thumbnail_file_name -> Varchar,
     }
 }
 
@@ -37,7 +37,7 @@ diesel::table! {
         number -> Int4,
         is_filler -> Bool,
         file_name -> Varchar,
-        thumbnail -> Bytea,
+        thumbnail_file_name -> Varchar,
     }
 }
 
@@ -58,7 +58,7 @@ diesel::table! {
         title -> Varchar,
         number -> Int4,
         file_name -> Varchar,
-        thumbnail -> Bytea,
+        thumbnail_file_name -> Varchar,
     }
 }
 
@@ -71,7 +71,7 @@ diesel::table! {
         title -> Varchar,
         number -> Int4,
         file_name -> Varchar,
-        thumbnail -> Bytea,
+        thumbnail_file_name -> Varchar,
     }
 }
 

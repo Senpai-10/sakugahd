@@ -13,7 +13,7 @@ pub struct NewEpisode {
     pub number: i32,
     pub is_filler: bool,
     pub file_name: String,
-    pub thumbnail: Vec<u8>,
+    pub thumbnail_file_name: String,
 }
 
 #[derive(
@@ -27,5 +27,5 @@ pub struct Episode {
     pub number: i32,
     pub is_filler: bool,
     pub file_name: String,
-    pub thumbnail: Vec<u8>,
+    pub thumbnail_file_name: String,
 }

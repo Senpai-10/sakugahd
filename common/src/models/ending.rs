@@ -12,7 +12,7 @@ pub struct NewEnding {
     pub title: String,
     pub number: i32,
     pub file_name: String,
-    pub thumbnail: Vec<u8>,
+    pub thumbnail_file_name: String,
 }
 
 #[derive(
@@ -25,5 +25,5 @@ pub struct Ending {
     pub number: i32,
     pub title: String,
     pub file_name: String,
-    pub thumbnail: Vec<u8>,
+    pub thumbnail_file_name: String,
 }
