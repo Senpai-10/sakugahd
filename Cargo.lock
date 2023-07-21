@@ -187,7 +187,6 @@ dependencies = [
  "diesel-derive-enum",
  "rocket",
  "serde",
- "uuid",
 ]
 
 [[package]]
@@ -274,7 +273,6 @@ dependencies = [
  "diesel_derives",
  "itoa",
  "pq-sys",
- "uuid",
 ]
 
 [[package]]
@@ -1599,7 +1597,6 @@ dependencies = [
  "tokio-stream",
  "tokio-util",
  "ubyte",
- "uuid",
  "version_check",
  "yansi 0.5.1",
 ]
@@ -1645,7 +1642,6 @@ dependencies = [
  "time",
  "tokio",
  "uncased",
- "uuid",
 ]
 
 [[package]]
@@ -2204,16 +2200,6 @@ name = "urlencoding"
 version = "2.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e8db7427f936968176eaa7cdf81b7f98b980b18495ec28f1b5791ac3bfe3eea9"
-
-[[package]]
-name = "uuid"
-version = "1.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "79daa5ed5740825c40b389c5e50312b9c86df53fccd33f281df655642b43869d"
-dependencies = [
- "getrandom",
- "serde",
-]
 
 [[package]]
 name = "valuable"
