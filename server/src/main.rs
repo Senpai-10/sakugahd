@@ -58,6 +58,7 @@ async fn main() {
                 routes::movies::movies,
                 routes::openings::openings,
                 routes::endings::endings,
+                routes::thumbnail::thumbnail
             ],
         )
         .launch()

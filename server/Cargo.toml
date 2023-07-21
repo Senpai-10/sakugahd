@@ -18,3 +18,4 @@ dirs = "5.0.1"
 log = "0.4.19"
 env_logger = "0.10"
 common = { path="../common" }
+urlencoding = "2.1.2"

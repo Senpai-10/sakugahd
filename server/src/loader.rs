@@ -13,6 +13,7 @@ use std::fs::DirEntry;
 use std::path::{Path, PathBuf};
 use std::process;
 
+pub const THUMBNAILS_CACHE_DIR: &str = "sakugahd_thumbnails";
 const EPISODES_DIR_NAME: &str = "episodes";
 const MOVIES_DIR_NAME: &str = "movies";
 const OPENINGS_DIR_NAME: &str = "openings";
@@ -76,7 +77,7 @@ impl<'a> Loader<'a> {
 
     fn generate_thumbnail(&self, file: DirEntry) -> String {
         let cache_dir: PathBuf = dirs::cache_dir().unwrap();
-        let thumbnails_dir = cache_dir.join("sakugahd_thumbnails");
+        let thumbnails_dir = cache_dir.join(THUMBNAILS_CACHE_DIR);
 
         if !thumbnails_dir.exists() {
             match std::fs::create_dir_all(&thumbnails_dir) {
