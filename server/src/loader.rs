@@ -7,11 +7,11 @@ use common::schema::{endings, episodes, movies, openings, shows};
 use diesel::dsl::exists;
 use diesel::dsl::select;
 use diesel::prelude::*;
+use nanoid::nanoid;
 use std::env;
 use std::fs::DirEntry;
 use std::path::{Path, PathBuf};
 use std::process;
-use uuid::Uuid;
 
 const EPISODES_DIR_NAME: &str = "episodes";
 const MOVIES_DIR_NAME: &str = "movies";
@@ -324,7 +324,7 @@ impl<'a> Loader<'a> {
             let thumbnail_file_name = self.generate_thumbnail(episode);
 
             let new_episode = NewEpisode {
-                id: Uuid::new_v4(),
+                id: nanoid!(),
                 show_title: self.current_show.clone(),
                 title,
                 number: episode_number,
@@ -411,7 +411,7 @@ impl<'a> Loader<'a> {
             let thumbnail_file_name = self.generate_thumbnail(movie);
 
             let new_movie = NewMovie {
-                id: Uuid::new_v4(),
+                id: nanoid!(),
                 show_title: self.current_show.clone(),
                 title,
                 watch_after: 0,
@@ -501,7 +501,7 @@ impl<'a> Loader<'a> {
             let thumbnail_file_name = self.generate_thumbnail(opening);
 
             let new_opening = NewOpening {
-                id: Uuid::new_v4(),
+                id: nanoid!(),
                 show_title: self.current_show.clone(),
                 title,
                 number,
@@ -587,7 +587,7 @@ impl<'a> Loader<'a> {
             let thumbnail_file_name = self.generate_thumbnail(ending);
 
             let new_ending = NewEnding {
-                id: Uuid::new_v4(),
+                id: nanoid!(),
                 show_title: self.current_show.clone(),
                 title,
                 number,

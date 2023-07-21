@@ -2,12 +2,11 @@ use crate::models::show::Show;
 use crate::schema::openings;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 
 #[derive(Insertable, Serialize, Deserialize)]
 #[diesel(table_name = openings)]
 pub struct NewOpening {
-    pub id: Uuid,
+    pub id: String,
     pub show_title: String,
     pub title: String,
     pub number: i32,
@@ -20,7 +19,7 @@ pub struct NewOpening {
 )]
 #[diesel(belongs_to(Show, foreign_key = show_title))]
 pub struct Opening {
-    pub id: Uuid,
+    pub id: String,
     pub show_title: String,
     pub title: String,
     pub number: i32,

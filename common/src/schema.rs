@@ -16,7 +16,7 @@ pub mod sql_types {
 
 diesel::table! {
     endings (id) {
-        id -> Uuid,
+        id -> Varchar,
         #[max_length = 255]
         show_title -> Varchar,
         number -> Int4,
@@ -29,7 +29,7 @@ diesel::table! {
 
 diesel::table! {
     episodes (id) {
-        id -> Uuid,
+        id -> Varchar,
         #[max_length = 255]
         show_title -> Varchar,
         #[max_length = 255]
@@ -50,7 +50,7 @@ diesel::table! {
 
 diesel::table! {
     movies (id) {
-        id -> Uuid,
+        id -> Varchar,
         #[max_length = 255]
         show_title -> Varchar,
         watch_after -> Int4,
@@ -64,7 +64,7 @@ diesel::table! {
 
 diesel::table! {
     openings (id) {
-        id -> Uuid,
+        id -> Varchar,
         #[max_length = 255]
         show_title -> Varchar,
         #[max_length = 255]

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS movies (
-    id UUID PRIMARY KEY NOT NULL,
+    id VARCHAR PRIMARY KEY NOT NULL,
     show_title VARCHAR(255) NOT NULL REFERENCES shows(title),
     -- watch movie after n number of episodes
     watch_after INT NOT NULL,
