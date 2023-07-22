@@ -27,6 +27,34 @@ interface Episode {
     thumbnail_file_name: string;
 }
 
+interface Movie {
+    id: string;
+    show_title: string;
+    title: string;
+    number: number;
+    watch_after: number;
+    file_name: string;
+    thumbnail_file_name: string;
+}
+
+interface Opening {
+    id: string;
+    show_title: string;
+    title: string;
+    number: number;
+    file_name: string;
+    thumbnail_file_name: string;
+}
+
+interface Ending {
+    id: string;
+    show_title: string;
+    title: string;
+    number: number;
+    file_name: string;
+    thumbnail_file_name: string;
+}
+
 interface EpProps {
     ep: Episode;
 }
@@ -47,6 +75,8 @@ function Episode(epprops: EpProps) {
     );
 }
 
+type Tabs = 'Episodes' | 'Movies' | 'Openings' | 'Endings';
+
 export function Show_page() {
     const { title } = useParams();
 
@@ -59,8 +89,12 @@ export function Show_page() {
     }
 
     const encoded_title = encodeURIComponent(title);
+    const [currentTab, setCurrentTab] = useState<Tabs>('Episodes');
     const [show, setShow] = useState<Show>();
     const [episodes, setEpisodes] = useState<Episode[]>([]);
+    const [movies, setMovies] = useState<Movie[]>([]);
+    const [openings, setOpenings] = useState<Opening[]>([]);
+    const [endings, setEndings] = useState<Ending[]>([]);
 
     useEffect(() => {
         axios
@@ -71,15 +105,67 @@ export function Show_page() {
             .get(`/api/shows/${encoded_title}/episodes`)
             .then((res) => res.data)
             .then((data) => setEpisodes(data));
+        axios
+            .get(`/api/shows/${encoded_title}/movies`)
+            .then((res) => res.data)
+            .then((data) => setMovies(data));
+        axios
+            .get(`/api/shows/${encoded_title}/openings`)
+            .then((res) => res.data)
+            .then((data) => setOpenings(data));
+        axios
+            .get(`/api/shows/${encoded_title}/endings`)
+            .then((res) => res.data)
+            .then((data) => setEndings(data));
     }, []);
 
     return show ? (
         <>
+            <button onClick={() => setCurrentTab('Episodes')}>Episodes</button>
+            <button onClick={() => setCurrentTab('Movies')}>Movies</button>
+            <button onClick={() => setCurrentTab('Openings')}>Openings</button>
+            <button onClick={() => setCurrentTab('Endings')}>Endings</button>
             show: {show.title}
-            <h1>Episodes</h1>
-            {episodes.map((episode) => (
-                <Episode key={episode.id} ep={episode} />
-            ))}
+            <div
+                className={
+                    currentTab == 'Episodes' ? 'active-tab' : 'inactive-tab'
+                }
+            >
+                <h1>Episodes</h1>
+                {episodes.map((episode) => (
+                    <Episode key={episode.id} ep={episode} />
+                ))}
+            </div>
+            <div
+                className={
+                    currentTab == 'Movies' ? 'active-tab' : 'inactive-tab'
+                }
+            >
+                <h1>Movies</h1>
+                {movies.map((movie) => (
+                    <p>{movie.title}</p>
+                ))}
+            </div>
+            <div
+                className={
+                    currentTab == 'Openings' ? 'active-tab' : 'inactive-tab'
+                }
+            >
+                <h1>Openings</h1>
+                {openings.map((opening) => (
+                    <p>{opening.title}</p>
+                ))}
+            </div>
+            <div
+                className={
+                    currentTab == 'Endings' ? 'active-tab' : 'inactive-tab'
+                }
+            >
+                <h1>Endings</h1>
+                {endings.map((ending) => (
+                    <p>{ending.title}</p>
+                ))}
+            </div>
         </>
     ) : (
         <p>Loading...</p>
