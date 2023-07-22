@@ -50,6 +50,7 @@ async fn main() {
                 routes::video::video_movies,
                 routes::video::video_openings,
                 routes::video::video_endings,
+                routes::show::show,
                 routes::shows::shows,
                 routes::episodes::episodes,
                 routes::movies::movies,
