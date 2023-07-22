@@ -151,7 +151,7 @@ export function Watch_page() {
 
     return (
         <>
-            <video width='650' controls muted autoPlay>
+            <video width='650' controls>
                 <source
                     src={`/api/shows/${title}/${type}/${number}`}
                     type='video/mp4'
