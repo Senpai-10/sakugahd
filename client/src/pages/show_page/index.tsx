@@ -61,7 +61,7 @@ function Episode(props: { itf: Episode }) {
 
     return (
         <Link to={`/shows/${encodeURIComponent(itf.show_title)}/watch/episodes/${itf.number}`}>
-            <img className='thumbnail' src={`/api/thumbnail/${image}`} />
+            <img loading="lazy" className='thumbnail' src={`/api/thumbnail/${image}`} />
             <p>title: {itf.title}</p>
             <p>show title: {itf.show_title}</p>
             <p>number: {itf.number}</p>
