@@ -11,7 +11,7 @@ pub fn endings(title: String) -> Json<Vec<Ending>> {
     Json(
         dsl::endings
             .filter(dsl::show_title.eq(title))
-            .order(dsl::title)
+            .order(dsl::number)
             .load(&mut conn)
             .expect("Can't load openings"),
     )

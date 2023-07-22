@@ -11,7 +11,7 @@ pub fn movies(title: String) -> Json<Vec<Movie>> {
     Json(
         dsl::movies
             .filter(dsl::show_title.eq(title))
-            .order(dsl::title)
+            .order(dsl::number)
             .load(&mut conn)
             .expect("Can't load movies"),
     )

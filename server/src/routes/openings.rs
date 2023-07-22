@@ -11,7 +11,7 @@ pub fn openings(title: String) -> Json<Vec<Opening>> {
     Json(
         dsl::openings
             .filter(dsl::show_title.eq(title))
-            .order(dsl::title)
+            .order(dsl::number)
             .load(&mut conn)
             .expect("Can't load openings"),
     )
