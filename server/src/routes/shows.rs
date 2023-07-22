@@ -14,3 +14,15 @@ pub fn shows() -> Json<Vec<Show>> {
             .expect("Can't load shows"),
     )
 }
+
+#[get("/shows/<title>")]
+pub fn show(title: String) -> Json<Show> {
+    let mut conn = establish_connection();
+
+    Json(
+        schema::shows::dsl::shows
+            .filter(schema::shows::title.eq(&title))
+            .first(&mut conn)
+            .expect("Can't load shows"),
+    )
+}
