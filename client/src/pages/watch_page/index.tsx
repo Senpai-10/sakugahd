@@ -206,7 +206,7 @@ export function Watch_page() {
 
     return (
         <>
-            <video width='650' controls>
+            <video width='650' preload='metadata' controls>
                 <source
                     src={`/api/shows/${title}/${type}/${number}`}
                     type='video/mp4'
