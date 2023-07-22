@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './index.css';
@@ -23,8 +23,8 @@ interface Episode {
     title: string;
     number: number;
     is_filler: boolean;
-    file_name: string;
     thumbnail_file_name: string;
+    file_name: string;
 }
 
 interface Movie {
@@ -60,14 +60,14 @@ function Episode(props: { itf: Episode }) {
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
     return (
-        <>
+        <Link to={`/shows/${encodeURIComponent(itf.show_title)}/watch/episodes/${itf.number}`}>
             <img className='thumbnail' src={`/api/thumbnail/${image}`} />
             <p>title: {itf.title}</p>
             <p>show title: {itf.show_title}</p>
             <p>number: {itf.number}</p>
             <p>is filler: {itf.is_filler}</p>
             <p>file name: {itf.file_name}</p>
-        </>
+        </Link>
     );
 }
 
@@ -76,14 +76,14 @@ function Movie(props: { itf: Movie }) {
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
     return (
-        <>
+        <Link to={`/shows/${encodeURIComponent(itf.show_title)}/watch/movies/${itf.number}`}>
             <img className='thumbnail' src={`/api/thumbnail/${image}`} />
             <p>title: {itf.title}</p>
             <p>show title: {itf.show_title}</p>
             <p>number: {itf.number}</p>
             <p>watch after: {itf.watch_after}</p>
             <p>file name: {itf.file_name}</p>
-        </>
+        </Link>
     );
 }
 
@@ -92,13 +92,13 @@ function Opening(props: { itf: Opening }) {
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
     return (
-        <>
+        <Link to={`/shows/${encodeURIComponent(itf.show_title)}/watch/openings/${itf.number}`}>
             <img className='thumbnail' src={`/api/thumbnail/${image}`} />
             <p>title: {itf.title}</p>
             <p>show title: {itf.show_title}</p>
             <p>number: {itf.number}</p>
             <p>file name: {itf.file_name}</p>
-        </>
+        </Link>
     );
 }
 
@@ -107,13 +107,13 @@ function Ending(props: { itf: Ending }) {
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
     return (
-        <>
+        <Link to={`/shows/${encodeURIComponent(itf.show_title)}/watch/endings/${itf.number}`}>
             <img className='thumbnail' src={`/api/thumbnail/${image}`} />
             <p>title: {itf.title}</p>
             <p>show title: {itf.show_title}</p>
             <p>number: {itf.number}</p>
             <p>file name: {itf.file_name}</p>
-        </>
+        </Link>
     );
 }
 
