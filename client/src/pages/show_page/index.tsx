@@ -55,22 +55,64 @@ interface Ending {
     thumbnail_file_name: string;
 }
 
-interface EpProps {
-    ep: Episode;
-}
-
-function Episode(epprops: EpProps) {
-    const ep = epprops.ep;
-    const image = encodeURIComponent(ep.thumbnail_file_name);
+function Episode(props: { itf: Episode }) {
+    const itf = props.itf;
+    const image = encodeURIComponent(itf.thumbnail_file_name);
 
     return (
         <>
             <img className='thumbnail' src={`/api/thumbnail/${image}`} />
-            <p>title: {ep.title}</p>
-            <p>show title: {ep.show_title}</p>
-            <p>ep number {ep.number}</p>
-            <p>is filler {ep.is_filler}</p>
-            <p>file name: {ep.file_name}</p>
+            <p>title: {itf.title}</p>
+            <p>show title: {itf.show_title}</p>
+            <p>number: {itf.number}</p>
+            <p>is filler: {itf.is_filler}</p>
+            <p>file name: {itf.file_name}</p>
+        </>
+    );
+}
+
+function Movie(props: { itf: Movie }) {
+    const itf = props.itf;
+    const image = encodeURIComponent(itf.thumbnail_file_name);
+
+    return (
+        <>
+            <img className='thumbnail' src={`/api/thumbnail/${image}`} />
+            <p>title: {itf.title}</p>
+            <p>show title: {itf.show_title}</p>
+            <p>number: {itf.number}</p>
+            <p>watch after: {itf.watch_after}</p>
+            <p>file name: {itf.file_name}</p>
+        </>
+    );
+}
+
+function Opening(props: { itf: Opening }) {
+    const itf = props.itf;
+    const image = encodeURIComponent(itf.thumbnail_file_name);
+
+    return (
+        <>
+            <img className='thumbnail' src={`/api/thumbnail/${image}`} />
+            <p>title: {itf.title}</p>
+            <p>show title: {itf.show_title}</p>
+            <p>number: {itf.number}</p>
+            <p>file name: {itf.file_name}</p>
+        </>
+    );
+}
+
+function Ending(props: { itf: Ending }) {
+    const itf = props.itf;
+    const image = encodeURIComponent(itf.thumbnail_file_name);
+
+    return (
+        <>
+            <img className='thumbnail' src={`/api/thumbnail/${image}`} />
+            <p>title: {itf.title}</p>
+            <p>show title: {itf.show_title}</p>
+            <p>number: {itf.number}</p>
+            <p>file name: {itf.file_name}</p>
         </>
     );
 }
@@ -121,11 +163,11 @@ export function Show_page() {
 
     return show ? (
         <>
+            show: {show.title}
             <button onClick={() => setCurrentTab('Episodes')}>Episodes</button>
             <button onClick={() => setCurrentTab('Movies')}>Movies</button>
             <button onClick={() => setCurrentTab('Openings')}>Openings</button>
             <button onClick={() => setCurrentTab('Endings')}>Endings</button>
-            show: {show.title}
             <div
                 className={
                     currentTab == 'Episodes' ? 'active-tab' : 'inactive-tab'
@@ -133,7 +175,7 @@ export function Show_page() {
             >
                 <h1>Episodes</h1>
                 {episodes.map((episode) => (
-                    <Episode key={episode.id} ep={episode} />
+                    <Episode key={episode.id} itf={episode} />
                 ))}
             </div>
             <div
@@ -143,7 +185,7 @@ export function Show_page() {
             >
                 <h1>Movies</h1>
                 {movies.map((movie) => (
-                    <p>{movie.title}</p>
+                    <Movie itf={movie} />
                 ))}
             </div>
             <div
@@ -153,7 +195,7 @@ export function Show_page() {
             >
                 <h1>Openings</h1>
                 {openings.map((opening) => (
-                    <p>{opening.title}</p>
+                    <Opening itf={opening} />
                 ))}
             </div>
             <div
@@ -163,7 +205,7 @@ export function Show_page() {
             >
                 <h1>Endings</h1>
                 {endings.map((ending) => (
-                    <p>{ending.title}</p>
+                    <Ending itf={ending} />
                 ))}
             </div>
         </>
