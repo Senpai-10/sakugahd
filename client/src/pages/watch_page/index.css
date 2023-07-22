@@ -1,11 +1,13 @@
 .video {
-    background-color: gray;
+    background-color: #ffffff05;
+    margin: 10px;
+    padding: 5px;
 }
 
 .active-video {
-    background-color: lightblue;
+    background-color: var(--primary);
 }
 
 .filler {
-    color: red;
+    border: 2px solid var(--filler);
 }

@@ -66,11 +66,11 @@ export function Watch_page() {
                     <div
                         className={classNames({
                             'active-video': Number(number) == video.number,
-                            filler: video.is_filler,
                             video: true,
+                            filler: video.is_filler,
                         })}
                     >
-                        {video.number}
+                        Episode {video.number} {video.is_filler ? "(Filler)" : ""}
                     </div>
                 </Link>
             ));
@@ -86,7 +86,7 @@ export function Watch_page() {
                             video: true,
                         })}
                     >
-                        {video.number}
+                        <p>Movie {video.number}</p>
                     </div>
                 </Link>
             ));
@@ -102,7 +102,7 @@ export function Watch_page() {
                             video: true,
                         })}
                     >
-                        {video.number}
+                        <p>Opening {video.number}</p>
                     </div>
                 </Link>
             ));
@@ -118,7 +118,7 @@ export function Watch_page() {
                             video: true,
                         })}
                     >
-                        {video.number}
+                        <p>Ending {video.number}</p>
                     </div>
                 </Link>
             ));
