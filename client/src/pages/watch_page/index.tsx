@@ -1,5 +1,5 @@
-import { Link, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
 import './index.css';
@@ -53,12 +53,58 @@ export function Watch_page() {
     const [movies, setMovies] = useState<Movie[]>([]);
     const [openings, setOpenings] = useState<Opening[]>([]);
     const [endings, setEndings] = useState<Ending[]>([]);
+    const inputRef = useRef(null);
+    const [searchQuery, setSearchQuery] = useState(0);
+    const [hideFillers, setHideFillers] = useState(false);
+
+    const filteredEpisodes = useMemo(() => {
+        return episodes.filter((video) => {
+            if (hideFillers === true && video.is_filler === true) {
+                return false;
+            }
+
+            if (searchQuery == 0) return true;
+
+            return video.number == searchQuery;
+        });
+    }, [episodes, searchQuery, hideFillers]);
+
+    const filteredMovies = useMemo(() => {
+        return movies.filter((video) => {
+            if (searchQuery == 0) return true;
+
+            return video.number == searchQuery;
+        });
+    }, [movies, searchQuery]);
+
+    const filteredOpenings = useMemo(() => {
+        return openings.filter((video) => {
+            if (searchQuery == 0) return true;
+
+            return video.number == searchQuery;
+        });
+    }, [openings, searchQuery]);
+
+    const filteredEndings = useMemo(() => {
+        return endings.filter((video) => {
+            if (searchQuery == 0) return true;
+
+            return video.number == searchQuery;
+        });
+    }, [endings, searchQuery]);
 
     const encoded_title = encodeURIComponent(title);
 
+    const scrollToActiveVideo = () => {
+        const section = document.querySelector('.active-video');
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     const VideosList = () => {
         if (type == 'episodes') {
-            return episodes.map((video) => (
+            return filteredEpisodes.map((video) => (
                 <Link
                     reloadDocument
                     to={`/shows/${title}/watch/episodes/${video.number}`}
@@ -70,12 +116,13 @@ export function Watch_page() {
                             filler: video.is_filler,
                         })}
                     >
-                        Episode {video.number} {video.is_filler ? "(Filler)" : ""}
+                        Episode {video.number}{' '}
+                        {video.is_filler ? '(Filler)' : ''}
                     </div>
                 </Link>
             ));
         } else if (type == 'movies') {
-            return movies.map((video) => (
+            return filteredMovies.map((video) => (
                 <Link
                     reloadDocument
                     to={`/shows/${title}/watch/movies/${video.number}`}
@@ -86,12 +133,12 @@ export function Watch_page() {
                             video: true,
                         })}
                     >
-                        <p>Movie {video.number}</p>
+                        Movie {video.number}
                     </div>
                 </Link>
             ));
         } else if (type == 'openings') {
-            return openings.map((video) => (
+            return filteredOpenings.map((video) => (
                 <Link
                     reloadDocument
                     to={`/shows/${title}/watch/openings/${video.number}`}
@@ -102,12 +149,12 @@ export function Watch_page() {
                             video: true,
                         })}
                     >
-                        <p>Opening {video.number}</p>
+                        Opening {video.number}
                     </div>
                 </Link>
             ));
         } else if (type == 'endings') {
-            return endings.map((video) => (
+            return filteredEndings.map((video) => (
                 <Link
                     reloadDocument
                     to={`/shows/${title}/watch/endings/${video.number}`}
@@ -118,7 +165,7 @@ export function Watch_page() {
                             video: true,
                         })}
                     >
-                        <p>Ending {video.number}</p>
+                        Ending {video.number}
                     </div>
                 </Link>
             ));
@@ -149,6 +196,14 @@ export function Watch_page() {
         }
     }, []);
 
+    const location = useLocation();
+
+    useEffect(() => {
+        setTimeout(() => {
+            scrollToActiveVideo();
+        }, 500);
+    }, [location]);
+
     return (
         <>
             <video width='650' controls>
@@ -157,7 +212,20 @@ export function Watch_page() {
                     type='video/mp4'
                 />
             </video>
-            <div>
+            <div className='videos-list'>
+                <input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(Number(e.target.value))}
+                    ref={inputRef}
+                    type='number'
+                    placeholder='Search'
+                />
+                <label>Hide Fillers</label>
+                <input
+                    type='checkbox'
+                    onChange={() => setHideFillers(!hideFillers)}
+                    checked={hideFillers}
+                />
                 <VideosList />
             </div>
         </>
