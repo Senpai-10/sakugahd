@@ -1,0 +1,11 @@
+.video {
+    background-color: gray;
+}
+
+.active-video {
+    background-color: lightblue;
+}
+
+.filler {
+    color: red;
+}
