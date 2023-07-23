@@ -213,22 +213,17 @@ impl<'a> Loader<'a> {
             if !show_exists {
                 let cover = show_dir.path().join("cover.png");
 
-                let mut new_show = NewShow {
+                // TODO: check if cover exists if not add default cover image
+                //  https://github.com/pyrossh/rust-embed
+
+                let new_show = NewShow {
                     title: self.current_show.clone(),
                     description: String::from("no description."),
                     format: None,
                     status: None,
                     season: None,
                     season_year: None,
-                    cover: None,
-                };
-
-                new_show.cover = match std::fs::read(cover) {
-                    Ok(bytes) => {
-                        info!("Detected show cover image");
-                        Some(bytes)
-                    }
-                    Err(_) => Some(Vec::new()),
+                    cover: cover.file_name().unwrap().to_str().unwrap().into(),
                 };
 
                 self.lists.shows.push(new_show);

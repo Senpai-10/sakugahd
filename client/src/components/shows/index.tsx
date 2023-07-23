@@ -14,7 +14,7 @@ interface Show {
     status?: ShowStatus;
     season?: ShowSeason;
     season_year?: number;
-    cover?: number[];
+    cover: string;
 }
 
 function Shows() {

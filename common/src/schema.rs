@@ -89,7 +89,7 @@ diesel::table! {
         status -> Nullable<ShowStatus>,
         season -> Nullable<ShowSeason>,
         season_year -> Nullable<Int4>,
-        cover -> Nullable<Bytea>,
+        cover -> Varchar,
     }
 }
 

@@ -13,5 +13,5 @@ CREATE TABLE IF NOT EXISTS shows (
     status show_status,
     season show_season,
     season_year INT,
-    cover BYTEA
+    cover VARCHAR NOT NULL
 );
