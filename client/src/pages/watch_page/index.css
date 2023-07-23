@@ -11,7 +11,7 @@
 }
 
 .filler {
-    border: 2px solid var(--filler);
+    outline: 2px solid var(--filler);
 }
 
 .videos-list {
