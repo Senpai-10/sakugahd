@@ -3,44 +3,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
 import './index.css';
-
-interface Episode {
-    id: string;
-    show_title: string;
-    title: string;
-    number: number;
-    is_filler: boolean;
-    thumbnail_file_name: string;
-    file_name: string;
-}
-
-interface Movie {
-    id: string;
-    show_title: string;
-    title: string;
-    number: number;
-    watch_after: number;
-    file_name: string;
-    thumbnail_file_name: string;
-}
-
-interface Opening {
-    id: string;
-    show_title: string;
-    title: string;
-    number: number;
-    file_name: string;
-    thumbnail_file_name: string;
-}
-
-interface Ending {
-    id: string;
-    show_title: string;
-    title: string;
-    number: number;
-    file_name: string;
-    thumbnail_file_name: string;
-}
+import { EpisodeType, MovieType, OpeningType, EndingType } from "../../types"
 
 export function Watch_page() {
     const { title, type, number } = useParams();
@@ -49,10 +12,10 @@ export function Watch_page() {
         return <h1>missing params</h1>;
     }
 
-    const [episodes, setEpisodes] = useState<Episode[]>([]);
-    const [movies, setMovies] = useState<Movie[]>([]);
-    const [openings, setOpenings] = useState<Opening[]>([]);
-    const [endings, setEndings] = useState<Ending[]>([]);
+    const [episodes, setEpisodes] = useState<EpisodeType[]>([]);
+    const [movies, setMovies] = useState<MovieType[]>([]);
+    const [openings, setOpenings] = useState<OpeningType[]>([]);
+    const [endings, setEndings] = useState<EndingType[]>([]);
     const inputRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [hideFillers, setHideFillers] = useState(false);

@@ -3,60 +3,9 @@ import { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
 import './index.css';
+import { ShowType, EpisodeType, MovieType, OpeningType, EndingType } from "../../types"
 
-type ShowFormat = 'TV' | 'OVA' | 'ONA' | 'MOVIE' | 'SPECIAL';
-type ShowSeason = 'SPRING' | 'SUMMER' | 'FALL' | 'WINTER';
-type ShowStatus = 'FINISHED' | 'ONGOING';
-
-interface Show {
-    title: string;
-    description: String;
-    format?: ShowFormat;
-    status?: ShowStatus;
-    season?: ShowSeason;
-    season_year?: number;
-    cover?: number[];
-}
-
-interface Episode {
-    id: string;
-    show_title: string;
-    title: string;
-    number: number;
-    is_filler: boolean;
-    thumbnail_file_name: string;
-    file_name: string;
-}
-
-interface Movie {
-    id: string;
-    show_title: string;
-    title: string;
-    number: number;
-    watch_after: number;
-    file_name: string;
-    thumbnail_file_name: string;
-}
-
-interface Opening {
-    id: string;
-    show_title: string;
-    title: string;
-    number: number;
-    file_name: string;
-    thumbnail_file_name: string;
-}
-
-interface Ending {
-    id: string;
-    show_title: string;
-    title: string;
-    number: number;
-    file_name: string;
-    thumbnail_file_name: string;
-}
-
-function Episode(props: { itf: Episode }) {
+function Episode(props: { itf: EpisodeType }) {
     const itf = props.itf;
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
@@ -83,7 +32,7 @@ function Episode(props: { itf: Episode }) {
     );
 }
 
-function Movie(props: { itf: Movie }) {
+function Movie(props: { itf: MovieType }) {
     const itf = props.itf;
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
@@ -107,7 +56,7 @@ function Movie(props: { itf: Movie }) {
     );
 }
 
-function Opening(props: { itf: Opening }) {
+function Opening(props: { itf: OpeningType }) {
     const itf = props.itf;
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
@@ -131,7 +80,7 @@ function Opening(props: { itf: Opening }) {
     );
 }
 
-function Ending(props: { itf: Ending }) {
+function Ending(props: { itf: EndingType }) {
     const itf = props.itf;
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
@@ -170,11 +119,11 @@ export function Show_page() {
 
     const encoded_title = encodeURIComponent(title);
     const [currentTab, setCurrentTab] = useState<Tabs>('Episodes');
-    const [show, setShow] = useState<Show>();
-    const [episodes, setEpisodes] = useState<Episode[]>([]);
-    const [movies, setMovies] = useState<Movie[]>([]);
-    const [openings, setOpenings] = useState<Opening[]>([]);
-    const [endings, setEndings] = useState<Ending[]>([]);
+    const [show, setShow] = useState<ShowType>();
+    const [episodes, setEpisodes] = useState<EpisodeType[]>([]);
+    const [movies, setMovies] = useState<MovieType[]>([]);
+    const [openings, setOpenings] = useState<OpeningType[]>([]);
+    const [endings, setEndings] = useState<EndingType[]>([]);
 
     useEffect(() => {
         axios

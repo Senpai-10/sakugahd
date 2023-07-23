@@ -2,23 +2,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Show from '../show';
 import './index.css';
-
-type ShowFormat = 'TV' | 'OVA' | 'ONA' | 'MOVIE' | 'SPECIAL';
-type ShowSeason = 'SPRING' | 'SUMMER' | 'FALL' | 'WINTER';
-type ShowStatus = 'FINISHED' | 'ONGOING';
-
-interface Show {
-    title: string;
-    description: String;
-    format?: ShowFormat;
-    status?: ShowStatus;
-    season?: ShowSeason;
-    season_year?: number;
-    cover: string;
-}
+import { ShowType } from "../../types"
 
 function Shows() {
-    const [shows, setShows] = useState<Show[]>([]);
+    const [shows, setShows] = useState<ShowType[]>([]);
 
     useEffect(() => {
         axios
