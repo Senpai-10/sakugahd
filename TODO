@@ -1,4 +1,21 @@
+[] add search bar to home page
+[] style shows/:title page
+[] move interface into separate file
+[] make show.cover NOT NULL and provide default cover image
+
 [] Move to sqlite3
 [] Parse episode title from the file name
 [] Stop storing show.image, show.banner in the database and only store the file_name
 [] Setup relationships between shows
+
+[] NOT IMPORTANT!: Add mangas
+
+Loader:
+    [] allow it to be callable from any were
+    [] reload only episodes or movies or openings or endings
+    [] refresh thumbnails
+
+config:
+    [] add config file
+    [] add option to config thumbnails cache default to anime_directory/.sakugahd/thumbnails
+    [] add option to config db_path default anime_directory/.sakugahd/sakugahd.db
