@@ -19,3 +19,4 @@ log = "0.4.19"
 env_logger = "0.10"
 common = { path="../common" }
 urlencoding = "2.1.2"
+sha256 = "1.2.2"

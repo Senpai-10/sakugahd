@@ -94,11 +94,15 @@ impl<'a> Loader<'a> {
             };
         }
 
-        let thumbnail_file = thumbnails_dir.join(format!(
-            "{}_{}.jpg",
+        let thumbnail_file_name = format!(
+            "{}_{}_{}",
             self.current_show,
-            file.path().file_stem().unwrap().to_str().unwrap()
-        ));
+            file.path().parent().unwrap().to_str().unwrap(),
+            file.file_name().to_str().unwrap()
+        );
+
+        let hash_file_name = sha256::digest(thumbnail_file_name);
+        let thumbnail_file = thumbnails_dir.join(format!("{}.jpg", hash_file_name));
 
         if thumbnail_file.exists() {
             info!(
