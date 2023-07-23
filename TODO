@@ -1,5 +1,4 @@
 [] add search bar to home page
-[] move interface into separate file
 [] server: provide default cover image
 
 [] Move to sqlite3
