@@ -100,7 +100,7 @@ function Movie(props: { itf: Movie }) {
                 className='thumbnail'
             >
                 <div className='overlay'>
-                    <p className='video-title'>{itf.title}</p>
+                    <p className='video-title'>{itf.number} - {itf.title}</p>
                 </div>
             </div>
         </Link>
@@ -124,7 +124,7 @@ function Opening(props: { itf: Opening }) {
                 className='thumbnail'
             >
                 <div className='overlay'>
-                    <p className='video-title'>{itf.title}</p>
+                    <p className='video-title'>{itf.number} - {itf.title}</p>
                 </div>
             </div>
         </Link>
@@ -148,7 +148,7 @@ function Ending(props: { itf: Ending }) {
                 className='thumbnail'
             >
                 <div className='overlay'>
-                    <p className='video-title'>{itf.title}</p>
+                    <p className='video-title'>{itf.number} - {itf.title}</p>
                 </div>
             </div>
         </Link>
