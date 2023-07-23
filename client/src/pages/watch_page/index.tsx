@@ -125,7 +125,7 @@ export function Watch_page() {
                             video: true,
                         })}
                     >
-                        Movie {video.number}
+                        Movie {video.number} - {video.title}
                     </div>
                 </Link>
             ));
@@ -141,7 +141,7 @@ export function Watch_page() {
                             video: true,
                         })}
                     >
-                        Opening {video.number}
+                        Opening {video.number} - {video.title}
                     </div>
                 </Link>
             ));
@@ -157,7 +157,7 @@ export function Watch_page() {
                             video: true,
                         })}
                     >
-                        Ending {video.number}
+                        Ending {video.number} - {video.title}
                     </div>
                 </Link>
             ));
