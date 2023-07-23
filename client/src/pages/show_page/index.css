@@ -1,12 +1,47 @@
-.thumbnail {
-    width: 256px;
-    height: 128px;
-}
-
 .active-tab {
     display: block;
 }
 
 .inactive-tab {
     display: none;
+}
+
+.videos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.thumbnail {
+    width: 256px;
+    height: 128px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+}
+
+.filler-video {
+    outline: 2px solid var(--filler);
+}
+
+.video-title {
+    font-size: 16px;
+    font-weight: bold;
+    user-select: none;
+    position: absolute;
+    bottom: 0px;
+    left: 15px;
+}
+
+.overlay {
+    width: 256px;
+    height: 128px;
+    border-radius: 3px;
+    background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.8) 30%,
+        rgba(0, 0, 0, 0.2) 100%
+    );
 }

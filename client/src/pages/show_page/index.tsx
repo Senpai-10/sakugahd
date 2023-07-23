@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import classNames from 'classnames';
 import axios from 'axios';
 import './index.css';
 
@@ -60,13 +61,24 @@ function Episode(props: { itf: Episode }) {
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
     return (
-        <Link to={`/shows/${encodeURIComponent(itf.show_title)}/watch/episodes/${itf.number}`}>
-            <img loading="lazy" className='thumbnail' src={`/api/thumbnail/${image}`} />
-            <p>title: {itf.title}</p>
-            <p>show title: {itf.show_title}</p>
-            <p>number: {itf.number}</p>
-            <p>is filler: {itf.is_filler}</p>
-            <p>file name: {itf.file_name}</p>
+        <Link
+            to={`/shows/${encodeURIComponent(itf.show_title)}/watch/episodes/${
+                itf.number
+            }`}
+        >
+            <div
+                style={{
+                    backgroundImage: `url(/api/thumbnail/${image})`,
+                }}
+                className={classNames({
+                    thumbnail: true,
+                    "filler-video": itf.is_filler,
+                })}
+            >
+                <div className='overlay'>
+                    <p className='video-title'>{itf.title}</p>
+                </div>
+            </div>
         </Link>
     );
 }
@@ -76,13 +88,21 @@ function Movie(props: { itf: Movie }) {
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
     return (
-        <Link to={`/shows/${encodeURIComponent(itf.show_title)}/watch/movies/${itf.number}`}>
-            <img className='thumbnail' src={`/api/thumbnail/${image}`} />
-            <p>title: {itf.title}</p>
-            <p>show title: {itf.show_title}</p>
-            <p>number: {itf.number}</p>
-            <p>watch after: {itf.watch_after}</p>
-            <p>file name: {itf.file_name}</p>
+        <Link
+            to={`/shows/${encodeURIComponent(itf.show_title)}/watch/movies/${
+                itf.number
+            }`}
+        >
+            <div
+                style={{
+                    backgroundImage: `url(/api/thumbnail/${image})`,
+                }}
+                className='thumbnail'
+            >
+                <div className='overlay'>
+                    <p className='video-title'>{itf.title}</p>
+                </div>
+            </div>
         </Link>
     );
 }
@@ -92,12 +112,21 @@ function Opening(props: { itf: Opening }) {
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
     return (
-        <Link to={`/shows/${encodeURIComponent(itf.show_title)}/watch/openings/${itf.number}`}>
-            <img className='thumbnail' src={`/api/thumbnail/${image}`} />
-            <p>title: {itf.title}</p>
-            <p>show title: {itf.show_title}</p>
-            <p>number: {itf.number}</p>
-            <p>file name: {itf.file_name}</p>
+        <Link
+            to={`/shows/${encodeURIComponent(itf.show_title)}/watch/openings/${
+                itf.number
+            }`}
+        >
+            <div
+                style={{
+                    backgroundImage: `url(/api/thumbnail/${image})`,
+                }}
+                className='thumbnail'
+            >
+                <div className='overlay'>
+                    <p className='video-title'>{itf.title}</p>
+                </div>
+            </div>
         </Link>
     );
 }
@@ -107,12 +136,21 @@ function Ending(props: { itf: Ending }) {
     const image = encodeURIComponent(itf.thumbnail_file_name);
 
     return (
-        <Link to={`/shows/${encodeURIComponent(itf.show_title)}/watch/endings/${itf.number}`}>
-            <img className='thumbnail' src={`/api/thumbnail/${image}`} />
-            <p>title: {itf.title}</p>
-            <p>show title: {itf.show_title}</p>
-            <p>number: {itf.number}</p>
-            <p>file name: {itf.file_name}</p>
+        <Link
+            to={`/shows/${encodeURIComponent(itf.show_title)}/watch/endings/${
+                itf.number
+            }`}
+        >
+            <div
+                style={{
+                    backgroundImage: `url(/api/thumbnail/${image})`,
+                }}
+                className='thumbnail'
+            >
+                <div className='overlay'>
+                    <p className='video-title'>{itf.title}</p>
+                </div>
+            </div>
         </Link>
     );
 }
@@ -174,9 +212,11 @@ export function Show_page() {
                 }
             >
                 <h1>Episodes</h1>
-                {episodes.map((episode) => (
-                    <Episode key={episode.id} itf={episode} />
-                ))}
+                <div className='videos'>
+                    {episodes.map((episode) => (
+                        <Episode key={episode.id} itf={episode} />
+                    ))}
+                </div>
             </div>
             <div
                 className={
@@ -184,9 +224,11 @@ export function Show_page() {
                 }
             >
                 <h1>Movies</h1>
-                {movies.map((movie) => (
-                    <Movie itf={movie} />
-                ))}
+                <div className='videos'>
+                    {movies.map((movie) => (
+                        <Movie itf={movie} />
+                    ))}
+                </div>
             </div>
             <div
                 className={
@@ -194,9 +236,11 @@ export function Show_page() {
                 }
             >
                 <h1>Openings</h1>
-                {openings.map((opening) => (
-                    <Opening itf={opening} />
-                ))}
+                <div className='videos'>
+                    {openings.map((opening) => (
+                        <Opening itf={opening} />
+                    ))}
+                </div>
             </div>
             <div
                 className={
@@ -204,9 +248,11 @@ export function Show_page() {
                 }
             >
                 <h1>Endings</h1>
-                {endings.map((ending) => (
-                    <Ending itf={ending} />
-                ))}
+                <div className='videos'>
+                    {endings.map((ending) => (
+                        <Ending itf={ending} />
+                    ))}
+                </div>
             </div>
         </>
     ) : (
