@@ -54,7 +54,7 @@ export function Watch_page() {
     const [openings, setOpenings] = useState<Opening[]>([]);
     const [endings, setEndings] = useState<Ending[]>([]);
     const inputRef = useRef(null);
-    const [searchQuery, setSearchQuery] = useState(0);
+    const [searchQuery, setSearchQuery] = useState("");
     const [hideFillers, setHideFillers] = useState(false);
 
     const filteredEpisodes = useMemo(() => {
@@ -63,33 +63,25 @@ export function Watch_page() {
                 return false;
             }
 
-            if (searchQuery == 0) return true;
-
-            return video.number == searchQuery;
+            return video.title.toLowerCase().includes(searchQuery);
         });
     }, [episodes, searchQuery, hideFillers]);
 
     const filteredMovies = useMemo(() => {
         return movies.filter((video) => {
-            if (searchQuery == 0) return true;
-
-            return video.number == searchQuery;
+            return video.title.toLowerCase().includes(searchQuery) || video.number.toString().includes(searchQuery);
         });
     }, [movies, searchQuery]);
 
     const filteredOpenings = useMemo(() => {
         return openings.filter((video) => {
-            if (searchQuery == 0) return true;
-
-            return video.number == searchQuery;
+            return video.title.toLowerCase().includes(searchQuery) || video.number.toString().includes(searchQuery);
         });
     }, [openings, searchQuery]);
 
     const filteredEndings = useMemo(() => {
         return endings.filter((video) => {
-            if (searchQuery == 0) return true;
-
-            return video.number == searchQuery;
+            return video.title.toLowerCase().includes(searchQuery) || video.number.toString().includes(searchQuery);
         });
     }, [endings, searchQuery]);
 
@@ -215,9 +207,9 @@ export function Watch_page() {
             <div className='videos-list'>
                 <input
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(Number(e.target.value))}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     ref={inputRef}
-                    type='number'
+                    type='text'
                     placeholder='Search'
                 />
                 <label>Hide Fillers</label>
