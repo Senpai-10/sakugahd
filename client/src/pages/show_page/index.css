@@ -45,3 +45,14 @@
         rgba(0, 0, 0, 0.2) 100%
     );
 }
+
+.tab {
+    font-size: 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.active-tab-button {
+    border-bottom: 1px solid var(--primary);
+}

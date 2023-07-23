@@ -72,7 +72,7 @@ function Episode(props: { itf: Episode }) {
                 }}
                 className={classNames({
                     thumbnail: true,
-                    "filler-video": itf.is_filler,
+                    'filler-video': itf.is_filler,
                 })}
             >
                 <div className='overlay'>
@@ -202,57 +202,101 @@ export function Show_page() {
     return show ? (
         <>
             show: {show.title}
-            <button onClick={() => setCurrentTab('Episodes')}>Episodes</button>
-            <button onClick={() => setCurrentTab('Movies')}>Movies</button>
-            <button onClick={() => setCurrentTab('Openings')}>Openings</button>
-            <button onClick={() => setCurrentTab('Endings')}>Endings</button>
+            <button
+                className={classNames({
+                    tab: true,
+                    'active-tab-button': currentTab == 'Episodes',
+                })}
+                onClick={() => setCurrentTab('Episodes')}
+            >
+                Episodes
+            </button>
+            <button
+                className={classNames({
+                    tab: true,
+                    'active-tab-button': currentTab == 'Movies',
+                })}
+                onClick={() => setCurrentTab('Movies')}
+            >
+                Movies
+            </button>
+            <button
+                className={classNames({
+                    tab: true,
+                    'active-tab-button': currentTab == 'Openings',
+                })}
+                onClick={() => setCurrentTab('Openings')}
+            >
+                Openings
+            </button>
+            <button
+                className={classNames({
+                    tab: true,
+                    'active-tab-button': currentTab == 'Endings',
+                })}
+                onClick={() => setCurrentTab('Endings')}
+            >
+                Endings
+            </button>
             <div
                 className={
                     currentTab == 'Episodes' ? 'active-tab' : 'inactive-tab'
                 }
             >
-                <h1>Episodes</h1>
-                <div className='videos'>
-                    {episodes.map((episode) => (
-                        <Episode key={episode.id} itf={episode} />
-                    ))}
-                </div>
+                {episodes.length == 0 ? (
+                    <p>nothing found</p>
+                ) : (
+                    <div className='videos'>
+                        {episodes.map((episode) => (
+                            <Episode key={episode.id} itf={episode} />
+                        ))}
+                    </div>
+                )}
             </div>
             <div
                 className={
                     currentTab == 'Movies' ? 'active-tab' : 'inactive-tab'
                 }
             >
-                <h1>Movies</h1>
-                <div className='videos'>
-                    {movies.map((movie) => (
-                        <Movie itf={movie} />
-                    ))}
-                </div>
+                {movies.length == 0 ? (
+                    <p>nothing found</p>
+                ) : (
+                    <div className='videos'>
+                        {movies.map((movie) => (
+                            <Movie itf={movie} />
+                        ))}
+                    </div>
+                )}
             </div>
             <div
                 className={
                     currentTab == 'Openings' ? 'active-tab' : 'inactive-tab'
                 }
             >
-                <h1>Openings</h1>
-                <div className='videos'>
-                    {openings.map((opening) => (
-                        <Opening itf={opening} />
-                    ))}
-                </div>
+                {openings.length == 0 ? (
+                    <p>nothing found</p>
+                ) : (
+                    <div className='videos'>
+                        {openings.map((opening) => (
+                            <Opening itf={opening} />
+                        ))}
+                    </div>
+                )}
             </div>
             <div
                 className={
                     currentTab == 'Endings' ? 'active-tab' : 'inactive-tab'
                 }
             >
-                <h1>Endings</h1>
-                <div className='videos'>
-                    {endings.map((ending) => (
-                        <Ending itf={ending} />
-                    ))}
-                </div>
+                {endings.length == 0 ? (
+                    <p>nothing found</p>
+                ) : (
+                    <div className='videos'>
+                        {endings.map((ending) => (
+                            <Ending itf={ending} />
+                        ))}
+                    </div>
+                )}
             </div>
         </>
     ) : (
