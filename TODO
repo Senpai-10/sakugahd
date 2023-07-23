@@ -1,5 +1,4 @@
 [] add search bar to home page
-[] style shows/:title page
 [] move interface into separate file
 [] make show.cover NOT NULL and provide default cover image
 
