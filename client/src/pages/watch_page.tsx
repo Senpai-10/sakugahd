@@ -2,8 +2,8 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
-import './index.css';
-import { EpisodeType, MovieType, OpeningType, EndingType } from "../../types"
+import '/public/css/pages/watch.css';
+import { EpisodeType, MovieType, OpeningType, EndingType } from "../types"
 
 export function Watch_page() {
     const { title, type, number } = useParams();

@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
-import Anime from '../anime';
-import './index.css';
-import { AnimeType } from '../../types';
+import Anime from './anime';
+import '/public/css/components/animeList.css';
+import { AnimeType } from '../types';
 
 function AnimeList() {
     const [anime, setAnime] = useState<AnimeType[]>([]);

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './index.css';
+import '/public/css/components/anime.css';
 
 interface Props {
     title: string;
@@ -9,13 +9,13 @@ interface Props {
 function Anime(props: Props) {
     let imageUrl = () => {
         if (props.cover == undefined) {
-            return "/default_cover.svg"
+            return '/default_cover.svg';
         }
 
-        return `/api/anime/${encodeURI(
-                        props.title
-                    )}/cover/${encodeURI(props.cover)}`
-    }
+        return `/api/anime/${encodeURI(props.title)}/cover/${encodeURI(
+            props.cover
+        )}`;
+    };
 
     return (
         <Link to={`/anime/${props.title}`}>

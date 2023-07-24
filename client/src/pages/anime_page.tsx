@@ -2,8 +2,8 @@ import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
-import './index.css';
-import { AnimeType, EpisodeType, MovieType, OpeningType, EndingType } from "../../types"
+import '/public/css/pages/anime.css';
+import { AnimeType, EpisodeType, MovieType, OpeningType, EndingType } from "../types"
 
 function Episode(props: { itf: EpisodeType }) {
     const itf = props.itf;
