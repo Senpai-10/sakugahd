@@ -150,7 +150,14 @@ export function Anime_page() {
 
     return anime ? (
         <>
-            anime: {anime.title}
+            <div className="anime-description">
+                <img src={`/api/anime/${encodeURI(anime.title)}/cover/${encodeURI(anime.cover)}`} />
+
+                <div>
+                    <h2>{anime.title}</h2>
+                    <p>{anime.description}</p>
+                </div>
+            </div>
             <button
                 className={classNames({
                     tab: true,

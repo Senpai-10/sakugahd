@@ -56,3 +56,31 @@
 .active-tab-button {
     border-bottom: 3px solid var(--primary);
 }
+
+.anime-description {
+    background-color: #00000025;
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+}
+
+.anime-description img {
+    width: 240px;
+    height: 340px;
+    border-radius: 10px;
+}
+
+.anime-description div h2 {
+    font-weight: bold;
+}
+
+.anime-description div p {
+    /* width: 800px; */
+    color: #ffffff60;
+}
+
+@media only screen and (max-width: 600px) {
+    .anime-description {
+        flex-wrap: wrap;
+    }
+}
