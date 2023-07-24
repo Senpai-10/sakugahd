@@ -8,7 +8,7 @@ use diesel::prelude::*;
 use diesel::QueryDsl;
 use rocket_seek_stream::SeekStream;
 
-#[get("/shows/<title>/episodes/<number>")]
+#[get("/anime/<title>/episodes/<number>")]
 pub fn video_episodes<'a>(title: String, number: i32) -> std::io::Result<SeekStream<'a>> {
     let mut conn = establish_connection();
     let anime_directory = std::env::var("ANIME_DIRECTORY").unwrap();
@@ -16,7 +16,7 @@ pub fn video_episodes<'a>(title: String, number: i32) -> std::io::Result<SeekStr
     let mut file_path = String::new();
 
     if let Ok(v) = schema::episodes::dsl::episodes
-        .filter(schema::episodes::show_title.eq(&title))
+        .filter(schema::episodes::anime_title.eq(&title))
         .filter(schema::episodes::number.eq(&number))
         .first::<Episode>(&mut conn)
     {
@@ -35,7 +35,7 @@ pub fn video_episodes<'a>(title: String, number: i32) -> std::io::Result<SeekStr
     SeekStream::from_path(file_path)
 }
 
-#[get("/shows/<title>/movies/<number>")]
+#[get("/anime/<title>/movies/<number>")]
 pub fn video_movies<'a>(title: String, number: i32) -> std::io::Result<SeekStream<'a>> {
     let mut conn = establish_connection();
     let anime_directory = std::env::var("ANIME_DIRECTORY").unwrap();
@@ -43,7 +43,7 @@ pub fn video_movies<'a>(title: String, number: i32) -> std::io::Result<SeekStrea
     let mut file_path = String::new();
 
     if let Ok(v) = schema::movies::dsl::movies
-        .filter(schema::movies::show_title.eq(&title))
+        .filter(schema::movies::anime_title.eq(&title))
         .filter(schema::movies::number.eq(&number))
         .first::<Movie>(&mut conn)
     {
@@ -62,7 +62,7 @@ pub fn video_movies<'a>(title: String, number: i32) -> std::io::Result<SeekStrea
     SeekStream::from_path(file_path)
 }
 
-#[get("/shows/<title>/openings/<number>")]
+#[get("/anime/<title>/openings/<number>")]
 pub fn video_openings<'a>(title: String, number: i32) -> std::io::Result<SeekStream<'a>> {
     let mut conn = establish_connection();
     let anime_directory = std::env::var("ANIME_DIRECTORY").unwrap();
@@ -70,7 +70,7 @@ pub fn video_openings<'a>(title: String, number: i32) -> std::io::Result<SeekStr
     let mut file_path = String::new();
 
     if let Ok(v) = schema::openings::dsl::openings
-        .filter(schema::openings::show_title.eq(&title))
+        .filter(schema::openings::anime_title.eq(&title))
         .filter(schema::openings::number.eq(&number))
         .first::<Opening>(&mut conn)
     {
@@ -89,7 +89,7 @@ pub fn video_openings<'a>(title: String, number: i32) -> std::io::Result<SeekStr
     SeekStream::from_path(file_path)
 }
 
-#[get("/shows/<title>/endings/<number>")]
+#[get("/anime/<title>/endings/<number>")]
 pub fn video_endings<'a>(title: String, number: i32) -> std::io::Result<SeekStream<'a>> {
     let mut conn = establish_connection();
     let anime_directory = std::env::var("ANIME_DIRECTORY").unwrap();
@@ -97,7 +97,7 @@ pub fn video_endings<'a>(title: String, number: i32) -> std::io::Result<SeekStre
     let mut file_path = String::new();
 
     if let Ok(v) = schema::endings::dsl::endings
-        .filter(schema::endings::show_title.eq(&title))
+        .filter(schema::endings::anime_title.eq(&title))
         .filter(schema::endings::number.eq(&number))
         .first::<Ending>(&mut conn)
     {

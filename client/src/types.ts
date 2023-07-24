@@ -1,20 +1,20 @@
-export type ShowFormat = 'TV' | 'OVA' | 'ONA' | 'MOVIE' | 'SPECIAL';
-export type ShowSeason = 'SPRING' | 'SUMMER' | 'FALL' | 'WINTER';
-export type ShowStatus = 'FINISHED' | 'ONGOING';
+export type AnimeFormat = 'TV' | 'OVA' | 'ONA' | 'MOVIE' | 'SPECIAL';
+export type AnimeSeason = 'SPRING' | 'SUMMER' | 'FALL' | 'WINTER';
+export type AnimeStatus = 'FINISHED' | 'ONGOING';
 
-export interface ShowType {
+export interface AnimeType {
     title: string;
     description: String;
-    format?: ShowFormat;
-    status?: ShowStatus;
-    season?: ShowSeason;
+    format?: AnimeFormat;
+    status?: AnimeStatus;
+    season?: AnimeSeason;
     season_year?: number;
     cover: string;
 }
 
 export interface EpisodeType {
     id: string;
-    show_title: string;
+    anime_title: string;
     title: string;
     number: number;
     is_filler: boolean;
@@ -24,7 +24,7 @@ export interface EpisodeType {
 
 export interface MovieType {
     id: string;
-    show_title: string;
+    anime_title: string;
     title: string;
     number: number;
     watch_after: number;
@@ -34,7 +34,7 @@ export interface MovieType {
 
 export interface OpeningType {
     id: string;
-    show_title: string;
+    anime_title: string;
     title: string;
     number: number;
     file_name: string;
@@ -43,7 +43,7 @@ export interface OpeningType {
 
 export interface EndingType {
     id: string;
-    show_title: string;
+    anime_title: string;
     title: string;
     number: number;
     file_name: string;

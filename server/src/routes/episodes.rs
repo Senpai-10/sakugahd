@@ -4,13 +4,13 @@ use common::schema::episodes::dsl;
 use diesel::prelude::*;
 use rocket::serde::json::Json;
 
-#[get("/shows/<title>/episodes")]
+#[get("/anime/<title>/episodes")]
 pub fn episodes(title: String) -> Json<Vec<Episode>> {
     let mut conn = establish_connection();
 
     Json(
         dsl::episodes
-            .filter(dsl::show_title.eq(title))
+            .filter(dsl::anime_title.eq(title))
             .order(dsl::number)
             .load(&mut conn)
             .expect("Can't load episodes"),

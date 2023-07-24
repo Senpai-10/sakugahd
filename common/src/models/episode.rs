@@ -1,4 +1,4 @@
-use crate::models::show::Show;
+use crate::models::anime::Anime;
 use crate::schema::episodes;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 #[diesel(table_name = episodes)]
 pub struct NewEpisode {
     pub id: String,
-    pub show_title: String,
+    pub anime_title: String,
     pub title: String,
     pub number: i32,
     pub is_filler: bool,
@@ -18,10 +18,10 @@ pub struct NewEpisode {
 #[derive(
     Queryable, Selectable, Identifiable, Associations, Debug, PartialEq, Serialize, Deserialize,
 )]
-#[diesel(belongs_to(Show, foreign_key = show_title))]
+#[diesel(belongs_to(Anime, foreign_key = anime_title))]
 pub struct Episode {
     pub id: String,
-    pub show_title: String,
+    pub anime_title: String,
     pub title: String,
     pub number: i32,
     pub is_filler: bool,
