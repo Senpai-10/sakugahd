@@ -1,11 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
 import Anime from '../anime';
 import './index.css';
-import { AnimeType } from "../../types"
+import { AnimeType } from '../../types';
 
 function AnimeList() {
     const [anime, setAnime] = useState<AnimeType[]>([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const inputRef = useRef(null);
+
+    const filteredAnimeList = useMemo(() => {
+        return anime.filter((a) => {
+            return (
+                a.title.toLowerCase().includes(searchQuery) ||
+                a.description.toLowerCase().includes(searchQuery)
+            );
+        });
+    }, [anime, searchQuery]);
 
     useEffect(() => {
         axios
@@ -15,11 +26,24 @@ function AnimeList() {
     }, []);
 
     return (
-        <div className='anime-list'>
-            {anime.map((anime_) => (
-                <Anime key={anime_.title} title={anime_.title} cover={anime_.cover} />
-            ))}
-        </div>
+        <>
+            <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                ref={inputRef}
+                type='text'
+                placeholder='Search'
+            />
+            <div className='anime-list'>
+                {filteredAnimeList.map((anime_) => (
+                    <Anime
+                        key={anime_.title}
+                        title={anime_.title}
+                        cover={anime_.cover}
+                    />
+                ))}
+            </div>
+        </>
     );
 }
 
