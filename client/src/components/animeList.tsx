@@ -27,13 +27,16 @@ function AnimeList() {
 
     return (
         <>
-            <input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                ref={inputRef}
-                type='text'
-                placeholder='Search'
-            />
+            <div className='topnav'>
+                <input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    ref={inputRef}
+                    type='text'
+                    placeholder='Search'
+                    className='anime-searchbar'
+                />
+            </div>
             <div className='anime-list'>
                 {filteredAnimeList.map((anime_) => (
                     <Anime
