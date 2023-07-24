@@ -50,7 +50,7 @@ pub struct NewAnime {
     Debug, Queryable, AsChangeset, Identifiable, Selectable, PartialEq, Serialize, Deserialize,
 )]
 #[diesel(primary_key(title))]
-#[table_name = "anime"]
+#[diesel(table_name = anime)]
 pub struct Anime {
     pub title: String,
     pub description: String,

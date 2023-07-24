@@ -6,24 +6,24 @@ interface Props {
     cover: string;
 }
 
-function Show(props: Props) {
+function Anime(props: Props) {
     return (
-        <Link to={`/shows/${props.title}`}>
+        <Link to={`/anime/${props.title}`}>
             <div
-                className='show'
+                className='anime'
                 style={{
-                    backgroundImage: `url(/api/shows/${encodeURI(
+                    backgroundImage: `url(/api/anime/${encodeURI(
                         props.title
                     )}/cover/${encodeURI(props.cover)})`,
                 }}
                 key={props.title}
             >
-                <div className='show-overlay'>
-                    <p className='show-title'>{props.title}</p>
+                <div className='anime-overlay'>
+                    <p className='anime-title'>{props.title}</p>
                 </div>
             </div>
         </Link>
     );
 }
 
-export default Show;
+export default Anime;

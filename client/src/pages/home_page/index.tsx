@@ -1,5 +1,5 @@
-import Shows from '../../components/shows';
+import AnimeList from '../../components/animeList';
 
 export function Home_page() {
-    return <Shows />;
+    return <AnimeList />;
 }

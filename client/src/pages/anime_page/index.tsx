@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
 import './index.css';
-import { ShowType, EpisodeType, MovieType, OpeningType, EndingType } from "../../types"
+import { AnimeType, EpisodeType, MovieType, OpeningType, EndingType } from "../../types"
 
 function Episode(props: { itf: EpisodeType }) {
     const itf = props.itf;
@@ -11,7 +11,7 @@ function Episode(props: { itf: EpisodeType }) {
 
     return (
         <Link
-            to={`/shows/${encodeURIComponent(itf.show_title)}/watch/episodes/${
+            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/episodes/${
                 itf.number
             }`}
         >
@@ -38,7 +38,7 @@ function Movie(props: { itf: MovieType }) {
 
     return (
         <Link
-            to={`/shows/${encodeURIComponent(itf.show_title)}/watch/movies/${
+            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/movies/${
                 itf.number
             }`}
         >
@@ -62,7 +62,7 @@ function Opening(props: { itf: OpeningType }) {
 
     return (
         <Link
-            to={`/shows/${encodeURIComponent(itf.show_title)}/watch/openings/${
+            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/openings/${
                 itf.number
             }`}
         >
@@ -86,7 +86,7 @@ function Ending(props: { itf: EndingType }) {
 
     return (
         <Link
-            to={`/shows/${encodeURIComponent(itf.show_title)}/watch/endings/${
+            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/endings/${
                 itf.number
             }`}
         >
@@ -106,7 +106,7 @@ function Ending(props: { itf: EndingType }) {
 
 type Tabs = 'Episodes' | 'Movies' | 'Openings' | 'Endings';
 
-export function Show_page() {
+export function Anime_page() {
     const { title } = useParams();
 
     if (title == undefined) {
@@ -119,7 +119,7 @@ export function Show_page() {
 
     const encoded_title = encodeURIComponent(title);
     const [currentTab, setCurrentTab] = useState<Tabs>('Episodes');
-    const [show, setShow] = useState<ShowType>();
+    const [anime, setAnime] = useState<AnimeType>();
     const [episodes, setEpisodes] = useState<EpisodeType[]>([]);
     const [movies, setMovies] = useState<MovieType[]>([]);
     const [openings, setOpenings] = useState<OpeningType[]>([]);
@@ -127,30 +127,30 @@ export function Show_page() {
 
     useEffect(() => {
         axios
-            .get(`/api/shows/${encoded_title}`)
+            .get(`/api/anime/${encoded_title}`)
             .then((res) => res.data)
-            .then((data) => setShow(data));
+            .then((data) => setAnime(data));
         axios
-            .get(`/api/shows/${encoded_title}/episodes`)
+            .get(`/api/anime/${encoded_title}/episodes`)
             .then((res) => res.data)
             .then((data) => setEpisodes(data));
         axios
-            .get(`/api/shows/${encoded_title}/movies`)
+            .get(`/api/anime/${encoded_title}/movies`)
             .then((res) => res.data)
             .then((data) => setMovies(data));
         axios
-            .get(`/api/shows/${encoded_title}/openings`)
+            .get(`/api/anime/${encoded_title}/openings`)
             .then((res) => res.data)
             .then((data) => setOpenings(data));
         axios
-            .get(`/api/shows/${encoded_title}/endings`)
+            .get(`/api/anime/${encoded_title}/endings`)
             .then((res) => res.data)
             .then((data) => setEndings(data));
     }, []);
 
-    return show ? (
+    return anime ? (
         <>
-            show: {show.title}
+            anime: {anime.title}
             <button
                 className={classNames({
                     tab: true,

@@ -62,7 +62,7 @@ export function Watch_page() {
             return filteredEpisodes.map((video) => (
                 <Link
                     reloadDocument
-                    to={`/shows/${title}/watch/episodes/${video.number}`}
+                    to={`/anime/${title}/watch/episodes/${video.number}`}
                 >
                     <div
                         className={classNames({
@@ -80,7 +80,7 @@ export function Watch_page() {
             return filteredMovies.map((video) => (
                 <Link
                     reloadDocument
-                    to={`/shows/${title}/watch/movies/${video.number}`}
+                    to={`/anime/${title}/watch/movies/${video.number}`}
                 >
                     <div
                         className={classNames({
@@ -96,7 +96,7 @@ export function Watch_page() {
             return filteredOpenings.map((video) => (
                 <Link
                     reloadDocument
-                    to={`/shows/${title}/watch/openings/${video.number}`}
+                    to={`/anime/${title}/watch/openings/${video.number}`}
                 >
                     <div
                         className={classNames({
@@ -112,7 +112,7 @@ export function Watch_page() {
             return filteredEndings.map((video) => (
                 <Link
                     reloadDocument
-                    to={`/shows/${title}/watch/endings/${video.number}`}
+                    to={`/anime/${title}/watch/endings/${video.number}`}
                 >
                     <div
                         className={classNames({
@@ -130,22 +130,22 @@ export function Watch_page() {
     useEffect(() => {
         if (type == 'episodes') {
             axios
-                .get(`/api/shows/${encoded_title}/episodes`)
+                .get(`/api/anime/${encoded_title}/episodes`)
                 .then((res) => res.data)
                 .then((data) => setEpisodes(data));
         } else if (type == 'movies') {
             axios
-                .get(`/api/shows/${encoded_title}/movies`)
+                .get(`/api/anime/${encoded_title}/movies`)
                 .then((res) => res.data)
                 .then((data) => setMovies(data));
         } else if (type == 'openings') {
             axios
-                .get(`/api/shows/${encoded_title}/openings`)
+                .get(`/api/anime/${encoded_title}/openings`)
                 .then((res) => res.data)
                 .then((data) => setOpenings(data));
         } else if (type == 'endings') {
             axios
-                .get(`/api/shows/${encoded_title}/endings`)
+                .get(`/api/anime/${encoded_title}/endings`)
                 .then((res) => res.data)
                 .then((data) => setEndings(data));
         }
@@ -163,7 +163,7 @@ export function Watch_page() {
         <>
             <video width='650' preload='metadata' controls>
                 <source
-                    src={`/api/shows/${title}/${type}/${number}`}
+                    src={`/api/anime/${title}/${type}/${number}`}
                     type='video/mp4'
                 />
             </video>
