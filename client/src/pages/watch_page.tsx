@@ -161,7 +161,7 @@ export function Watch_page() {
 
     return (
         <>
-            <video width='650' preload='metadata' controls>
+            <video onLoadedData={(e) => e.currentTarget.volume = 0.25} width='650' preload='metadata' controls>
                 <source
                     src={`/api/anime/${title}/${type}/${number}`}
                     type='video/mp4'
