@@ -43,7 +43,7 @@ pub struct NewAnime {
     pub status: Option<AnimeStatus>,
     pub season: Option<AnimeSeason>,
     pub season_year: Option<i32>,
-    pub cover: String,
+    pub cover: Option<String>,
 }
 
 #[derive(
@@ -58,5 +58,5 @@ pub struct Anime {
     pub status: Option<AnimeStatus>,
     pub season: Option<AnimeSeason>,
     pub season_year: Option<i32>,
-    pub cover: String,
+    pub cover: Option<String>,
 }

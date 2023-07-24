@@ -28,7 +28,7 @@ diesel::table! {
         status -> Nullable<AnimeStatus>,
         season -> Nullable<AnimeSeason>,
         season_year -> Nullable<Int4>,
-        cover -> Varchar,
+        cover -> Nullable<Varchar>,
     }
 }
 

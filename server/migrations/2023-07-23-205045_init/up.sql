@@ -9,7 +9,7 @@ CREATE TABLE anime (
     status anime_status,
     season anime_season,
     season_year INT,
-    cover VARCHAR NOT NULL
+    cover VARCHAR
 );
 
 CREATE TABLE studios (

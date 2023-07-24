@@ -7,14 +7,22 @@ interface Props {
 }
 
 function Anime(props: Props) {
+    let imageUrl = () => {
+        if (props.cover == undefined) {
+            return "/default_cover.svg"
+        }
+
+        return `/api/anime/${encodeURI(
+                        props.title
+                    )}/cover/${encodeURI(props.cover)}`
+    }
+
     return (
         <Link to={`/anime/${props.title}`}>
             <div
                 className='anime'
                 style={{
-                    backgroundImage: `url(/api/anime/${encodeURI(
-                        props.title
-                    )}/cover/${encodeURI(props.cover)})`,
+                    backgroundImage: `url(${imageUrl()})`,
                 }}
                 key={props.title}
             >

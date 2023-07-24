@@ -213,18 +213,19 @@ impl<'a> Loader<'a> {
             if !anime_exists {
                 let cover = anime_dir.path().join("cover.png");
 
-                // TODO: check if cover exists if not add default cover image
-                //  https://github.com/pyrossh/rust-embed
-
-                let new_anime = NewAnime {
+                let mut new_anime = NewAnime {
                     title: self.current_anime.clone(),
                     description: String::from("no description."),
                     format: None,
                     status: None,
                     season: None,
                     season_year: None,
-                    cover: cover.file_name().unwrap().to_str().unwrap().into(),
+                    cover: None,
                 };
+
+                if cover.exists() {
+                    new_anime.cover = Some(cover.file_name().unwrap().to_str().unwrap().into());
+                }
 
                 self.lists.anime.push(new_anime);
             }
