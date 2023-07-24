@@ -1,9 +1,9 @@
+use common::models::anime::NewAnime;
 use common::models::ending::NewEnding;
 use common::models::episode::NewEpisode;
 use common::models::movie::NewMovie;
 use common::models::opening::NewOpening;
-use common::models::show::NewShow;
-use common::schema::{endings, episodes, movies, openings, shows};
+use common::schema::{anime, endings, episodes, movies, openings};
 use diesel::dsl::exists;
 use diesel::dsl::select;
 use diesel::prelude::*;
@@ -20,7 +20,7 @@ const OPENINGS_DIR_NAME: &str = "openings";
 const ENDINGS_DIR_NAME: &str = "endings";
 
 pub struct List {
-    shows: Vec<NewShow>,
+    anime: Vec<NewAnime>,
     openings: Vec<NewOpening>,
     endings: Vec<NewEnding>,
     episodes: Vec<NewEpisode>,
@@ -31,7 +31,7 @@ pub struct Loader<'a> {
     ffmpeg_binary: String,
     anime_directory: &'a Path,
     db_connection: &'a mut PgConnection,
-    current_show: String,
+    current_anime: String,
     lists: List,
 }
 
@@ -64,9 +64,9 @@ impl<'a> Loader<'a> {
             ffmpeg_binary,
             anime_directory,
             db_connection,
-            current_show: String::new(),
+            current_anime: String::new(),
             lists: List {
-                shows: Vec::new(),
+                anime: Vec::new(),
                 openings: Vec::new(),
                 endings: Vec::new(),
                 episodes: Vec::new(),
@@ -96,7 +96,7 @@ impl<'a> Loader<'a> {
 
         let thumbnail_file_name = format!(
             "{}_{}_{}",
-            self.current_show,
+            self.current_anime,
             file.path().parent().unwrap().to_str().unwrap(),
             file.file_name().to_str().unwrap()
         );
@@ -107,13 +107,13 @@ impl<'a> Loader<'a> {
         if thumbnail_file.exists() {
             info!(
                 "Thumbnail Found for ({}) {}!",
-                self.current_show,
+                self.current_anime,
                 file.file_name().to_str().unwrap()
             )
         } else {
             info!(
                 "Generating thumbnail for ({}) '{}'",
-                self.current_show,
+                self.current_anime,
                 file.file_name().to_str().unwrap()
             );
 
@@ -142,10 +142,10 @@ impl<'a> Loader<'a> {
     }
 
     fn insert_into_database(&mut self) {
-        diesel::insert_into(shows::dsl::shows)
-            .values(&self.lists.shows)
+        diesel::insert_into(anime::dsl::anime)
+            .values(&self.lists.anime)
             .execute(self.db_connection)
-            .expect("Error saving shows");
+            .expect("Error saving anime");
 
         diesel::insert_into(openings::dsl::openings)
             .values(&self.lists.openings)
@@ -168,17 +168,17 @@ impl<'a> Loader<'a> {
             .expect("Error saving movies");
     }
 
-    /// Check if a show exists
-    fn show_exists(&mut self) -> bool {
+    /// Check if a anime exists
+    fn anime_exists(&mut self) -> bool {
         select(exists(
-            shows::dsl::shows.filter(shows::title.eq(&self.current_show)),
+            anime::dsl::anime.filter(anime::title.eq(&self.current_anime)),
         ))
         .get_result::<bool>(self.db_connection)
-        .expect("Failed to check if show exists")
+        .expect("Failed to check if anime exists")
     }
 
     pub fn run(mut self) {
-        // Load Shows
+        // Load anime
 
         // check if anime_directory exists
         if !self.anime_directory.exists() {
@@ -190,34 +190,34 @@ impl<'a> Loader<'a> {
             process::exit(1);
         }
 
-        for show_dir in self
+        for anime_dir in self
             .anime_directory
             .read_dir()
             .expect("read_dir anime_directory failed")
         {
-            let show_dir = show_dir.unwrap();
-            let show_name: String = match show_dir.file_name().into_string() {
+            let anime_dir = anime_dir.unwrap();
+            let anime_name: String = match anime_dir.file_name().into_string() {
                 Ok(v) => v,
                 Err(_) => continue,
             };
 
-            if show_dir.path().is_file() {
+            if anime_dir.path().is_file() {
                 // Skip files in the root of the anime dir
                 continue;
             }
 
-            self.current_show = show_name;
+            self.current_anime = anime_name;
 
-            let show_exists = self.show_exists();
+            let anime_exists = self.anime_exists();
 
-            if !show_exists {
-                let cover = show_dir.path().join("cover.png");
+            if !anime_exists {
+                let cover = anime_dir.path().join("cover.png");
 
                 // TODO: check if cover exists if not add default cover image
                 //  https://github.com/pyrossh/rust-embed
 
-                let new_show = NewShow {
-                    title: self.current_show.clone(),
+                let new_anime = NewAnime {
+                    title: self.current_anime.clone(),
                     description: String::from("no description."),
                     format: None,
                     status: None,
@@ -226,19 +226,19 @@ impl<'a> Loader<'a> {
                     cover: cover.file_name().unwrap().to_str().unwrap().into(),
                 };
 
-                self.lists.shows.push(new_show);
+                self.lists.anime.push(new_anime);
             }
 
-            self.load_episodes(&show_dir, show_exists);
-            self.load_movies(&show_dir, show_exists);
-            self.load_openings(&show_dir, show_exists);
-            self.load_endings(&show_dir, show_exists);
+            self.load_episodes(&anime_dir, anime_exists);
+            self.load_movies(&anime_dir, anime_exists);
+            self.load_openings(&anime_dir, anime_exists);
+            self.load_endings(&anime_dir, anime_exists);
         }
         self.insert_into_database();
     }
 
-    fn load_episodes(&mut self, show_path: &DirEntry, check_new: bool) {
-        let episodes_directory = show_path.path().join(EPISODES_DIR_NAME);
+    fn load_episodes(&mut self, anime_path: &DirEntry, check_new: bool) {
+        let episodes_directory = anime_path.path().join(EPISODES_DIR_NAME);
 
         if !episodes_directory.exists() {
             warn!(
@@ -249,13 +249,13 @@ impl<'a> Loader<'a> {
         }
 
         if check_new {
-            info!("({}) Checking for new episodes", self.current_show);
+            info!("({}) Checking for new episodes", self.current_anime);
         } else {
-            info!("({}) Loading Episodes", self.current_show);
+            info!("({}) Loading Episodes", self.current_anime);
         }
 
         let file_names: Vec<String> = episodes::dsl::episodes
-            .filter(episodes::show_title.eq(&self.current_show))
+            .filter(episodes::anime_title.eq(&self.current_anime))
             .select(episodes::file_name)
             .load(self.db_connection)
             .expect("Can't load episode file_names");
@@ -315,7 +315,7 @@ impl<'a> Loader<'a> {
 
             let new_episode = NewEpisode {
                 id: nanoid!(),
-                show_title: self.current_show.clone(),
+                anime_title: self.current_anime.clone(),
                 title,
                 number: episode_number,
                 is_filler,
@@ -335,8 +335,8 @@ impl<'a> Loader<'a> {
         }
     }
 
-    fn load_movies(&mut self, show_path: &DirEntry, check_new: bool) {
-        let movies_directory = show_path.path().join(MOVIES_DIR_NAME);
+    fn load_movies(&mut self, anime_path: &DirEntry, check_new: bool) {
+        let movies_directory = anime_path.path().join(MOVIES_DIR_NAME);
 
         if !movies_directory.exists() {
             warn!("'{}' Does not exists'", movies_directory.to_str().unwrap());
@@ -344,13 +344,13 @@ impl<'a> Loader<'a> {
         }
 
         if check_new {
-            info!("({}) Checking for new movies", self.current_show);
+            info!("({}) Checking for new movies", self.current_anime);
         } else {
-            info!("({}) Loading Movies", self.current_show);
+            info!("({}) Loading Movies", self.current_anime);
         }
 
         let file_names: Vec<String> = movies::dsl::movies
-            .filter(movies::show_title.eq(&self.current_show))
+            .filter(movies::anime_title.eq(&self.current_anime))
             .select(movies::file_name)
             .load(self.db_connection)
             .expect("Can't load movies file_names");
@@ -402,7 +402,7 @@ impl<'a> Loader<'a> {
 
             let new_movie = NewMovie {
                 id: nanoid!(),
-                show_title: self.current_show.clone(),
+                anime_title: self.current_anime.clone(),
                 title,
                 watch_after: 0,
                 number,
@@ -422,8 +422,8 @@ impl<'a> Loader<'a> {
         }
     }
 
-    fn load_openings(&mut self, show_path: &DirEntry, check_new: bool) {
-        let openings_directory = show_path.path().join(OPENINGS_DIR_NAME);
+    fn load_openings(&mut self, anime_path: &DirEntry, check_new: bool) {
+        let openings_directory = anime_path.path().join(OPENINGS_DIR_NAME);
 
         if !openings_directory.exists() {
             warn!(
@@ -434,13 +434,13 @@ impl<'a> Loader<'a> {
         }
 
         if check_new {
-            info!("({}) Checking for new openings", self.current_show);
+            info!("({}) Checking for new openings", self.current_anime);
         } else {
-            info!("({}) Loading Openings", self.current_show);
+            info!("({}) Loading Openings", self.current_anime);
         }
 
         let file_names: Vec<String> = openings::dsl::openings
-            .filter(openings::show_title.eq(&self.current_show))
+            .filter(openings::anime_title.eq(&self.current_anime))
             .select(openings::file_name)
             .load(self.db_connection)
             .expect("Can't load openings file_names");
@@ -492,7 +492,7 @@ impl<'a> Loader<'a> {
 
             let new_opening = NewOpening {
                 id: nanoid!(),
-                show_title: self.current_show.clone(),
+                anime_title: self.current_anime.clone(),
                 title,
                 number,
                 file_name: file_name.clone(),
@@ -511,8 +511,8 @@ impl<'a> Loader<'a> {
         }
     }
 
-    fn load_endings(&mut self, show_path: &DirEntry, check_new: bool) {
-        let endings_directory = show_path.path().join(ENDINGS_DIR_NAME);
+    fn load_endings(&mut self, anime_path: &DirEntry, check_new: bool) {
+        let endings_directory = anime_path.path().join(ENDINGS_DIR_NAME);
 
         if !endings_directory.exists() {
             warn!("'{}' Does not exists'", endings_directory.to_str().unwrap());
@@ -520,13 +520,13 @@ impl<'a> Loader<'a> {
         }
 
         if check_new {
-            info!("({}) Checking for new endings", self.current_show);
+            info!("({}) Checking for new endings", self.current_anime);
         } else {
-            info!("({}) Loading endings", self.current_show);
+            info!("({}) Loading endings", self.current_anime);
         }
 
         let file_names: Vec<String> = endings::dsl::endings
-            .filter(endings::show_title.eq(&self.current_show))
+            .filter(endings::anime_title.eq(&self.current_anime))
             .select(endings::file_name)
             .load(self.db_connection)
             .expect("Can't load endings file_names");
@@ -578,7 +578,7 @@ impl<'a> Loader<'a> {
 
             let new_ending = NewEnding {
                 id: nanoid!(),
-                show_title: self.current_show.clone(),
+                anime_title: self.current_anime.clone(),
                 title,
                 number,
                 file_name: file_name.clone(),

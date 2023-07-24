@@ -1,5 +1,5 @@
 use crate::db::establish_connection;
-use common::models::show::Show;
+use common::models::anime::Anime;
 use common::schema;
 use diesel::prelude::*;
 use rocket::fs::NamedFile;
@@ -7,30 +7,30 @@ use rocket::serde::json::Json;
 use std::path::Path;
 use urlencoding::decode;
 
-#[get("/shows")]
-pub fn shows() -> Json<Vec<Show>> {
+#[get("/anime")]
+pub fn anime() -> Json<Vec<Anime>> {
     let mut conn = establish_connection();
 
     Json(
-        schema::shows::dsl::shows
+        schema::anime::dsl::anime
             .load(&mut conn)
-            .expect("Can't load shows"),
+            .expect("Can't load anime"),
     )
 }
 
-#[get("/shows/<title>")]
-pub fn show(title: String) -> Json<Show> {
+#[get("/anime/<title>")]
+pub fn anime_one(title: String) -> Json<Anime> {
     let mut conn = establish_connection();
 
     Json(
-        schema::shows::dsl::shows
-            .filter(schema::shows::title.eq(&title))
+        schema::anime::dsl::anime
+            .filter(schema::anime::title.eq(&title))
             .first(&mut conn)
-            .expect("Can't load shows"),
+            .expect("Can't load anime"),
     )
 }
 
-#[get("/shows/<title>/cover/<file_name>")]
+#[get("/anime/<title>/cover/<file_name>")]
 pub async fn get_cover(title: String, file_name: String) -> NamedFile {
     let decoded_title: String = decode(&title).expect("UTF-8").to_string();
     let decoded_file_name: String = decode(&file_name).expect("UTF-8").to_string();
