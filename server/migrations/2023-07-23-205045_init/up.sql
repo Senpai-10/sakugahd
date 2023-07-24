@@ -1,12 +1,8 @@
-DO $$ BEGIN
-    CREATE TYPE show_format AS ENUM ('TV', 'OVA', 'ONA', 'MOVIE', 'SPECIAL');
-    CREATE TYPE show_status AS ENUM ('FINISHED', 'ONGOING');
-    CREATE TYPE show_season AS ENUM ('SPRING', 'SUMMER', 'FALL', 'WINTER');
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+CREATE TYPE show_format AS ENUM ('TV', 'OVA', 'ONA', 'MOVIE', 'SPECIAL');
+CREATE TYPE show_status AS ENUM ('FINISHED', 'ONGOING');
+CREATE TYPE show_season AS ENUM ('SPRING', 'SUMMER', 'FALL', 'WINTER');
 
-CREATE TABLE IF NOT EXISTS shows (
+CREATE TABLE shows (
     title VARCHAR(255) PRIMARY KEY NOT NULL,
     description TEXT NOT NULL,
     format show_format,
@@ -16,28 +12,28 @@ CREATE TABLE IF NOT EXISTS shows (
     cover VARCHAR NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS studios (
+CREATE TABLE studios (
     name VARCHAR(255) PRIMARY KEY NOT NULL
 );
 
 -- junction table for shows and studios
-CREATE TABLE IF NOT EXISTS shows_studios (
+CREATE TABLE shows_studios (
     id SERIAL PRIMARY KEY NOT NULL,
     show_title VARCHAR(255) NOT NULL REFERENCES shows(title) ON DELETE CASCADE,
     studio_name VARCHAR(255) NOT NULL REFERENCES studios(name) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS genres (
+CREATE TABLE genres (
     name VARCHAR(255) NOT NULL PRIMARY KEY
 );
 
-CREATE TABLE IF NOT EXISTS shows_genres (
+CREATE TABLE shows_genres (
     id SERIAL PRIMARY KEY NOT NULL,
     show_title VARCHAR(255) NOT NULL REFERENCES shows(title) ON DELETE CASCADE,
     genre_name VARCHAR NOT NULL REFERENCES genres(name) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS episodes (
+CREATE TABLE episodes (
     id VARCHAR PRIMARY KEY NOT NULL,
     show_title VARCHAR(255) NOT NULL REFERENCES shows(title) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
@@ -50,7 +46,7 @@ CREATE TABLE IF NOT EXISTS episodes (
     thumbnail_file_name VARCHAR NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS movies (
+CREATE TABLE movies (
     id VARCHAR PRIMARY KEY NOT NULL,
     show_title VARCHAR(255) NOT NULL REFERENCES shows(title) ON DELETE CASCADE,
     -- watch movie after n number of episodes
@@ -61,7 +57,7 @@ CREATE TABLE IF NOT EXISTS movies (
     thumbnail_file_name VARCHAR NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS openings (
+CREATE TABLE openings (
     id VARCHAR PRIMARY KEY NOT NULL,
     show_title VARCHAR(255) NOT NULL REFERENCES shows(title) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
@@ -70,7 +66,7 @@ CREATE TABLE IF NOT EXISTS openings (
     thumbnail_file_name VARCHAR NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS endings (
+CREATE TABLE endings (
     id VARCHAR PRIMARY KEY NOT NULL,
     show_title VARCHAR(255) NOT NULL REFERENCES shows(title) ON DELETE CASCADE,
     number INT NOT NULL,
