@@ -172,6 +172,33 @@ export function Anime_page() {
                 <div>
                     <h2>{anime.title}</h2>
                     <p>{anime.description}</p>
+                    <div className='anime-info'>
+                        {anime.format ? (
+                            <div>
+                                <p>Format:</p> {anime.format}
+                            </div>
+                        ) : (
+                            <></>
+                        )}
+                        <div>
+                            <p>Episodes:</p> {episodes.length}
+                        </div>
+                        {anime.status ? (
+                            <div>
+                                <p>Status:</p> {anime.status}
+                            </div>
+                        ) : (
+                            <></>
+                        )}
+                        {anime.season && anime.season_year ? (
+                            <div>
+                                <p>Season:</p> {anime.season} - {anime.season_year}
+                            </div>
+                        ) : (
+                            <></>
+                        )}
+                        { /* add studio, genres */ }
+                    </div>
                 </div>
             </div>
             <button

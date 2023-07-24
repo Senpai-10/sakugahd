@@ -79,6 +79,12 @@
     color: #ffffff60;
 }
 
+.anime-info {
+    background: #ffffff05;
+    max-width: max-content;
+    padding: 10px;
+}
+
 @media only screen and (max-width: 600px) {
     .anime-description {
         flex-wrap: wrap;
