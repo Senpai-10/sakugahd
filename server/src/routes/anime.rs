@@ -13,6 +13,7 @@ pub fn anime() -> Json<Vec<Anime>> {
 
     Json(
         schema::anime::dsl::anime
+            .order(schema::anime::title)
             .load(&mut conn)
             .expect("Can't load anime"),
     )
