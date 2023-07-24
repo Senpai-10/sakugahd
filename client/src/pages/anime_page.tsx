@@ -3,7 +3,13 @@ import { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
 import '/public/css/pages/anime.css';
-import { AnimeType, EpisodeType, MovieType, OpeningType, EndingType } from "../types"
+import {
+    AnimeType,
+    EpisodeType,
+    MovieType,
+    OpeningType,
+    EndingType,
+} from '../types';
 
 function Episode(props: { itf: EpisodeType }) {
     const itf = props.itf;
@@ -49,7 +55,9 @@ function Movie(props: { itf: MovieType }) {
                 className='thumbnail'
             >
                 <div className='overlay'>
-                    <p className='video-title'>{itf.number} - {itf.title}</p>
+                    <p className='video-title'>
+                        {itf.number} - {itf.title}
+                    </p>
                 </div>
             </div>
         </Link>
@@ -73,7 +81,9 @@ function Opening(props: { itf: OpeningType }) {
                 className='thumbnail'
             >
                 <div className='overlay'>
-                    <p className='video-title'>{itf.number} - {itf.title}</p>
+                    <p className='video-title'>
+                        {itf.number} - {itf.title}
+                    </p>
                 </div>
             </div>
         </Link>
@@ -97,7 +107,9 @@ function Ending(props: { itf: EndingType }) {
                 className='thumbnail'
             >
                 <div className='overlay'>
-                    <p className='video-title'>{itf.number} - {itf.title}</p>
+                    <p className='video-title'>
+                        {itf.number} - {itf.title}
+                    </p>
                 </div>
             </div>
         </Link>
@@ -150,8 +162,12 @@ export function Anime_page() {
 
     return anime ? (
         <>
-            <div className="anime-description">
-                <img src={`/api/anime/${encodeURI(anime.title)}/cover/${encodeURI(anime.cover)}`} />
+            <div className='anime-description'>
+                <img
+                    src={`/api/anime/${encodeURI(
+                        anime.title
+                    )}/cover/${encodeURI(anime.cover)}`}
+                />
 
                 <div>
                     <h2>{anime.title}</h2>
