@@ -1,12 +1,12 @@
-use crate::schema::shows;
+use crate::schema::anime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq, Serialize, Deserialize)]
-#[ExistingTypePath = "crate::schema::sql_types::ShowFormat"]
+#[ExistingTypePath = "crate::schema::sql_types::AnimeFormat"]
 #[DbValueStyle = "UPPERCASE"]
 #[allow(clippy::upper_case_acronyms)]
-pub enum ShowFormat {
+pub enum AnimeFormat {
     TV,
     OVA,
     ONA,
@@ -15,19 +15,19 @@ pub enum ShowFormat {
 }
 
 #[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq, Serialize, Deserialize)]
-#[ExistingTypePath = "crate::schema::sql_types::ShowStatus"]
+#[ExistingTypePath = "crate::schema::sql_types::AnimeStatus"]
 #[DbValueStyle = "UPPERCASE"]
 #[allow(clippy::upper_case_acronyms)]
-pub enum ShowStatus {
+pub enum AnimeStatus {
     FINISHED,
     ONGOING,
 }
 
 #[derive(diesel_derive_enum::DbEnum, std::fmt::Debug, PartialEq, Serialize, Deserialize)]
-#[ExistingTypePath = "crate::schema::sql_types::ShowSeason"]
+#[ExistingTypePath = "crate::schema::sql_types::AnimeSeason"]
 #[DbValueStyle = "UPPERCASE"]
 #[allow(clippy::upper_case_acronyms)]
-pub enum ShowSeason {
+pub enum AnimeSeason {
     SPRING,
     SUMMER,
     FALL,
@@ -35,13 +35,13 @@ pub enum ShowSeason {
 }
 
 #[derive(Insertable, Serialize, Deserialize)]
-#[diesel(table_name = shows)]
-pub struct NewShow {
+#[diesel(table_name = anime)]
+pub struct NewAnime {
     pub title: String,
     pub description: String,
-    pub format: Option<ShowFormat>,
-    pub status: Option<ShowStatus>,
-    pub season: Option<ShowSeason>,
+    pub format: Option<AnimeFormat>,
+    pub status: Option<AnimeStatus>,
+    pub season: Option<AnimeSeason>,
     pub season_year: Option<i32>,
     pub cover: String,
 }
@@ -50,12 +50,13 @@ pub struct NewShow {
     Debug, Queryable, AsChangeset, Identifiable, Selectable, PartialEq, Serialize, Deserialize,
 )]
 #[diesel(primary_key(title))]
-pub struct Show {
+#[table_name = "anime"]
+pub struct Anime {
     pub title: String,
     pub description: String,
-    pub format: Option<ShowFormat>,
-    pub status: Option<ShowStatus>,
-    pub season: Option<ShowSeason>,
+    pub format: Option<AnimeFormat>,
+    pub status: Option<AnimeStatus>,
+    pub season: Option<AnimeSeason>,
     pub season_year: Option<i32>,
     pub cover: String,
 }
