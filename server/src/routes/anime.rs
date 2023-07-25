@@ -31,6 +31,32 @@ pub fn anime_one(title: String) -> Json<Anime> {
     )
 }
 
+#[get("/anime/<title>/genres")]
+pub fn anime_genres(title: String) -> Json<Vec<String>> {
+    let mut conn = establish_connection();
+
+    Json(
+        schema::anime_genres::dsl::anime_genres
+            .filter(schema::anime_genres::anime_title.eq(&title))
+            .select(schema::anime_genres::genre_name)
+            .load(&mut conn)
+            .expect("Can't load genres"),
+    )
+}
+
+#[get("/anime/<title>/studios")]
+pub fn anime_studios(title: String) -> Json<Vec<String>> {
+    let mut conn = establish_connection();
+
+    Json(
+        schema::anime_studios::dsl::anime_studios
+            .filter(schema::anime_studios::anime_title.eq(&title))
+            .select(schema::anime_studios::studio_name)
+            .load(&mut conn)
+            .expect("Can't load studios"),
+    )
+}
+
 #[get("/anime/<title>/cover/<file_name>")]
 pub async fn get_cover(title: String, file_name: String) -> NamedFile {
     let decoded_title: String = decode(&title).expect("UTF-8").to_string();

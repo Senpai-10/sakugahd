@@ -51,6 +51,8 @@ async fn main() {
                 routes::video::video_openings,
                 routes::video::video_endings,
                 routes::anime::anime_one,
+                routes::anime::anime_studios,
+                routes::anime::anime_genres,
                 routes::anime::anime,
                 routes::anime::get_cover,
                 routes::episodes::episodes,
