@@ -1,3 +1,4 @@
+[] animeList component: pass the list as a prop (allow it to be used in genres/studios pages)
 [] Parse episode title from the file name
 [] Setup relationships between anime
 
