@@ -99,6 +99,16 @@
     color: gray;
 }
 
+.info-value-list {
+    display: inline-block;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.info-value-list:hover {
+    color: var(--primary);
+}
+
 @media only screen and (max-width: 600px) {
     .anime-description {
         flex-wrap: wrap;

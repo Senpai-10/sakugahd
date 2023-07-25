@@ -131,6 +131,8 @@ export function Anime_page() {
 
     const encoded_title = encodeURIComponent(title);
     const [currentTab, setCurrentTab] = useState<Tabs>('Episodes');
+    const [animeStudios, setAnimeStudios] = useState<string[]>([]);
+    const [animeGenres, setAnimeGenres] = useState<string[]>([]);
     const [anime, setAnime] = useState<AnimeType>();
     const [episodes, setEpisodes] = useState<EpisodeType[]>([]);
     const [movies, setMovies] = useState<MovieType[]>([]);
@@ -158,6 +160,15 @@ export function Anime_page() {
             .get(`/api/anime/${encoded_title}/endings`)
             .then((res) => res.data)
             .then((data) => setEndings(data));
+        axios
+            .get(`/api/anime/${encoded_title}/studios`)
+            .then((res) => res.data)
+            .then((data) => setAnimeStudios(data));
+        axios
+            .get(`/api/anime/${encoded_title}/genres`)
+            .then((res) => res.data)
+            .then((data) => setAnimeGenres(data));
+
     }, []);
 
     return anime ? (
@@ -185,7 +196,18 @@ export function Anime_page() {
                                 <h3 className="info-title">Season</h3>
                                 <p className="info-value">{anime.season && anime.season_year ? `${anime.season} - ${anime.season_year}` : "Unknown"}</p>
                             </div>
-                        {/* TODO: add studio, genres */}
+                            <div>
+                                <h3 className="info-title">Studios</h3>
+                                {animeStudios.map(studio => (
+                                    <Link to={`/studios/${studio}`} className="info-value info-value-list">{studio}</Link>
+                                ))}
+                            </div>
+                            <div>
+                                <h3 className="info-title">Genres</h3>
+                                {animeGenres.map(genre => (
+                                    <Link to={`/genres/${genre}`} className="info-value info-value-list">{genre}</Link>
+                                ))}
+                            </div>
                     </div>
                 </div>
             </div>
