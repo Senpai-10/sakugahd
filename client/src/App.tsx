@@ -3,11 +3,19 @@ import { Route, Routes } from 'react-router-dom';
 import { Home_page } from './pages/home_page';
 import { Anime_page } from './pages/anime_page';
 import { Watch_page } from './pages/watch_page';
+import { Studio_page } from './pages/studio_page';
+import { Studios_page } from './pages/studios_page';
+import { Genres_page } from './pages/genres_page';
+import { Genre_page } from './pages/genre_page';
 
 function App() {
     return (
         <Routes>
             <Route path='/' element={<Home_page />} />
+            <Route path='/studios' element={<Studios_page />} />
+            <Route path='/studios/:name' element={<Studio_page />} />
+            <Route path='/genres' element={<Genres_page />} />
+            <Route path='/genres/:name' element={<Genre_page />} />
             <Route path='/anime/:title' element={<Anime_page />} />
             <Route
                 path='/anime/:title/watch/:type/:number'
