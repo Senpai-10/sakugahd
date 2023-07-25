@@ -1,7 +1,9 @@
 pub mod anime;
 pub mod endings;
 pub mod episodes;
+pub mod genres;
 pub mod movies;
 pub mod openings;
+pub mod studios;
 pub mod thumbnail;
 pub mod video;
