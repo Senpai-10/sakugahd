@@ -192,110 +192,113 @@ export function Anime_page() {
                         )}
                         {anime.season && anime.season_year ? (
                             <div>
-                                <p>Season:</p> {anime.season} - {anime.season_year}
+                                <p>Season:</p> {anime.season} -{' '}
+                                {anime.season_year}
                             </div>
                         ) : (
                             <></>
                         )}
-                        { /* add studio, genres */ }
+                        {/* add studio, genres */}
                     </div>
                 </div>
             </div>
-            <button
-                className={classNames({
-                    tab: true,
-                    'active-tab-button': currentTab == 'Episodes',
-                })}
-                onClick={() => setCurrentTab('Episodes')}
-            >
-                Episodes
-            </button>
-            <button
-                className={classNames({
-                    tab: true,
-                    'active-tab-button': currentTab == 'Movies',
-                })}
-                onClick={() => setCurrentTab('Movies')}
-            >
-                Movies
-            </button>
-            <button
-                className={classNames({
-                    tab: true,
-                    'active-tab-button': currentTab == 'Openings',
-                })}
-                onClick={() => setCurrentTab('Openings')}
-            >
-                Openings
-            </button>
-            <button
-                className={classNames({
-                    tab: true,
-                    'active-tab-button': currentTab == 'Endings',
-                })}
-                onClick={() => setCurrentTab('Endings')}
-            >
-                Endings
-            </button>
-            <div
-                className={
-                    currentTab == 'Episodes' ? 'active-tab' : 'inactive-tab'
-                }
-            >
-                {episodes.length == 0 ? (
-                    <p>nothing found</p>
-                ) : (
-                    <div className='videos'>
-                        {episodes.map((episode) => (
-                            <Episode key={episode.id} itf={episode} />
-                        ))}
-                    </div>
-                )}
-            </div>
-            <div
-                className={
-                    currentTab == 'Movies' ? 'active-tab' : 'inactive-tab'
-                }
-            >
-                {movies.length == 0 ? (
-                    <p>nothing found</p>
-                ) : (
-                    <div className='videos'>
-                        {movies.map((movie) => (
-                            <Movie itf={movie} />
-                        ))}
-                    </div>
-                )}
-            </div>
-            <div
-                className={
-                    currentTab == 'Openings' ? 'active-tab' : 'inactive-tab'
-                }
-            >
-                {openings.length == 0 ? (
-                    <p>nothing found</p>
-                ) : (
-                    <div className='videos'>
-                        {openings.map((opening) => (
-                            <Opening itf={opening} />
-                        ))}
-                    </div>
-                )}
-            </div>
-            <div
-                className={
-                    currentTab == 'Endings' ? 'active-tab' : 'inactive-tab'
-                }
-            >
-                {endings.length == 0 ? (
-                    <p>nothing found</p>
-                ) : (
-                    <div className='videos'>
-                        {endings.map((ending) => (
-                            <Ending itf={ending} />
-                        ))}
-                    </div>
-                )}
+            <div className='content'>
+                <button
+                    className={classNames({
+                        tab: true,
+                        'active-tab-button': currentTab == 'Episodes',
+                    })}
+                    onClick={() => setCurrentTab('Episodes')}
+                >
+                    Episodes
+                </button>
+                <button
+                    className={classNames({
+                        tab: true,
+                        'active-tab-button': currentTab == 'Movies',
+                    })}
+                    onClick={() => setCurrentTab('Movies')}
+                >
+                    Movies
+                </button>
+                <button
+                    className={classNames({
+                        tab: true,
+                        'active-tab-button': currentTab == 'Openings',
+                    })}
+                    onClick={() => setCurrentTab('Openings')}
+                >
+                    Openings
+                </button>
+                <button
+                    className={classNames({
+                        tab: true,
+                        'active-tab-button': currentTab == 'Endings',
+                    })}
+                    onClick={() => setCurrentTab('Endings')}
+                >
+                    Endings
+                </button>
+                <div
+                    className={
+                        currentTab == 'Episodes' ? 'active-tab' : 'inactive-tab'
+                    }
+                >
+                    {episodes.length == 0 ? (
+                        <p>nothing found</p>
+                    ) : (
+                        <div className='videos'>
+                            {episodes.map((episode) => (
+                                <Episode key={episode.id} itf={episode} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div
+                    className={
+                        currentTab == 'Movies' ? 'active-tab' : 'inactive-tab'
+                    }
+                >
+                    {movies.length == 0 ? (
+                        <p>nothing found</p>
+                    ) : (
+                        <div className='videos'>
+                            {movies.map((movie) => (
+                                <Movie itf={movie} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div
+                    className={
+                        currentTab == 'Openings' ? 'active-tab' : 'inactive-tab'
+                    }
+                >
+                    {openings.length == 0 ? (
+                        <p>nothing found</p>
+                    ) : (
+                        <div className='videos'>
+                            {openings.map((opening) => (
+                                <Opening itf={opening} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div
+                    className={
+                        currentTab == 'Endings' ? 'active-tab' : 'inactive-tab'
+                    }
+                >
+                    {endings.length == 0 ? (
+                        <p>nothing found</p>
+                    ) : (
+                        <div className='videos'>
+                            {endings.map((ending) => (
+                                <Ending itf={ending} />
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
         </>
     ) : (
