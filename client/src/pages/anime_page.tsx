@@ -173,32 +173,19 @@ export function Anime_page() {
                     <h2>{anime.title}</h2>
                     <p>{anime.description}</p>
                     <div className='anime-info'>
-                        {anime.format ? (
                             <div>
-                                <p>Format:</p> {anime.format}
+                                <h3 className="info-title">Format</h3>
+                                <p className="info-value">{anime.format ? anime.format : 'Unknown'}</p>
                             </div>
-                        ) : (
-                            <></>
-                        )}
-                        <div>
-                            <p>Episodes:</p> {episodes.length}
-                        </div>
-                        {anime.status ? (
                             <div>
-                                <p>Status:</p> {anime.status}
+                                <h3 className="info-title">Status</h3>
+                                <p className="info-value">{anime.status ? anime.status : "Unknown"}</p>
                             </div>
-                        ) : (
-                            <></>
-                        )}
-                        {anime.season && anime.season_year ? (
                             <div>
-                                <p>Season:</p> {anime.season} -{' '}
-                                {anime.season_year}
+                                <h3 className="info-title">Season</h3>
+                                <p className="info-value">{anime.season && anime.season_year ? `${anime.season} - ${anime.season_year}` : "Unknown"}</p>
                             </div>
-                        ) : (
-                            <></>
-                        )}
-                        {/* add studio, genres */}
+                        {/* TODO: add studio, genres */}
                     </div>
                 </div>
             </div>
@@ -210,7 +197,7 @@ export function Anime_page() {
                     })}
                     onClick={() => setCurrentTab('Episodes')}
                 >
-                    Episodes
+                    Episodes {episodes.length}
                 </button>
                 <button
                     className={classNames({
@@ -219,7 +206,7 @@ export function Anime_page() {
                     })}
                     onClick={() => setCurrentTab('Movies')}
                 >
-                    Movies
+                    Movies {movies.length}
                 </button>
                 <button
                     className={classNames({
@@ -228,7 +215,7 @@ export function Anime_page() {
                     })}
                     onClick={() => setCurrentTab('Openings')}
                 >
-                    Openings
+                    Openings {openings.length}
                 </button>
                 <button
                     className={classNames({
@@ -237,7 +224,7 @@ export function Anime_page() {
                     })}
                     onClick={() => setCurrentTab('Endings')}
                 >
-                    Endings
+                    Endings {endings.length}
                 </button>
                 <div
                     className={

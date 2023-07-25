@@ -4,6 +4,7 @@
 
 .active-tab {
     display: block;
+    margin-top: 30px;
 }
 
 .inactive-tab {
@@ -51,10 +52,11 @@
 }
 
 .tab {
-    font-size: 16px;
+    font-size: 20px;
     border: none;
     background: none;
     cursor: pointer;
+    margin: 1rem;
 }
 
 .active-tab-button {
@@ -86,7 +88,15 @@
 .anime-info {
     background: #ffffff05;
     max-width: max-content;
-    padding: 10px;
+    padding: 10px 60px 10px 20px;
+}
+
+.info-title {
+    color: #a6a6a6;
+}
+
+.info-value {
+    color: gray;
 }
 
 @media only screen and (max-width: 600px) {
