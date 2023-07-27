@@ -40,6 +40,16 @@
     left: 15px;
 }
 
+.video-filler {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    background-color: var(--filler);
+    color: #b0b0b0;
+    padding: 2px;
+    border-radius: 3px;
+}
+
 .overlay {
     width: 256px;
     height: 128px;

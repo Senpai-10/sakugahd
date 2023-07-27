@@ -32,6 +32,9 @@ function Episode(props: { itf: EpisodeType }) {
             >
                 <div className='overlay'>
                     <p className='video-title'>{itf.title}</p>
+                    {
+                        itf.is_filler ? <p className="video-filler">Filler</p> : null
+                    }
                 </div>
             </div>
         </Link>
