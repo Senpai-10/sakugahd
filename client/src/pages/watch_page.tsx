@@ -19,6 +19,7 @@ export function Watch_page() {
     const inputRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [hideFillers, setHideFillers] = useState(false);
+    const videoProgressKey = `videoProgress_${title}_${type}_${number}`;
 
     const filteredEpisodes = useMemo(() => {
         return episodes.filter((video) => {
@@ -163,15 +164,11 @@ export function Watch_page() {
         if (type == "openings" || type == "endings")
             return
 
-        let key = `progress_${title}_${type}_${number}`
-
-        localStorage.setItem(key, e.target.currentTime)
+        localStorage.setItem(videoProgressKey, e.target.currentTime)
     }
 
     const loadCurrentTime = (): number => {
-        let key = `progress_${title}_${type}_${number}`
-
-        let time = localStorage.getItem(key)
+        let time = localStorage.getItem(videoProgressKey)
 
         if (time != null) {
             return Number(time)
