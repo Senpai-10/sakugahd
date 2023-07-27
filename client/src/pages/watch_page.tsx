@@ -185,7 +185,7 @@ export function Watch_page() {
                     type='video/mp4'
                 />
             </video>
-            <div className='videos-list'>
+            <div className="videos-list-container">
                 <input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -199,7 +199,10 @@ export function Watch_page() {
                     onChange={() => setHideFillers(!hideFillers)}
                     checked={hideFillers}
                 />
-                <VideosList />
+
+                <div className='videos-list'>
+                    <VideosList />
+                </div>
             </div>
         </>
     );

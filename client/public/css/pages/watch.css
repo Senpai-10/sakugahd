@@ -14,12 +14,16 @@
     outline: 2px solid var(--filler);
 }
 
-.videos-list {
+.videos-list-container {
     display: inline-block;
     vertical-align: top;
-    /* border: 1px solid red; */
+    margin-left: 20px;
+    background-color: var(--focused);
+
+}
+
+.videos-list {
     height: 360px;
     overflow: hidden;
     overflow-y: scroll;
-    margin-left: 20px;
 }

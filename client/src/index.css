@@ -10,8 +10,9 @@
     --focused: #1a1a1e;
     --button-label: #f8feff;
     --text: #f1f1f1;
+    --background: #171b23;
     color: #f1f1f1;
-    background-color: #171b23;
+    background-color: var(--background);
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
