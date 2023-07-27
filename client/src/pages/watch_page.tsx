@@ -179,7 +179,7 @@ export function Watch_page() {
 
     return (
         <>
-            <video onTimeUpdate={saveCurrnetTime} onLoadedData={(e) => {e.currentTarget.volume = 0.25; e.currentTarget.currentTime = loadCurrentTime()}} width='650' preload='metadata' controls>
+            <video onTimeUpdate={saveCurrnetTime} onLoadedData={(e) => {e.currentTarget.volume = 0.25; e.currentTarget.currentTime = loadCurrentTime()}} width='850' preload='metadata' controls>
                 <source
                     src={`/api/anime/${title}/${type}/${number}`}
                     type='video/mp4'
