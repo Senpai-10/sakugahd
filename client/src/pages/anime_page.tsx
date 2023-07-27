@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
 import '/public/css/pages/anime.css';
@@ -141,6 +141,17 @@ export function Anime_page() {
     const [movies, setMovies] = useState<MovieType[]>([]);
     const [openings, setOpenings] = useState<OpeningType[]>([]);
     const [endings, setEndings] = useState<EndingType[]>([]);
+    const [hideFillers, setHideFillers] = useState(false);
+
+    const filteredEpisodes = useMemo(() => {
+        return episodes.filter((video) => {
+            if (hideFillers === true && video.is_filler === true) {
+                return false;
+            }
+
+            return true
+        });
+    }, [episodes, hideFillers]);
 
     useEffect(() => {
         axios
@@ -221,9 +232,9 @@ export function Anime_page() {
                         'active-tab-button': currentTab == 'Episodes',
                     })}
                     onClick={() => setCurrentTab('Episodes')}
-                    disabled={episodes.length == 0 ? true : false}
+                    disabled={filteredEpisodes.length == 0 ? true : false}
                 >
-                    Episodes {episodes.length}
+                    Episodes {filteredEpisodes.length}
                 </button>
                 <button
                     className={classNames({
@@ -255,16 +266,27 @@ export function Anime_page() {
                 >
                     Endings {endings.length}
                 </button>
+                { currentTab == "Episodes" ?
+                    <>
+                        <label>Hide Fillers</label>
+                        <input
+                            type='checkbox'
+                            onChange={() => setHideFillers(!hideFillers)}
+                            checked={hideFillers}
+                        />
+                    </>
+                    : null
+                }
                 <div
                     className={
                         currentTab == 'Episodes' ? 'active-tab' : 'inactive-tab'
                     }
                 >
-                    {episodes.length == 0 ? (
+                    {filteredEpisodes.length == 0 ? (
                         <p>nothing found</p>
                     ) : (
                         <div className='videos'>
-                            {episodes.map((episode) => (
+                            {filteredEpisodes.map((episode) => (
                                 <Episode key={episode.id} itf={episode} />
                             ))}
                         </div>
