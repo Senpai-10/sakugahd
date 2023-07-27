@@ -23,7 +23,7 @@ export function Watch_page() {
 
     const filteredEpisodes = useMemo(() => {
         return episodes.filter((video) => {
-            if (hideFillers === true && video.is_filler === true) {
+            if (hideFillers === true && video.is_filler === true && video.number != Number(number)) {
                 return false;
             }
 
