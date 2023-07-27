@@ -159,9 +159,30 @@ export function Watch_page() {
         }, 500);
     }, [location]);
 
+    const saveCurrnetTime = (e: any) => {
+        if (type == "openings" || type == "endings")
+            return
+
+        let id = `${title}_${type}_${number}`
+
+        localStorage.setItem(id, e.target.currentTime)
+    }
+
+    const loadCurrentTime = (): number => {
+        let id = `${title}_${type}_${number}`
+
+        let time = localStorage.getItem(id)
+
+        if (time != null) {
+            return Number(time)
+        }
+
+        return 0
+    }
+
     return (
         <>
-            <video onLoadedData={(e) => e.currentTarget.volume = 0.25} width='650' preload='metadata' controls>
+            <video onTimeUpdate={saveCurrnetTime} onLoadedData={(e) => {e.currentTarget.volume = 0.25; e.currentTarget.currentTime = loadCurrentTime()}} width='650' preload='metadata' controls>
                 <source
                     src={`/api/anime/${title}/${type}/${number}`}
                     type='video/mp4'
