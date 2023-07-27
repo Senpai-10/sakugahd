@@ -163,15 +163,15 @@ export function Watch_page() {
         if (type == "openings" || type == "endings")
             return
 
-        let id = `${title}_${type}_${number}`
+        let key = `progress_${title}_${type}_${number}`
 
-        localStorage.setItem(id, e.target.currentTime)
+        localStorage.setItem(key, e.target.currentTime)
     }
 
     const loadCurrentTime = (): number => {
-        let id = `${title}_${type}_${number}`
+        let key = `progress_${title}_${type}_${number}`
 
-        let time = localStorage.getItem(id)
+        let time = localStorage.getItem(key)
 
         if (time != null) {
             return Number(time)
