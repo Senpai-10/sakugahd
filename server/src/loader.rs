@@ -117,7 +117,7 @@ impl<'a> Loader<'a> {
                 self.current_anime,
                 file.file_name().to_str().unwrap()
             );
-            let thumbnail_size = "256x144";
+            let thumbnail_size = "256";
             let time_to_seek = "10%";
             let quality = "8";
 
