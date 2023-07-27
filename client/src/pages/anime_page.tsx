@@ -218,6 +218,7 @@ export function Anime_page() {
                         'active-tab-button': currentTab == 'Episodes',
                     })}
                     onClick={() => setCurrentTab('Episodes')}
+                    disabled={episodes.length == 0 ? true : false}
                 >
                     Episodes {episodes.length}
                 </button>
@@ -227,6 +228,7 @@ export function Anime_page() {
                         'active-tab-button': currentTab == 'Movies',
                     })}
                     onClick={() => setCurrentTab('Movies')}
+                    disabled={movies.length == 0 ? true : false}
                 >
                     Movies {movies.length}
                 </button>
@@ -236,6 +238,7 @@ export function Anime_page() {
                         'active-tab-button': currentTab == 'Openings',
                     })}
                     onClick={() => setCurrentTab('Openings')}
+                    disabled={openings.length == 0 ? true : false}
                 >
                     Openings {openings.length}
                 </button>
@@ -245,6 +248,7 @@ export function Anime_page() {
                         'active-tab-button': currentTab == 'Endings',
                     })}
                     onClick={() => setCurrentTab('Endings')}
+                    disabled={endings.length == 0 ? true : false}
                 >
                     Endings {endings.length}
                 </button>
