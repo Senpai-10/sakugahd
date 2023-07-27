@@ -28,7 +28,7 @@ pub struct List {
 }
 
 pub struct Loader<'a> {
-    ffmpeg_binary: String,
+    ffmpegthumbnailer_binary: String,
     anime_directory: &'a Path,
     db_connection: &'a mut PgConnection,
     current_anime: String,
@@ -37,10 +37,11 @@ pub struct Loader<'a> {
 
 impl<'a> Loader<'a> {
     pub fn new(anime_directory: &'a Path, db_connection: &'a mut PgConnection) -> Self {
-        let ffmpeg_binary = env::var("FFMPEG_BINARY").unwrap_or("ffmpeg".into());
+        let ffmpegthumbnailer_binary =
+            env::var("FFMPEGTHUMBNAILER_BINARY").unwrap_or("ffmpegthumbnailer".into());
 
-        // Check if ffmpeg exists
-        match process::Command::new(&ffmpeg_binary)
+        // Check if ffmpegthumbnailer exists
+        match process::Command::new(&ffmpegthumbnailer_binary)
             .arg("-version")
             .output()
         {
@@ -49,10 +50,10 @@ impl<'a> Loader<'a> {
                 if let std::io::ErrorKind::NotFound = e.kind() {
                     error!(
                         "`{}` was not found! Can't generate thumbnails.",
-                        &ffmpeg_binary
+                        &ffmpegthumbnailer_binary
                     )
                 } else {
-                    error!("Some error occurred when checking for ffmpeg {e}");
+                    error!("Some error occurred when checking for ffmpegthumbnailer {e}");
                 }
 
                 error!("Exiting..");
@@ -61,7 +62,7 @@ impl<'a> Loader<'a> {
         }
 
         Self {
-            ffmpeg_binary,
+            ffmpegthumbnailer_binary,
             anime_directory,
             db_connection,
             current_anime: String::new(),
@@ -102,7 +103,7 @@ impl<'a> Loader<'a> {
         );
 
         let hash_file_name = sha256::digest(thumbnail_file_name);
-        let thumbnail_file = thumbnails_dir.join(format!("{}.jpg", hash_file_name));
+        let thumbnail_file = thumbnails_dir.join(format!("{}.jpeg", hash_file_name));
 
         if thumbnail_file.exists() {
             info!(
@@ -116,18 +117,22 @@ impl<'a> Loader<'a> {
                 self.current_anime,
                 file.file_name().to_str().unwrap()
             );
+            let thumbnail_size = "256x144";
+            let time_to_seek = "10%";
+            let quality = "8";
 
-            process::Command::new(&self.ffmpeg_binary)
+            process::Command::new(&self.ffmpegthumbnailer_binary)
                 .args([
-                    "-nostdin",
-                    "-y",
                     "-i",
                     file.path().to_str().unwrap(),
-                    "-vf",
-                    "thumbnail",
-                    "-frames:v",
-                    "1",
+                    "-o",
                     thumbnail_file.to_str().unwrap(),
+                    "-s",
+                    thumbnail_size,
+                    "-t",
+                    time_to_seek,
+                    "-q",
+                    quality,
                 ])
                 .output()
                 .expect("Failed to generate thumbnail!");
