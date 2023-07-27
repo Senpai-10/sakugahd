@@ -179,6 +179,14 @@ export function Watch_page() {
 
     return (
         <>
+            <div className='topnav'>
+                <Link reloadDocument to={`/`} className="link">Home</Link>
+                <Link reloadDocument to={`/anime/${title}`} className="link">Anime</Link>
+                <Link reloadDocument to={`/anime/${title}/watch/episodes/1`} className="link">Episodes</Link>
+                <Link reloadDocument to={`/anime/${title}/watch/movies/1`} className="link">Movies</Link>
+                <Link reloadDocument to={`/anime/${title}/watch/openings/1`} className="link">Openings</Link>
+                <Link reloadDocument to={`/anime/${title}/watch/endings/1`} className="link">Endings</Link>
+            </div>
             <video onTimeUpdate={saveCurrnetTime} onLoadedData={(e) => {e.currentTarget.volume = 0.25; e.currentTarget.currentTime = loadCurrentTime()}} width='850' preload='metadata' controls>
                 <source
                     src={`/api/anime/${title}/${type}/${number}`}

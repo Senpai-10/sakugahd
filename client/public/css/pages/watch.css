@@ -26,3 +26,12 @@
     overflow: hidden;
     overflow-y: scroll;
 }
+
+.link {
+    margin: 10px;
+}
+
+.link:hover {
+    color: var(--primary);
+    cursor: pointer;
+}
