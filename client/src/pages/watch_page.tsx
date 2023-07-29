@@ -5,6 +5,12 @@ import axios from 'axios';
 import '/public/css/pages/watch.css';
 import { EpisodeType, MovieType, OpeningType, EndingType } from '../types';
 
+interface VideoProgress {
+    [key: string]: {
+        [key: string]: { video_number: number; progress: number }[];
+    };
+}
+
 export function Watch_page() {
     const { title, type, number } = useParams();
 
@@ -19,7 +25,7 @@ export function Watch_page() {
     const inputRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [hideFillers, setHideFillers] = useState(false);
-    const videoProgressKey = `videoProgress_${title}_${type}_${number}`;
+    const video_progress_key = "video_progress";
 
     const filteredEpisodes = useMemo(() => {
         return episodes.filter((video) => {
@@ -176,17 +182,41 @@ export function Watch_page() {
     const saveCurrnetTime = (e: any) => {
         if (type == 'openings' || type == 'endings') return;
 
-        localStorage.setItem(videoProgressKey, e.target.currentTime);
+        let string_value: string = localStorage.getItem(video_progress_key) || "{}"
+
+        let video_progress: VideoProgress = JSON.parse(string_value)
+
+        if (video_progress[title] == undefined) {
+            video_progress[title] = {
+                [type]: [{ video_number: Number(number), progress: e.target.currentTime }],
+            }
+        } else {
+            let index = video_progress[title][type].findIndex((x) => x.video_number == Number(number))
+
+            if (index == -1) {
+                video_progress[title][type].push({video_number: Number(number), progress: e.target.currentTime})
+            } else {
+                video_progress[title][type][index].progress = e.target.currentTime
+            }
+        }
+
+        localStorage.setItem(video_progress_key, JSON.stringify(video_progress));
     };
 
     const loadCurrentTime = (): number => {
-        let time = localStorage.getItem(videoProgressKey);
+        if (type == "openings" || type == "endings") return 0
 
-        if (time != null) {
-            return Number(time);
+        let value_string = localStorage.getItem(video_progress_key)
+
+        if (value_string == null) {
+            return 0
         }
 
-        return 0;
+        let video_progress: VideoProgress = JSON.parse(value_string)
+
+        let progress = video_progress[title][type].find((x) => x.video_number == Number(number))?.progress || 0
+
+        return progress
     };
 
     return (
