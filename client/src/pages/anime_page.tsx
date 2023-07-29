@@ -17,9 +17,8 @@ function Episode(props: { itf: EpisodeType }) {
 
     return (
         <Link
-            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/episodes/${
-                itf.number
-            }`}
+            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/episodes/${itf.number
+                }`}
         >
             <div
                 style={{
@@ -47,9 +46,8 @@ function Movie(props: { itf: MovieType }) {
 
     return (
         <Link
-            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/movies/${
-                itf.number
-            }`}
+            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/movies/${itf.number
+                }`}
         >
             <div
                 style={{
@@ -73,9 +71,8 @@ function Opening(props: { itf: OpeningType }) {
 
     return (
         <Link
-            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/openings/${
-                itf.number
-            }`}
+            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/openings/${itf.number
+                }`}
         >
             <div
                 style={{
@@ -99,9 +96,8 @@ function Ending(props: { itf: EndingType }) {
 
     return (
         <Link
-            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/endings/${
-                itf.number
-            }`}
+            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/endings/${itf.number
+                }`}
         >
             <div
                 style={{
@@ -198,30 +194,30 @@ export function Anime_page() {
                     <h2>{anime.title}</h2>
                     <p>{anime.description}</p>
                     <div className='anime-info'>
-                            <div>
-                                <h3 className="info-title">Format</h3>
-                                <p className="info-value">{anime.format ? anime.format : 'Unknown'}</p>
-                            </div>
-                            <div>
-                                <h3 className="info-title">Status</h3>
-                                <p className="info-value">{anime.status ? anime.status : "Unknown"}</p>
-                            </div>
-                            <div>
-                                <h3 className="info-title">Season</h3>
-                                <p className="info-value">{anime.season && anime.season_year ? `${anime.season} - ${anime.season_year}` : "Unknown"}</p>
-                            </div>
-                            <div>
-                                <h3 className="info-title">Studios</h3>
-                                {animeStudios.map(studio => (
-                                    <Link to={`/studios/${studio}`} className="info-value info-value-list">{studio}</Link>
-                                ))}
-                            </div>
-                            <div>
-                                <h3 className="info-title">Genres</h3>
-                                {animeGenres.map(genre => (
-                                    <Link to={`/genres/${genre}`} className="info-value info-value-list">{genre}</Link>
-                                ))}
-                            </div>
+                        <div>
+                            <h3 className="info-title">Format</h3>
+                            <p className="info-value">{anime.format ? anime.format : 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <h3 className="info-title">Status</h3>
+                            <p className="info-value">{anime.status ? anime.status : "Unknown"}</p>
+                        </div>
+                        <div>
+                            <h3 className="info-title">Season</h3>
+                            <p className="info-value">{anime.season && anime.season_year ? `${anime.season} - ${anime.season_year}` : "Unknown"}</p>
+                        </div>
+                        <div>
+                            <h3 className="info-title">Studios</h3>
+                            {animeStudios.map(studio => (
+                                <Link to={`/studios/${studio}`} className="info-value info-value-list">{studio}</Link>
+                            ))}
+                        </div>
+                        <div>
+                            <h3 className="info-title">Genres</h3>
+                            {animeGenres.map(genre => (
+                                <Link to={`/genres/${genre}`} className="info-value info-value-list">{genre}</Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -266,7 +262,7 @@ export function Anime_page() {
                 >
                     Endings {endings.length}
                 </button>
-                { currentTab == "Episodes" ?
+                {currentTab == "Episodes" ?
                     <>
                         <label>Hide Fillers</label>
                         <input

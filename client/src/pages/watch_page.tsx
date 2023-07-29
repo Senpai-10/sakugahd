@@ -194,7 +194,7 @@ export function Watch_page() {
             let index = video_progress[title][type].findIndex((x) => x.video_number == Number(number))
 
             if (index == -1) {
-                video_progress[title][type].push({video_number: Number(number), progress: e.target.currentTime})
+                video_progress[title][type].push({ video_number: Number(number), progress: e.target.currentTime })
             } else {
                 video_progress[title][type][index].progress = e.target.currentTime
             }
