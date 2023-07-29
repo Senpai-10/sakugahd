@@ -22,14 +22,14 @@ pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations/");
 
 #[get("/<file..>")]
 async fn files(file: PathBuf) -> Option<NamedFile> {
-    NamedFile::open(Path::new("/home/senpai/projects/dev/rust/sakugahd/server/dist").join(file))
+    NamedFile::open(Path::new("/usr/src/sakugahd-dist/").join(file))
         .await
         .ok()
 }
 
 #[get("/")]
 async fn index() -> io::Result<NamedFile> {
-    NamedFile::open("/home/senpai/projects/dev/rust/sakugahd/server/dist/index.html").await
+    NamedFile::open("/usr/src/sakugahd-dist/index.html").await
 }
 
 #[rocket::main]
