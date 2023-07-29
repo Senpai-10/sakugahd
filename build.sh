@@ -1,10 +1,12 @@
 #!/bin/sh
 
+set -e
+
 cd server
 cargo build --release
 cd ..
-cp ./target/release/sakugahd-server .
+cp ./target/release/sakugahd-server ~/.local/bin/
 
 cd client
 yarn build
-cp -r dist ../
+sudo cp -Tr dist /usr/src/sakugahd-dist/
