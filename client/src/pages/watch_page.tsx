@@ -219,6 +219,16 @@ export function Watch_page() {
         return progress
     };
 
+    function saveVolumeLevel(e: any) {
+        localStorage.setItem("video_player_volume", e.currentTarget.volume)
+    }
+
+    function loadVolumeLevel(): number {
+        let volume = localStorage.getItem("video_player_volume")
+
+        return Number(volume) || 0.50
+    }
+
     return (
         <>
             <div className='topnav'>
@@ -259,8 +269,9 @@ export function Watch_page() {
             </div>
             <video
                 onTimeUpdate={saveCurrnetTime}
+                onVolumeChange={saveVolumeLevel}
                 onLoadedData={(e) => {
-                    e.currentTarget.volume = 0.25;
+                    e.currentTarget.volume = loadVolumeLevel();
                     e.currentTarget.currentTime = loadCurrentTime();
                 }}
                 width='850'
