@@ -25,6 +25,8 @@ export function Watch_page() {
     const inputRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [hideFillers, setHideFillers] = useState(false);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [videoUrl, setVideoUrl] = useState(`/api/anime/${title}/${type}/${number}`)
     const video_progress_key = "video_progress";
 
     const filteredEpisodes = useMemo(() => {
@@ -81,7 +83,6 @@ export function Watch_page() {
         if (type == 'episodes') {
             return filteredEpisodes.map((video) => (
                 <Link
-                    reloadDocument
                     to={`/anime/${title}/watch/episodes/${video.number}`}
                 >
                     <div
@@ -99,7 +100,6 @@ export function Watch_page() {
         } else if (type == 'movies') {
             return filteredMovies.map((video) => (
                 <Link
-                    reloadDocument
                     to={`/anime/${title}/watch/movies/${video.number}`}
                 >
                     <div
@@ -115,7 +115,6 @@ export function Watch_page() {
         } else if (type == 'openings') {
             return filteredOpenings.map((video) => (
                 <Link
-                    reloadDocument
                     to={`/anime/${title}/watch/openings/${video.number}`}
                 >
                     <div
@@ -131,7 +130,6 @@ export function Watch_page() {
         } else if (type == 'endings') {
             return filteredEndings.map((video) => (
                 <Link
-                    reloadDocument
                     to={`/anime/${title}/watch/endings/${video.number}`}
                 >
                     <div
@@ -177,7 +175,14 @@ export function Watch_page() {
         setTimeout(() => {
             scrollToActiveVideo();
         }, 500);
+        setVideoUrl(`/api/anime/${title}/${type}/${number}`)
     }, [location]);
+
+    useEffect(() => {
+        if (videoRef != null) {
+            videoRef.current?.load();
+        }
+    }, [videoUrl])
 
     const saveCurrnetTime = (e: any) => {
         if (type == 'openings' || type == 'endings') return;
@@ -232,35 +237,31 @@ export function Watch_page() {
     return (
         <>
             <div className='topnav'>
-                <Link reloadDocument to={`/`} className='link'>
+                <Link to={`/`} className='link'>
                     Home
                 </Link>
-                <Link reloadDocument to={`/anime/${title}`} className='link'>
+                <Link to={`/anime/${title}`} className='link'>
                     Anime
                 </Link>
                 <Link
-                    reloadDocument
                     to={`/anime/${title}/watch/episodes/1`}
                     className='link'
                 >
                     Episodes
                 </Link>
                 <Link
-                    reloadDocument
                     to={`/anime/${title}/watch/movies/1`}
                     className='link'
                 >
                     Movies
                 </Link>
                 <Link
-                    reloadDocument
                     to={`/anime/${title}/watch/openings/1`}
                     className='link'
                 >
                     Openings
                 </Link>
                 <Link
-                    reloadDocument
                     to={`/anime/${title}/watch/endings/1`}
                     className='link'
                 >
@@ -268,6 +269,7 @@ export function Watch_page() {
                 </Link>
             </div>
             <video
+                ref={videoRef}
                 onTimeUpdate={saveCurrnetTime}
                 onVolumeChange={saveVolumeLevel}
                 onLoadedData={(e) => {
@@ -278,10 +280,7 @@ export function Watch_page() {
                 preload='metadata'
                 controls
             >
-                <source
-                    src={`/api/anime/${title}/${type}/${number}`}
-                    type='video/mp4'
-                />
+                <source src={videoUrl} type="video/mp4" />
             </video>
             <div className='videos-list-container'>
                 <input
