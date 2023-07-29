@@ -3,6 +3,10 @@ name = "server"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "sakugahd-server"
+path = "src/main.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
@@ -20,3 +24,8 @@ env_logger = "0.10"
 common = { path="../common" }
 urlencoding = "2.1.2"
 sha256 = "1.2.2"
+
+[dependencies.rocket_contrib]
+version = "0.4.10"
+default-features = false
+features = ["serve"]

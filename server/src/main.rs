@@ -14,13 +14,22 @@ mod routes;
 use db::establish_connection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use loader::Loader;
-use std::path::Path;
+use rocket::fs::NamedFile;
+use std::io;
+use std::path::{Path, PathBuf};
 
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations/");
 
+#[get("/<file..>")]
+async fn files(file: PathBuf) -> Option<NamedFile> {
+    NamedFile::open(Path::new("/home/senpai/projects/dev/rust/sakugahd/server/dist").join(file))
+        .await
+        .ok()
+}
+
 #[get("/")]
-fn home() -> String {
-    String::from("Home page")
+async fn index() -> io::Result<NamedFile> {
+    NamedFile::open("/home/senpai/projects/dev/rust/sakugahd/server/dist/index.html").await
 }
 
 #[rocket::main]
@@ -42,10 +51,10 @@ async fn main() {
 
     match rocket::build()
         .attach(cors::Cors)
+        .mount("/", routes![index, files])
         .mount(
             "/api",
             routes![
-                home,
                 routes::video::video_episodes,
                 routes::video::video_movies,
                 routes::video::video_openings,
