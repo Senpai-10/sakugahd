@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
 import '/public/css/pages/watch.css';
-import { EpisodeType, MovieType, OpeningType, EndingType } from "../types"
+import { EpisodeType, MovieType, OpeningType, EndingType } from '../types';
 
 export function Watch_page() {
     const { title, type, number } = useParams();
@@ -17,13 +17,17 @@ export function Watch_page() {
     const [openings, setOpenings] = useState<OpeningType[]>([]);
     const [endings, setEndings] = useState<EndingType[]>([]);
     const inputRef = useRef(null);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState('');
     const [hideFillers, setHideFillers] = useState(false);
     const videoProgressKey = `videoProgress_${title}_${type}_${number}`;
 
     const filteredEpisodes = useMemo(() => {
         return episodes.filter((video) => {
-            if (hideFillers === true && video.is_filler === true && video.number != Number(number)) {
+            if (
+                hideFillers === true &&
+                video.is_filler === true &&
+                video.number != Number(number)
+            ) {
                 return false;
             }
 
@@ -33,19 +37,28 @@ export function Watch_page() {
 
     const filteredMovies = useMemo(() => {
         return movies.filter((video) => {
-            return video.title.toLowerCase().includes(searchQuery) || video.number.toString().includes(searchQuery);
+            return (
+                video.title.toLowerCase().includes(searchQuery) ||
+                video.number.toString().includes(searchQuery)
+            );
         });
     }, [movies, searchQuery]);
 
     const filteredOpenings = useMemo(() => {
         return openings.filter((video) => {
-            return video.title.toLowerCase().includes(searchQuery) || video.number.toString().includes(searchQuery);
+            return (
+                video.title.toLowerCase().includes(searchQuery) ||
+                video.number.toString().includes(searchQuery)
+            );
         });
     }, [openings, searchQuery]);
 
     const filteredEndings = useMemo(() => {
         return endings.filter((video) => {
-            return video.title.toLowerCase().includes(searchQuery) || video.number.toString().includes(searchQuery);
+            return (
+                video.title.toLowerCase().includes(searchQuery) ||
+                video.number.toString().includes(searchQuery)
+            );
         });
     }, [endings, searchQuery]);
 
@@ -161,39 +174,75 @@ export function Watch_page() {
     }, [location]);
 
     const saveCurrnetTime = (e: any) => {
-        if (type == "openings" || type == "endings")
-            return
+        if (type == 'openings' || type == 'endings') return;
 
-        localStorage.setItem(videoProgressKey, e.target.currentTime)
-    }
+        localStorage.setItem(videoProgressKey, e.target.currentTime);
+    };
 
     const loadCurrentTime = (): number => {
-        let time = localStorage.getItem(videoProgressKey)
+        let time = localStorage.getItem(videoProgressKey);
 
         if (time != null) {
-            return Number(time)
+            return Number(time);
         }
 
-        return 0
-    }
+        return 0;
+    };
 
     return (
         <>
             <div className='topnav'>
-                <Link reloadDocument to={`/`} className="link">Home</Link>
-                <Link reloadDocument to={`/anime/${title}`} className="link">Anime</Link>
-                <Link reloadDocument to={`/anime/${title}/watch/episodes/1`} className="link">Episodes</Link>
-                <Link reloadDocument to={`/anime/${title}/watch/movies/1`} className="link">Movies</Link>
-                <Link reloadDocument to={`/anime/${title}/watch/openings/1`} className="link">Openings</Link>
-                <Link reloadDocument to={`/anime/${title}/watch/endings/1`} className="link">Endings</Link>
+                <Link reloadDocument to={`/`} className='link'>
+                    Home
+                </Link>
+                <Link reloadDocument to={`/anime/${title}`} className='link'>
+                    Anime
+                </Link>
+                <Link
+                    reloadDocument
+                    to={`/anime/${title}/watch/episodes/1`}
+                    className='link'
+                >
+                    Episodes
+                </Link>
+                <Link
+                    reloadDocument
+                    to={`/anime/${title}/watch/movies/1`}
+                    className='link'
+                >
+                    Movies
+                </Link>
+                <Link
+                    reloadDocument
+                    to={`/anime/${title}/watch/openings/1`}
+                    className='link'
+                >
+                    Openings
+                </Link>
+                <Link
+                    reloadDocument
+                    to={`/anime/${title}/watch/endings/1`}
+                    className='link'
+                >
+                    Endings
+                </Link>
             </div>
-            <video onTimeUpdate={saveCurrnetTime} onLoadedData={(e) => {e.currentTarget.volume = 0.25; e.currentTarget.currentTime = loadCurrentTime()}} width='850' preload='metadata' controls>
+            <video
+                onTimeUpdate={saveCurrnetTime}
+                onLoadedData={(e) => {
+                    e.currentTarget.volume = 0.25;
+                    e.currentTarget.currentTime = loadCurrentTime();
+                }}
+                width='850'
+                preload='metadata'
+                controls
+            >
                 <source
                     src={`/api/anime/${title}/${type}/${number}`}
                     type='video/mp4'
                 />
             </video>
-            <div className="videos-list-container">
+            <div className='videos-list-container'>
                 <input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
