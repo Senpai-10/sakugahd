@@ -26,7 +26,7 @@ CREATE TABLE anime_studios (
 
 CREATE TABLE genres (
     name VARCHAR(255) NOT NULL PRIMARY KEY,
-    type tag_types NOT NULL
+    tag_type tag_types NOT NULL
 );
 
 CREATE TABLE anime_genres (
@@ -91,7 +91,7 @@ CREATE TABLE manga_genres (
 
 CREATE TABLE themes (
     name VARCHAR(255) NOT NULL PRIMARY KEY,
-    type tag_types NOT NULL
+    tag_type tag_types NOT NULL
 );
 
 CREATE TABLE manga_themes (
@@ -101,20 +101,21 @@ CREATE TABLE manga_themes (
 );
 
 CREATE TABLE chapters (
+    id VARCHAR PRIMARY KEY NOT NULL,
     manga_title VARCHAR(255) NOT NULL REFERENCES manga(title) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     -- Number is a VARCHAR and not a float because
     -- if we store chapter number as a float chapter 1
     -- for example is going to be 1.0 not 1
-    number VARCHAR PRIMARY KEY NOT NULL,
+    number VARCHAR NOT NULL,
     -- The first image of the chapter
     cover_image VARCHAR NOT NULL
 );
 
 CREATE TABLE pages (
-    id SERIAL PRIMARY KEY NOT NULL,
+    id VARCHAR PRIMARY KEY NOT NULL,
     manga_title VARCHAR(255) NOT NULL REFERENCES manga(title) ON DELETE CASCADE,
-    chapter_number VARCHAR NOT NULL REFERENCES chapters(number) ON DELETE CASCADE,
+    chapter_id VARCHAR NOT NULL REFERENCES chapters(id) ON DELETE CASCADE,
     number INT NOT NULL,
     -- example: 1.jpg
     file_name VARCHAR NOT NULL

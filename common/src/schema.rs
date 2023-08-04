@@ -56,7 +56,8 @@ diesel::table! {
 }
 
 diesel::table! {
-    chapters (number) {
+    chapters (id) {
+        id -> Varchar,
         #[max_length = 255]
         manga_title -> Varchar,
         #[max_length = 255]
@@ -100,8 +101,7 @@ diesel::table! {
     genres (name) {
         #[max_length = 255]
         name -> Varchar,
-        #[sql_name = "type"]
-        type_ -> TagTypes,
+        tag_type -> TagTypes,
     }
 }
 
@@ -161,10 +161,10 @@ diesel::table! {
 
 diesel::table! {
     pages (id) {
-        id -> Int4,
+        id -> Varchar,
         #[max_length = 255]
         manga_title -> Varchar,
-        chapter_number -> Varchar,
+        chapter_id -> Varchar,
         number -> Int4,
         file_name -> Varchar,
     }
@@ -184,8 +184,7 @@ diesel::table! {
     themes (name) {
         #[max_length = 255]
         name -> Varchar,
-        #[sql_name = "type"]
-        type_ -> TagTypes,
+        tag_type -> TagTypes,
     }
 }
 
@@ -202,7 +201,7 @@ diesel::joinable!(manga_themes -> manga (manga_title));
 diesel::joinable!(manga_themes -> themes (theme_name));
 diesel::joinable!(movies -> anime (anime_title));
 diesel::joinable!(openings -> anime (anime_title));
-diesel::joinable!(pages -> chapters (chapter_number));
+diesel::joinable!(pages -> chapters (chapter_id));
 diesel::joinable!(pages -> manga (manga_title));
 
 diesel::allow_tables_to_appear_in_same_query!(
