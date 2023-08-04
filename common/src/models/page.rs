@@ -11,6 +11,7 @@ pub struct NewPage {
     pub manga_title: String,
     pub chapter_id: String,
     pub number: i32,
+    pub file_name: String,
 }
 
 #[derive(
@@ -23,4 +24,5 @@ pub struct Page {
     pub manga_title: String,
     pub chapter_id: String,
     pub number: i32,
+    pub file_name: String,
 }
