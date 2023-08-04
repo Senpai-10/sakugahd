@@ -14,6 +14,7 @@ mod routes;
 use db::establish_connection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use loaders::anime::AnimeLoader;
+use loaders::manga::MangaLoader;
 use rocket::fs::NamedFile;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -46,8 +47,12 @@ async fn main() {
     let env_anime_directory =
         std::env::var("ANIME_DIRECTORY").expect("ANIME_DIRECTORY must be set");
     let anime_directory = Path::new(&env_anime_directory);
+    let env_manga_directory =
+        std::env::var("MANGA_DIRECTORY").expect("MANGA_DIRECTORY must be set");
+    let manga_directory = Path::new(&env_manga_directory);
 
     AnimeLoader::new(anime_directory, &mut connection).run();
+    MangaLoader::new(manga_directory, &mut connection).run();
 
     match rocket::build()
         .attach(cors::Cors)
