@@ -107,9 +107,7 @@ CREATE TABLE chapters (
     -- Number is a VARCHAR and not a float because
     -- if we store chapter number as a float chapter 1
     -- for example is going to be 1.0 not 1
-    number VARCHAR NOT NULL,
-    -- The first image of the chapter
-    cover_image VARCHAR NOT NULL
+    number VARCHAR NOT NULL
 );
 
 CREATE TABLE pages (

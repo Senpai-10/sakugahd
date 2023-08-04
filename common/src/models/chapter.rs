@@ -10,7 +10,6 @@ pub struct NewChapter {
     pub manga_title: String,
     pub title: String,
     pub number: String,
-    pub cover_image: String,
 }
 
 #[derive(
@@ -22,5 +21,4 @@ pub struct Chapter {
     pub manga_title: String,
     pub title: String,
     pub number: String,
-    pub cover_image: String,
 }

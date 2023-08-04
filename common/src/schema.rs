@@ -63,7 +63,6 @@ diesel::table! {
         #[max_length = 255]
         title -> Varchar,
         number -> Varchar,
-        cover_image -> Varchar,
     }
 }
 
