@@ -1,4 +1,4 @@
-use crate::models::TagTypes;
+use crate::enums::TagTypes;
 use crate::schema::themes;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};

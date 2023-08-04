@@ -10,9 +10,7 @@ pub struct NewPage {
     pub id: String,
     pub manga_title: String,
     pub chapter_id: String,
-    pub title: String,
-    pub number: String,
-    pub cover_image: String,
+    pub number: i32,
 }
 
 #[derive(
@@ -24,7 +22,5 @@ pub struct Page {
     pub id: String,
     pub manga_title: String,
     pub chapter_id: String,
-    pub title: String,
-    pub number: String,
-    pub cover_image: String,
+    pub number: i32,
 }
