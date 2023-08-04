@@ -19,7 +19,7 @@ const MOVIES_DIR_NAME: &str = "movies";
 const OPENINGS_DIR_NAME: &str = "openings";
 const ENDINGS_DIR_NAME: &str = "endings";
 
-pub struct List {
+struct List {
     anime: Vec<NewAnime>,
     openings: Vec<NewOpening>,
     endings: Vec<NewEnding>,
