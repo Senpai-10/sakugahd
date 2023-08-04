@@ -8,12 +8,12 @@ extern crate log;
 
 mod cors;
 mod db;
-mod loader;
+mod loaders;
 mod routes;
 
 use db::establish_connection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
-use loader::Loader;
+use loaders::anime::AnimeLoader;
 use rocket::fs::NamedFile;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -47,7 +47,7 @@ async fn main() {
         std::env::var("ANIME_DIRECTORY").expect("ANIME_DIRECTORY must be set");
     let anime_directory = Path::new(&env_anime_directory);
 
-    Loader::new(anime_directory, &mut connection).run();
+    AnimeLoader::new(anime_directory, &mut connection).run();
 
     match rocket::build()
         .attach(cors::Cors)
