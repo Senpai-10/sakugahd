@@ -37,3 +37,12 @@ ANIME DIRECTORY
 > **Note**
 > If an episode file name includes a "(Filler)"
 > the episode will be marked as a filler
+
+## Manga directory structure example
+
+```
+MANGA DIRECTORY
+└── bleach
+    │
+    ├── cover.png  ( cover image for the manga )
+```
