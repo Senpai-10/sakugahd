@@ -1,0 +1,11 @@
+.horizontal-list {
+    display: flex;
+    gap: 20px;
+}
+
+.section {
+    padding: 2px;
+    background: #ffffff05;
+    color: var(--primary);
+    cursor: pointer;
+}
