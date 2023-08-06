@@ -9,16 +9,19 @@ use rocket::serde::json::Json;
 use std::path::Path;
 use urlencoding::decode;
 
-#[get("/manga")]
-pub fn manga() -> Json<Vec<Manga>> {
+#[get("/manga?<limit>")]
+pub fn manga(limit: Option<i64>) -> Json<Vec<Manga>> {
     let mut conn = establish_connection();
+    let mut query = schema::manga::table.into_boxed();
 
-    Json(
-        schema::manga::dsl::manga
-            .order(schema::manga::title)
-            .load(&mut conn)
-            .expect("Can't load manga"),
-    )
+    query = query.order(schema::manga::title);
+
+    if limit.is_some() {
+        let l = limit.unwrap();
+        query = query.limit(l);
+    }
+
+    Json(query.load(&mut conn).expect("Can't load manga"))
 }
 
 #[get("/manga/<title>")]
