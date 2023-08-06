@@ -26,9 +26,9 @@ export function MangaRead_page() {
         <>
             {
                 pages.map((page) => {
-                    return (<>
+                    return (<div>
                         <img src={`/api/page/${page.id}`} />
-                    </>)
+                    </div>)
                 })
             }
         </>
