@@ -128,8 +128,6 @@ pub async fn manga_page(id: String) -> Option<NamedFile> {
                 .join(format!("{} {}", chapter.number, chapter.title))
                 .join(page.file_name);
 
-            println!("{:?}", file_path);
-
             return Some(
                 NamedFile::open(&file_path)
                     .await
