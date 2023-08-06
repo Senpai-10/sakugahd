@@ -49,3 +49,25 @@ export interface EndingType {
     file_name: string;
     thumbnail_file_name: string;
 }
+
+export interface MangaType {
+    title: string,
+    description: string,
+    cover?: string,
+}
+
+export interface ChapterType {
+    id: string,
+    manga_title: string,
+    title: string,
+    number: string,
+}
+
+export interface PageType {
+    id: string,
+    manga_title: string,
+    chapter_id: string,
+    number: number,
+    file_name: string,
+}
+

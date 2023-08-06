@@ -7,6 +7,9 @@ import { Studio_page } from './pages/studio_page';
 import { Studios_page } from './pages/studios_page';
 import { Genres_page } from './pages/genres_page';
 import { Genre_page } from './pages/genre_page';
+import { Manga_page } from './pages/manga_page';
+import { MangaView_page } from './pages/manga_view_page';
+import { MangaRead_page } from './pages/manga_read_page';
 
 function App() {
     return (
@@ -21,6 +24,9 @@ function App() {
                 path='/anime/:title/watch/:type/:number'
                 element={<Watch_page />}
             />
+            <Route path='/manga' element={<Manga_page />} />
+            <Route path='/manga/:title' element={<MangaView_page />} />
+            <Route path='/manga/:title/read/:id' element={<MangaRead_page />} />
         </Routes>
     );
 }
