@@ -60,6 +60,14 @@ async fn main() {
         .mount(
             "/api",
             routes![
+                routes::manga::manga,
+                routes::manga::manga_one,
+                routes::manga::manga_genres,
+                routes::manga::manga_themes,
+                routes::manga::get_cover,
+                routes::manga::manga_chapters,
+                routes::manga::manga_chapter_pages,
+                routes::manga::manga_page,
                 routes::video::video_episodes,
                 routes::video::video_movies,
                 routes::video::video_openings,
