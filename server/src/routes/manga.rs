@@ -96,6 +96,7 @@ pub fn manga_chapters(title: String) -> Json<Vec<Chapter>> {
 #[derive(Deserialize, Serialize)]
 pub struct ChapterData {
     pub pages: Vec<Page>,
+    pub current_chapter: Chapter,
     pub prev_chapter: Option<Chapter>,
     pub next_chapter: Option<Chapter>,
 }
@@ -110,8 +111,14 @@ pub fn manga_chapter(title: String, id: String) -> Json<ChapterData> {
         .load(&mut conn)
         .expect("Can't load pages");
 
+    let current_chapter = schema::chapters::dsl::chapters
+        .filter(schema::chapters::id.eq(&id))
+        .first(&mut conn)
+        .expect("Failed to get Chapter");
+
     let mut ch_data = ChapterData {
         pages,
+        current_chapter,
         prev_chapter: None,
         next_chapter: None,
     };
