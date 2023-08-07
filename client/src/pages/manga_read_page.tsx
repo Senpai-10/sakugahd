@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { ChapterType, PageType } from "../types";
 import "/public/css/pages/manga_read.css"
@@ -41,6 +41,38 @@ export function MangaRead_page() {
             setCurrentPage(data.pages[cursor])
         }
     }, [cursor])
+
+    const handleKeyPress = (event: any) => {
+        if (data) {
+            if (event.key === "ArrowLeft") {
+                if (cursor == 0) {
+                    to_prev_chapter()
+                    return
+                }
+
+                setCursor(cursor - 1)
+            }
+            else if (event.key === "ArrowRight") {
+                if (cursor == data.pages.length - 1) {
+                    to_next_chapter()
+                    return
+                }
+
+                setCursor(cursor + 1)
+            }
+        }
+    }
+
+    useEffect(() => {
+        // attach the event listener
+        document.addEventListener('keydown', handleKeyPress);
+
+        // remove the event listener
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [handleKeyPress]);
+
 
     if (data == undefined || currentPage == undefined) {
         return <h1>Loading..</h1>
