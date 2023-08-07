@@ -1,0 +1,21 @@
+.chapters-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.ch {
+    display: inline-flex;
+    background-color: rgba(255, 255, 255, 0.03);
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.ch:hover {
+    background-color: rgba(var(--primary), 0.5);
+}
+
+.ch-number {
+    padding-right: 2rem;
+    color: gray;
+}

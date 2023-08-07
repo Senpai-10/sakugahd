@@ -5,7 +5,8 @@
 
     color-scheme: light dark;
     /* background-color: #242424; */
-    --primary: #527fff;
+    /* --primary: #527fff; */
+    --primary: 52, 127, 255;
     --filler: #a14a40;
     --focused: #1a1a1e;
     --button-label: #f8feff;

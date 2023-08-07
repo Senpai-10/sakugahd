@@ -70,7 +70,7 @@
 }
 
 .active-tab-button {
-    border-bottom: 3px solid var(--primary);
+    border-bottom: 3px solid rgb(var(--primary));
 }
 
 .anime-description {
@@ -116,7 +116,7 @@
 }
 
 .info-value-list:hover {
-    color: var(--primary);
+    color: rgb(var(--primary));
 }
 
 @media only screen and (max-width: 600px) {

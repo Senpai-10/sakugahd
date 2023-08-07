@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import { ChapterType } from "../types";
+import '/public/css/pages/manga_view.css';
 
 export function MangaView_page() {
     const { title } = useParams();
@@ -24,11 +25,18 @@ export function MangaView_page() {
 
     return (
         <>
-            {
-                chapters.map((ch: ChapterType) => {
-                    return (<Link to={`/manga/${title}/read/${ch.id}`}><h1>{ch.title}</h1></Link>)
-                })
-            }
+            <div className="chapters-list">
+                {
+                    chapters.map((ch: ChapterType) => {
+                        return (
+                            <Link className="ch" to={`/manga/${title}/read/${ch.id}`}>
+                                <p className="ch-number">{ch.number}</p>
+                                <p className="ch-title">{ch.title}</p>
+                            </Link>
+                        )
+                    })
+                }
+            </div>
         </>
     )
 }

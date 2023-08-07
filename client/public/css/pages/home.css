@@ -6,6 +6,6 @@
 .section {
     padding: 2px;
     background: #ffffff05;
-    color: var(--primary);
+    color: rgb(var(--primary));
     cursor: pointer;
 }

@@ -7,7 +7,7 @@
 }
 
 .active-video {
-    background-color: var(--primary);
+    background-color: rgb(var(--primary));
 }
 
 .filler {
@@ -32,6 +32,6 @@
 }
 
 .link:hover {
-    color: var(--primary);
+    color: rgb(var(--primary));
     cursor: pointer;
 }
