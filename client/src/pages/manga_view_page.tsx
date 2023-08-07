@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import { ChapterType } from "../types";
 import '/public/css/pages/manga_view.css';
@@ -11,7 +11,15 @@ export function MangaView_page() {
         return <h1>No title</h1>
     }
 
-    const [chapters, setChapters] = useState<ChapterType[]>();
+    const [chapters, setChapters] = useState<ChapterType[]>([]);
+    const inputRef = useRef(null);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    let filtered_list = useMemo(() => {
+        return chapters.filter((x) => (
+            x.title.toLowerCase().includes(searchQuery) || x.number.includes(searchQuery)
+        ))
+    }, [chapters, searchQuery])
 
     useEffect(() => {
         axios.get(`/api/manga/${title}/chapters`)
@@ -19,17 +27,14 @@ export function MangaView_page() {
             .then((data) => setChapters(data))
     }, [])
 
-    if (chapters == undefined) {
-        return <h1>Loading..</h1>
-    }
-
     return (
         <>
+            <input ref={inputRef} onChange={(e) => setSearchQuery(e.target.value)} />
             <div className="chapters-list">
                 {
-                    chapters.map((ch: ChapterType) => {
+                    filtered_list.map((ch: ChapterType) => {
                         return (
-                            <Link className="ch" to={`/manga/${title}/read/${ch.id}`}>
+                            <Link key={ch.id} className="ch" to={`/manga/${title}/read/${ch.id}`}>
                                 <p className="ch-number">{ch.number}</p>
                                 <p className="ch-title">{ch.title}</p>
                             </Link>
