@@ -66,7 +66,7 @@ async fn main() {
                 routes::manga::manga_themes,
                 routes::manga::get_cover,
                 routes::manga::manga_chapters,
-                routes::manga::manga_chapter_pages,
+                routes::manga::manga_chapter,
                 routes::manga::manga_page,
                 routes::video::video_episodes,
                 routes::video::video_movies,

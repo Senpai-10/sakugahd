@@ -6,6 +6,7 @@ use common::schema;
 use diesel::prelude::*;
 use rocket::fs::NamedFile;
 use rocket::serde::json::Json;
+use serde::{Deserialize, Serialize};
 use std::path::Path;
 use urlencoding::decode;
 
@@ -92,17 +93,68 @@ pub fn manga_chapters(title: String) -> Json<Vec<Chapter>> {
     )
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct ChapterData {
+    pub pages: Vec<Page>,
+    pub prev_chapter: Option<Chapter>,
+    pub next_chapter: Option<Chapter>,
+}
+
 #[get("/manga/<title>/chapters/<id>")]
-pub fn manga_chapter_pages(title: String, id: String) -> Json<Vec<Page>> {
+pub fn manga_chapter(title: String, id: String) -> Json<ChapterData> {
     let mut conn = establish_connection();
 
-    Json(
-        schema::pages::dsl::pages
-            .filter(schema::pages::chapter_id.eq(&id))
-            .order(schema::pages::number)
-            .load(&mut conn)
-            .expect("Can't load pages"),
-    )
+    let pages = schema::pages::dsl::pages
+        .filter(schema::pages::chapter_id.eq(&id))
+        .order(schema::pages::number)
+        .load(&mut conn)
+        .expect("Can't load pages");
+
+    let mut ch_data = ChapterData {
+        pages,
+        prev_chapter: None,
+        next_chapter: None,
+    };
+
+    // Find prev and next chapter
+    let chapters: Vec<Chapter> = schema::chapters::dsl::chapters
+        .filter(schema::chapters::manga_title.eq(&title))
+        .order(schema::chapters::number)
+        .load::<Chapter>(&mut conn)
+        .expect("Failed to load chapters");
+
+    let mut index = 0;
+    for ch in &chapters {
+        if ch.id == id {
+            if index != 0 {
+                let chapter_from_vec = chapters.get(index - 1);
+
+                if let Some(chapter) = chapter_from_vec {
+                    ch_data.prev_chapter = Some(
+                        schema::chapters::dsl::chapters
+                            .filter(schema::chapters::id.eq(&chapter.id))
+                            .first(&mut conn)
+                            .expect("Failed to load chapter"),
+                    );
+                }
+            }
+            if index != chapters.len() {
+                let chapter_from_vec = chapters.get(index + 1);
+
+                if let Some(chapter) = chapter_from_vec {
+                    ch_data.next_chapter = Some(
+                        schema::chapters::dsl::chapters
+                            .filter(schema::chapters::id.eq(&chapter.id))
+                            .first(&mut conn)
+                            .expect("Failed to load chapter"),
+                    );
+                }
+            }
+        }
+        index += 1;
+    }
+
+    Json(ch_data)
 }
 
 #[get("/page/<id>")]
