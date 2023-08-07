@@ -12,13 +12,13 @@ export function MangaView_page() {
     }
 
     const getHideTitle = (): boolean => {
-        const b = localStorage.getItem("hide_chapter_title")
+        const v = localStorage.getItem("hide_chapter_title")
 
-        if (b == null) {
+        if (v === "true") {
+            return true
+        } else {
             return false
         }
-
-        return Boolean(b)
     }
 
 
