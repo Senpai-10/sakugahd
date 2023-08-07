@@ -8,7 +8,8 @@
     /* --primary: #527fff; */
     --primary: 52, 127, 255;
     --filler: #a14a40;
-    --focused: #1a1a1e;
+    /* --focused: #1a1a1e; */
+    --focused: 26, 26, 30;
     --button-label: #f8feff;
     --text: #f1f1f1;
     --background: #171b23;
