@@ -8,17 +8,10 @@ use std::fs::DirEntry;
 use std::path::Path;
 use std::process;
 
-struct Lists {
-    manga: Vec<NewManga>,
-    chapters: Vec<NewChapter>,
-    pages: Vec<NewPage>,
-}
-
 pub struct MangaLoader<'a> {
     manga_directory: &'a Path,
     db_connection: &'a mut PgConnection,
     current_manga: String,
-    lists: Lists,
 }
 
 impl<'a> MangaLoader<'a> {
@@ -27,11 +20,6 @@ impl<'a> MangaLoader<'a> {
             manga_directory,
             db_connection,
             current_manga: String::new(),
-            lists: Lists {
-                manga: Vec::new(),
-                chapters: Vec::new(),
-                pages: Vec::new(),
-            },
         }
     }
 
@@ -65,22 +53,7 @@ impl<'a> MangaLoader<'a> {
         .expect("Failed to check if page exists")
     }
 
-    fn insert_into_database(&mut self) {
-        diesel::insert_into(manga::dsl::manga)
-            .values(&self.lists.manga)
-            .execute(self.db_connection)
-            .expect("Error saving manga");
-
-        diesel::insert_into(chapters::dsl::chapters)
-            .values(&self.lists.chapters)
-            .execute(self.db_connection)
-            .expect("Error saving chapters");
-
-        diesel::insert_into(pages::dsl::pages)
-            .values(&self.lists.pages)
-            .execute(self.db_connection)
-            .expect("Error saving pages");
-    }
+    fn insert_into_database(&mut self) {}
 
     pub fn run(mut self) {
         if !self.manga_directory.exists() {
@@ -127,7 +100,10 @@ impl<'a> MangaLoader<'a> {
                     new_manga.cover = Some(cover.file_name().unwrap().to_str().unwrap().into());
                 }
 
-                self.lists.manga.push(new_manga);
+                diesel::insert_into(manga::dsl::manga)
+                    .values(new_manga)
+                    .execute(self.db_connection)
+                    .expect("Error saving manga");
             }
 
             // Load chapters
@@ -185,17 +161,27 @@ impl<'a> MangaLoader<'a> {
                     number: num,
                 };
 
-                self.lists.chapters.push(new_chapter)
+                diesel::insert_into(chapters::dsl::chapters)
+                    .values(new_chapter)
+                    .execute(self.db_connection)
+                    .expect("Error saving chapters");
             }
 
             // Load pages
             if let Some(ch_id) = chapter_id {
-                self.load_pages(chapter, ch_id);
+                let pages = self.load_pages(chapter, ch_id);
+
+                diesel::insert_into(pages::dsl::pages)
+                    .values(pages)
+                    .execute(self.db_connection)
+                    .expect("Error saving pages");
             }
         }
     }
 
-    fn load_pages(&mut self, chapter_dir: DirEntry, chapter_id: String) {
+    fn load_pages(&mut self, chapter_dir: DirEntry, chapter_id: String) -> Vec<NewPage> {
+        let mut pages: Vec<NewPage> = Vec::new();
+
         for page in chapter_dir
             .path()
             .read_dir()
@@ -226,8 +212,10 @@ impl<'a> MangaLoader<'a> {
                 ),
             };
 
-            self.lists.pages.push(new_page)
+            pages.push(new_page)
         }
+
+        pages
     }
 }
 
