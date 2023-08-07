@@ -44,7 +44,13 @@ export function MangaRead_page() {
 
     const handleKeyPress = (event: any) => {
         if (data) {
-            if (event.key === "ArrowLeft") {
+            if (event.shiftKey === true && event.key == "ArrowLeft") {
+                to_prev_chapter()
+            }
+            else if (event.shiftKey === true && event.key == "ArrowRight") {
+                to_next_chapter()
+            }
+            else if (event.key === "ArrowLeft") {
                 if (cursor == 0) {
                     to_prev_chapter()
                     return
