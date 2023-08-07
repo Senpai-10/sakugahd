@@ -11,9 +11,26 @@ export function MangaView_page() {
         return <h1>No title</h1>
     }
 
+    const getHideTitle = (): boolean => {
+        const b = localStorage.getItem("hide_chapter_title")
+
+        if (b == null) {
+            return false
+        }
+
+        return Boolean(b)
+    }
+
+
     const [chapters, setChapters] = useState<ChapterType[]>([]);
     const inputRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [hideTitle, setHideTitle] = useState<boolean>(getHideTitle());
+
+    const save_hideTitle_value = (v: boolean) => {
+        localStorage.setItem("hide_chapter_title", String(v))
+        setHideTitle(v)
+    }
 
     let filtered_list = useMemo(() => {
         return chapters.filter((x) => (
@@ -30,13 +47,15 @@ export function MangaView_page() {
     return (
         <>
             <input ref={inputRef} onChange={(e) => setSearchQuery(e.target.value)} />
+            <label>Hide titles</label>
+            <input checked={hideTitle} type="checkbox" onChange={() => save_hideTitle_value(!hideTitle)} />
             <div className="chapters-list">
                 {
                     filtered_list.map((ch: ChapterType) => {
                         return (
                             <Link key={ch.id} className="ch" to={`/manga/${title}/read/${ch.id}`}>
                                 <p className="ch-number">{ch.number}</p>
-                                <p className="ch-title">{ch.title}</p>
+                                <p className="ch-title">{hideTitle ? "x".repeat(ch.title.length) : ch.title}</p>
                             </Link>
                         )
                     })
