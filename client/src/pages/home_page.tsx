@@ -26,7 +26,7 @@ export function Home_page() {
     }
 
     return (
-        <>
+        <div className="home-container">
             <Link to='/anime'>
                 <h1 className="section">Anime</h1>
                 <div className="horizontal-list">
@@ -41,16 +41,16 @@ export function Home_page() {
             </Link>
             <Link to='/manga'>
                 <h1 className="section">Manga</h1>
+                <div className="horizontal-list">
+                    {
+                        manga.map((m) => {
+                            return (
+                                <Manga title={m.title} cover={m.cover} />
+                            )
+                        })
+                    }
+                </div>
             </Link>
-            <div className="horizontal-list">
-                {
-                    manga.map((m) => {
-                        return (
-                            <Manga title={m.title} cover={m.cover} />
-                        )
-                    })
-                }
-            </div>
-        </>
+        </div>
     )
 }
