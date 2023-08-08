@@ -3,6 +3,10 @@ import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
 import '/public/css/pages/anime.css';
+import { Episode } from "../components/episode"
+import { Movie } from "../components/movie"
+import { Opening } from "../components/opening"
+import { Ending } from "../components/ending"
 import {
     AnimeType,
     EpisodeType,
@@ -10,110 +14,6 @@ import {
     OpeningType,
     EndingType,
 } from '../types';
-
-function Episode(props: { itf: EpisodeType }) {
-    const itf = props.itf;
-    const image = encodeURIComponent(itf.thumbnail_file_name);
-
-    return (
-        <Link
-            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/episodes/${itf.number
-                }`}
-        >
-            <div
-                style={{
-                    backgroundImage: `url(/api/thumbnail/${image})`,
-                }}
-                className={classNames({
-                    thumbnail: true,
-                    'filler-video': itf.is_filler,
-                })}
-            >
-                <div className='overlay'>
-                    <p className='video-title'>{itf.title}</p>
-                    {
-                        itf.is_filler ? <p className="video-filler">Filler</p> : null
-                    }
-                </div>
-            </div>
-        </Link>
-    );
-}
-
-function Movie(props: { itf: MovieType }) {
-    const itf = props.itf;
-    const image = encodeURIComponent(itf.thumbnail_file_name);
-
-    return (
-        <Link
-            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/movies/${itf.number
-                }`}
-        >
-            <div
-                style={{
-                    backgroundImage: `url(/api/thumbnail/${image})`,
-                }}
-                className='thumbnail'
-            >
-                <div className='overlay'>
-                    <p className='video-title'>
-                        {itf.number} - {itf.title}
-                    </p>
-                </div>
-            </div>
-        </Link>
-    );
-}
-
-function Opening(props: { itf: OpeningType }) {
-    const itf = props.itf;
-    const image = encodeURIComponent(itf.thumbnail_file_name);
-
-    return (
-        <Link
-            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/openings/${itf.number
-                }`}
-        >
-            <div
-                style={{
-                    backgroundImage: `url(/api/thumbnail/${image})`,
-                }}
-                className='thumbnail'
-            >
-                <div className='overlay'>
-                    <p className='video-title'>
-                        {itf.number} - {itf.title}
-                    </p>
-                </div>
-            </div>
-        </Link>
-    );
-}
-
-function Ending(props: { itf: EndingType }) {
-    const itf = props.itf;
-    const image = encodeURIComponent(itf.thumbnail_file_name);
-
-    return (
-        <Link
-            to={`/anime/${encodeURIComponent(itf.anime_title)}/watch/endings/${itf.number
-                }`}
-        >
-            <div
-                style={{
-                    backgroundImage: `url(/api/thumbnail/${image})`,
-                }}
-                className='thumbnail'
-            >
-                <div className='overlay'>
-                    <p className='video-title'>
-                        {itf.number} - {itf.title}
-                    </p>
-                </div>
-            </div>
-        </Link>
-    );
-}
 
 type Tabs = 'Episodes' | 'Movies' | 'Openings' | 'Endings';
 
