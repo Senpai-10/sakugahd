@@ -104,10 +104,8 @@ CREATE TABLE chapters (
     id VARCHAR PRIMARY KEY NOT NULL,
     manga_title VARCHAR(255) NOT NULL REFERENCES manga(title) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
-    -- Number is a VARCHAR and not a float because
-    -- if we store chapter number as a float chapter 1
-    -- for example is going to be 1.0 not 1
-    number VARCHAR NOT NULL
+    -- number can be: 1 or 1.1
+    number NUMERIC NOT NULL
 );
 
 CREATE TABLE pages (

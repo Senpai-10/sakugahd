@@ -62,7 +62,7 @@ diesel::table! {
         manga_title -> Varchar,
         #[max_length = 255]
         title -> Varchar,
-        number -> Varchar,
+        number -> Numeric,
     }
 }
 
@@ -177,6 +177,13 @@ diesel::table! {
 }
 
 diesel::table! {
+    test_chs (id) {
+        id -> Int4,
+        num -> Numeric,
+    }
+}
+
+diesel::table! {
     use diesel::sql_types::*;
     use super::sql_types::TagTypes;
 
@@ -218,5 +225,6 @@ diesel::allow_tables_to_appear_in_same_query!(
     openings,
     pages,
     studios,
+    test_chs,
     themes,
 );

@@ -1,5 +1,6 @@
 use crate::models::manga::Manga;
 use crate::schema::chapters;
+use bigdecimal::BigDecimal;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -9,7 +10,7 @@ pub struct NewChapter {
     pub id: String,
     pub manga_title: String,
     pub title: String,
-    pub number: String,
+    pub number: BigDecimal,
 }
 
 #[derive(
@@ -20,5 +21,5 @@ pub struct Chapter {
     pub id: String,
     pub manga_title: String,
     pub title: String,
-    pub number: String,
+    pub number: BigDecimal,
 }

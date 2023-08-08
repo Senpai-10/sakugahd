@@ -1,3 +1,4 @@
+use bigdecimal::BigDecimal;
 use common::models::{chapter::NewChapter, manga::NewManga, page::NewPage};
 use common::schema::{chapters, manga, pages};
 use diesel::dsl::exists;
@@ -7,6 +8,7 @@ use nanoid::nanoid;
 use std::fs::DirEntry;
 use std::path::Path;
 use std::process;
+use std::str::FromStr;
 
 pub struct MangaLoader<'a> {
     manga_directory: &'a Path,
@@ -31,7 +33,7 @@ impl<'a> MangaLoader<'a> {
         .expect("Failed to check if manga exists")
     }
 
-    fn chapter_exists(&mut self, title: &String, num: &String) -> bool {
+    fn chapter_exists(&mut self, title: &String, num: &BigDecimal) -> bool {
         select(exists(
             chapters::dsl::chapters
                 .filter(chapters::manga_title.eq(&self.current_manga))
@@ -220,8 +222,8 @@ impl<'a> MangaLoader<'a> {
 }
 
 // Just a helper function
-fn parse_chapter_title(chapter_name: String) -> Option<(String, String)> {
-    let mut d: Vec<&str> = chapter_name.split(" ").collect();
+fn parse_chapter_title(chapter_name: String) -> Option<(BigDecimal, String)> {
+    let mut d: Vec<&str> = chapter_name.split(' ').collect();
 
     // Because the first item is going to be the chapter number
     // and the rest is the title
@@ -229,9 +231,9 @@ fn parse_chapter_title(chapter_name: String) -> Option<(String, String)> {
         return None;
     }
 
-    let chapter_number = d[0].to_string();
+    let chapter_number = d[0];
     d.remove(0);
     let chapter_title = d.join(" ");
 
-    Some((chapter_number, chapter_title))
+    Some((BigDecimal::from_str(chapter_number).unwrap(), chapter_title))
 }
