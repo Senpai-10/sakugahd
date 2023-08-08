@@ -140,44 +140,31 @@ impl<'a> MangaLoader<'a> {
                 }
             };
 
-            let mut chapter_id: Option<String> = None;
-
             if self.chapter_exists(&title, &num) {
-                chapter_id = Some(
-                    chapters::dsl::chapters
-                        .filter(chapters::manga_title.eq(&self.current_manga))
-                        .filter(chapters::title.eq(&title))
-                        .filter(chapters::number.eq(&num))
-                        .select(chapters::id)
-                        .first(self.db_connection)
-                        .expect("Failed to get chapter id"),
-                );
-            } else {
-                let id = nanoid!();
-                chapter_id = Some(id.clone());
-
-                let new_chapter = NewChapter {
-                    id,
-                    manga_title: self.current_manga.clone(),
-                    title,
-                    number: num,
-                };
-
-                diesel::insert_into(chapters::dsl::chapters)
-                    .values(new_chapter)
-                    .execute(self.db_connection)
-                    .expect("Error saving chapters");
+                continue;
             }
+
+            let id = nanoid!();
+
+            let new_chapter = NewChapter {
+                id: id.clone(),
+                manga_title: self.current_manga.clone(),
+                title,
+                number: num,
+            };
+
+            diesel::insert_into(chapters::dsl::chapters)
+                .values(new_chapter)
+                .execute(self.db_connection)
+                .expect("Error saving chapters");
 
             // Load pages
-            if let Some(ch_id) = chapter_id {
-                let pages = self.load_pages(chapter, ch_id);
+            let pages = self.load_pages(chapter, id);
 
-                diesel::insert_into(pages::dsl::pages)
-                    .values(pages)
-                    .execute(self.db_connection)
-                    .expect("Error saving pages");
-            }
+            diesel::insert_into(pages::dsl::pages)
+                .values(pages)
+                .execute(self.db_connection)
+                .expect("Error saving pages");
         }
     }
 
