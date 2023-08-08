@@ -1,4 +1,3 @@
-import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { Home_page } from './pages/home_page';
 import { AnimeView_page } from './pages/anime_view_page';
