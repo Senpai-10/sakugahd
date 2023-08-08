@@ -14,9 +14,8 @@ pub fn anime(limit: Option<i64>) -> Json<Vec<Anime>> {
 
     query = query.order(schema::anime::title);
 
-    if limit.is_some() {
-        let l = limit.unwrap();
-        query = query.limit(l);
+    if let Some(limit) = limit {
+        query = query.limit(limit);
     }
 
     Json(query.load(&mut conn).expect("Can't load anime"))
