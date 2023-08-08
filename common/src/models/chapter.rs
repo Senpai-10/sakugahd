@@ -14,7 +14,15 @@ pub struct NewChapter {
 }
 
 #[derive(
-    Queryable, Selectable, Identifiable, Associations, Debug, PartialEq, Serialize, Deserialize,
+    Queryable,
+    Selectable,
+    Identifiable,
+    Associations,
+    Debug,
+    Clone,
+    PartialEq,
+    Serialize,
+    Deserialize,
 )]
 #[diesel(belongs_to(Manga, foreign_key = manga_title))]
 pub struct Chapter {

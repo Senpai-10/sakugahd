@@ -129,8 +129,7 @@ pub fn manga_chapter(title: String, id: String) -> Json<ChapterData> {
         .load::<Chapter>(&mut conn)
         .expect("Failed to load chapters");
 
-    let mut index = 0;
-    for ch in &chapters {
+    for (index, ch) in chapters.clone().into_iter().enumerate() {
         if ch.id == id {
             if index != 0 {
                 let chapter_from_vec = chapters.get(index - 1);
@@ -157,7 +156,6 @@ pub fn manga_chapter(title: String, id: String) -> Json<ChapterData> {
                 }
             }
         }
-        index += 1;
     }
 
     Json(ch_data)
