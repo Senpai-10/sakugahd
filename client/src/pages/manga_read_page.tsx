@@ -130,7 +130,7 @@ export function MangaRead_page() {
         <div>
             <div className="info-navbar">
                 <span>Chapter {data.current_chapter.number} - {data.current_chapter.title}</span>
-                <span>Page {currentPage.number}</span>
+                <span>Page {currentPage.number}/{data.pages.length}</span>
 
                 <div className="btn-container">
                     <button onClick={to_prev_chapter} disabled={data.prev_chapter == undefined}>Prev chapter</button>
