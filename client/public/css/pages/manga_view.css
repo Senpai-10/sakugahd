@@ -1,6 +1,11 @@
+.manga-view-container {
+    padding: 1rem;
+}
+
 .chapters-list {
     display: flex;
     flex-direction: column;
+    padding-top: 5px;
 }
 
 .ch {
@@ -12,10 +17,5 @@
 }
 
 .ch:hover {
-    background-color: rgba(var(--primary), 0.5);
-}
-
-.ch-number {
-    padding-right: 2rem;
-    color: gray;
+    background-color: rgba(var(--primary), 0.05);
 }

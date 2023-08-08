@@ -45,7 +45,7 @@ export function MangaView_page() {
     }, [])
 
     return (
-        <>
+        <div className="manga-view-container">
             <input ref={inputRef} onChange={(e) => setSearchQuery(e.target.value)} />
             <label>Hide titles</label>
             <input checked={hideTitle} type="checkbox" onChange={() => save_hideTitle_value(!hideTitle)} />
@@ -54,13 +54,12 @@ export function MangaView_page() {
                     filtered_list.map((ch: ChapterType) => {
                         return (
                             <Link key={ch.id} className="ch" to={`/manga/${title}/read/${ch.id}`}>
-                                <p className="ch-number">{ch.number}</p>
-                                <p className="ch-title">{hideTitle ? "x".repeat(ch.title.length) : ch.title}</p>
+                                <span>{ch.number} - {hideTitle ? "x".repeat(ch.title.length) : ch.title}</span>
                             </Link>
                         )
                     })
                 }
             </div>
-        </>
+        </div>
     )
 }
