@@ -3,6 +3,7 @@ import axios from 'axios';
 import Anime from './anime';
 import '/public/css/components/animeList.css';
 import { AnimeType } from '../types';
+import { Link } from 'react-router-dom';
 
 function AnimeList() {
     const [anime, setAnime] = useState<AnimeType[]>([]);
@@ -39,11 +40,13 @@ function AnimeList() {
             </div>
             <div className='anime-list'>
                 {filteredAnimeList.map((anime_) => (
-                    <Anime
-                        key={anime_.title}
-                        title={anime_.title}
-                        cover={anime_.cover}
-                    />
+                    <Link to={`/anime/${anime_.title}`}>
+                        <Anime
+                            key={anime_.title}
+                            title={anime_.title}
+                            cover={anime_.cover}
+                        />
+                    </Link>
                 ))}
             </div>
         </>

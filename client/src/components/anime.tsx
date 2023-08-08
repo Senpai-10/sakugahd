@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import '/public/css/components/anime.css';
 
 interface Props {
@@ -18,19 +17,17 @@ function Anime(props: Props) {
     };
 
     return (
-        <Link to={`/anime/${props.title}`}>
-            <div
-                className='anime'
-                style={{
-                    backgroundImage: `url(${imageUrl()})`,
-                }}
-                key={props.title}
-            >
-                <div className='anime-overlay'>
-                    <p className='anime-title'>{props.title}</p>
-                </div>
+        <div
+            className='anime'
+            style={{
+                backgroundImage: `url(${imageUrl()})`,
+            }}
+            key={props.title}
+        >
+            <div className='anime-overlay'>
+                <p className='anime-title'>{props.title}</p>
             </div>
-        </Link>
+        </div>
     );
 }
 

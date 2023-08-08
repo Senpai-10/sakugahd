@@ -3,6 +3,7 @@ import axios from 'axios';
 import '/public/css/pages/manga.css';
 import { MangaType } from '../types';
 import { Manga } from '../components/manga';
+import { Link } from 'react-router-dom';
 
 export function Manga_page() {
     const [manga, setManga] = useState<MangaType[]>([]);
@@ -39,11 +40,13 @@ export function Manga_page() {
             </div>
             <div className='manga-list'>
                 {filteredMangaList.map((manga_) => (
-                    <Manga
-                        key={manga_.title}
-                        title={manga_.title}
-                        cover={manga_.cover}
-                    />
+                    <Link to={`/manga/${manga_.title}`}>
+                        <Manga
+                            key={manga_.title}
+                            title={manga_.title}
+                            cover={manga_.cover}
+                        />
+                    </Link>
                 ))}
             </div>
         </>

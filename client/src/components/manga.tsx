@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import '/public/css/components/manga.css';
 
 interface Props {
@@ -18,19 +17,17 @@ export function Manga(props: Props) {
     };
 
     return (
-        <Link to={`/manga/${props.title}`}>
-            <div
-                className='manga'
-                style={{
-                    backgroundImage: `url(${imageUrl()})`,
-                }}
-                key={props.title}
-            >
-                <div className='manga-overlay'>
-                    <p className='manga-title'>{props.title}</p>
-                </div>
+        <div
+            className='manga'
+            style={{
+                backgroundImage: `url(${imageUrl()})`,
+            }}
+            key={props.title}
+        >
+            <div className='manga-overlay'>
+                <p className='manga-title'>{props.title}</p>
             </div>
-        </Link>
+        </div>
     );
 }
 
