@@ -44,17 +44,6 @@ impl<'a> MangaLoader<'a> {
         .expect("Failed to check if chapter exists")
     }
 
-    fn page_exists(&mut self, chapter_id: &String, page_number: &i32) -> bool {
-        select(exists(
-            pages::dsl::pages
-                .filter(pages::manga_title.eq(&self.current_manga))
-                .filter(pages::chapter_id.eq(chapter_id))
-                .filter(pages::number.eq(page_number)),
-        ))
-        .get_result::<bool>(self.db_connection)
-        .expect("Failed to check if page exists")
-    }
-
     fn insert_into_database(&mut self) {}
 
     pub fn run(mut self) {
@@ -186,10 +175,6 @@ impl<'a> MangaLoader<'a> {
                 .unwrap()
                 .parse::<i32>()
                 .unwrap();
-
-            if self.page_exists(&chapter_id, &page_number) {
-                continue;
-            }
 
             let new_page = NewPage {
                 id: nanoid!(),
