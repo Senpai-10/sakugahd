@@ -1,4 +1,4 @@
-use crate::loader::THUMBNAILS_CACHE_DIR;
+use crate::loaders::anime::THUMBNAILS_CACHE_DIR;
 use rocket::fs::NamedFile;
 use std::path::{Path, PathBuf};
 use urlencoding::decode;

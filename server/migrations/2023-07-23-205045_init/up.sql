@@ -1,6 +1,7 @@
 CREATE TYPE anime_format AS ENUM ('TV', 'OVA', 'ONA', 'MOVIE', 'SPECIAL');
 CREATE TYPE anime_status AS ENUM ('FINISHED', 'ONGOING');
 CREATE TYPE anime_season AS ENUM ('SPRING', 'SUMMER', 'FALL', 'WINTER');
+CREATE TYPE tag_types AS ENUM ('ANIME', 'MANGA');
 
 CREATE TABLE anime (
     title VARCHAR(255) PRIMARY KEY NOT NULL,
@@ -24,7 +25,8 @@ CREATE TABLE anime_studios (
 );
 
 CREATE TABLE genres (
-    name VARCHAR(255) NOT NULL PRIMARY KEY
+    name VARCHAR(255) NOT NULL PRIMARY KEY,
+    tag_type tag_types NOT NULL
 );
 
 CREATE TABLE anime_genres (
@@ -73,4 +75,44 @@ CREATE TABLE endings (
     title VARCHAR(255) NOT NULL,
     file_name VARCHAR NOT NULL,
     thumbnail_file_name VARCHAR NOT NULL
+);
+
+CREATE TABLE manga (
+    title VARCHAR(255) PRIMARY KEY NOT NULL,
+    description TEXT NOT NULL,
+    cover VARCHAR
+);
+
+CREATE TABLE manga_genres (
+    id SERIAL PRIMARY KEY NOT NULL,
+    manga_title VARCHAR(255) NOT NULL REFERENCES manga(title) ON DELETE CASCADE,
+    genre_name VARCHAR NOT NULL REFERENCES genres(name) ON DELETE CASCADE
+);
+
+CREATE TABLE themes (
+    name VARCHAR(255) NOT NULL PRIMARY KEY,
+    tag_type tag_types NOT NULL
+);
+
+CREATE TABLE manga_themes (
+    id SERIAL PRIMARY KEY NOT NULL,
+    manga_title VARCHAR(255) NOT NULL REFERENCES manga(title) ON DELETE CASCADE,
+    theme_name VARCHAR NOT NULL REFERENCES themes(name) ON DELETE CASCADE
+);
+
+CREATE TABLE chapters (
+    id VARCHAR PRIMARY KEY NOT NULL,
+    manga_title VARCHAR(255) NOT NULL REFERENCES manga(title) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    -- number can be: 1 or 1.1
+    number NUMERIC NOT NULL
+);
+
+CREATE TABLE pages (
+    id VARCHAR PRIMARY KEY NOT NULL,
+    manga_title VARCHAR(255) NOT NULL REFERENCES manga(title) ON DELETE CASCADE,
+    chapter_id VARCHAR NOT NULL REFERENCES chapters(id) ON DELETE CASCADE,
+    number INT NOT NULL,
+    -- example: 1.jpg
+    file_name VARCHAR NOT NULL
 );

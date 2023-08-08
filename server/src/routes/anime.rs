@@ -7,16 +7,18 @@ use rocket::serde::json::Json;
 use std::path::Path;
 use urlencoding::decode;
 
-#[get("/anime")]
-pub fn anime() -> Json<Vec<Anime>> {
+#[get("/anime?<limit>")]
+pub fn anime(limit: Option<i64>) -> Json<Vec<Anime>> {
     let mut conn = establish_connection();
+    let mut query = schema::anime::table.into_boxed();
 
-    Json(
-        schema::anime::dsl::anime
-            .order(schema::anime::title)
-            .load(&mut conn)
-            .expect("Can't load anime"),
-    )
+    query = query.order(schema::anime::title);
+
+    if let Some(limit) = limit {
+        query = query.limit(limit);
+    }
+
+    Json(query.load(&mut conn).expect("Can't load anime"))
 }
 
 #[get("/anime/<title>")]

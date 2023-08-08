@@ -2,6 +2,7 @@ pub mod anime;
 pub mod endings;
 pub mod episodes;
 pub mod genres;
+pub mod manga;
 pub mod movies;
 pub mod openings;
 pub mod studios;

@@ -12,7 +12,7 @@ path = "src/main.rs"
 [dependencies]
 rocket = { version = "0.5.0-rc.3", features = ["json"]}
 rocket_seek_stream = { git = "https://github.com/rydz/rocket_seek_stream" }
-diesel = { version = "2.1.0", features = ["postgres"] }
+diesel = { version = "2.1.0", features = ["postgres", "numeric"] }
 diesel_migrations = { version = "2.1.0", features = ["postgres"] }
 diesel-derive-enum = { version = "2.1.0", features = ["postgres"] }
 nanoid = "0.4.0"
@@ -24,6 +24,7 @@ env_logger = "0.10"
 common = { path="../common" }
 urlencoding = "2.1.2"
 sha256 = "1.2.2"
+bigdecimal = {version = "0.3.1", features = ["serde"]}
 
 [dependencies.rocket_contrib]
 version = "0.4.10"

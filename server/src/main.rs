@@ -8,12 +8,13 @@ extern crate log;
 
 mod cors;
 mod db;
-mod loader;
+mod loaders;
 mod routes;
 
 use db::establish_connection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
-use loader::Loader;
+use loaders::anime::AnimeLoader;
+use loaders::manga::MangaLoader;
 use rocket::fs::NamedFile;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -46,8 +47,12 @@ async fn main() {
     let env_anime_directory =
         std::env::var("ANIME_DIRECTORY").expect("ANIME_DIRECTORY must be set");
     let anime_directory = Path::new(&env_anime_directory);
+    let env_manga_directory =
+        std::env::var("MANGA_DIRECTORY").expect("MANGA_DIRECTORY must be set");
+    let manga_directory = Path::new(&env_manga_directory);
 
-    Loader::new(anime_directory, &mut connection).run();
+    AnimeLoader::new(anime_directory, &mut connection).run();
+    MangaLoader::new(manga_directory, &mut connection).run();
 
     match rocket::build()
         .attach(cors::Cors)
@@ -55,6 +60,14 @@ async fn main() {
         .mount(
             "/api",
             routes![
+                routes::manga::manga,
+                routes::manga::manga_one,
+                routes::manga::manga_genres,
+                routes::manga::manga_themes,
+                routes::manga::get_cover,
+                routes::manga::manga_chapters,
+                routes::manga::manga_chapter,
+                routes::manga::manga_page,
                 routes::video::video_episodes,
                 routes::video::video_movies,
                 routes::video::video_openings,

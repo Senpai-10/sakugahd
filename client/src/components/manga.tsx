@@ -1,34 +1,33 @@
-import '/public/css/components/anime.css';
+import '/public/css/components/manga.css';
 
 interface Props {
     title: string;
-    cover: string;
+    cover?: string;
 }
 
-function Anime(props: Props) {
+export function Manga(props: Props) {
     let imageUrl = () => {
         if (props.cover == undefined) {
             return '/default_cover.svg';
         }
 
-        return `/api/anime/${encodeURI(props.title)}/cover/${encodeURI(
+        return `/api/manga/${encodeURI(props.title)}/cover/${encodeURI(
             props.cover
         )}`;
     };
 
     return (
         <div
-            className='anime'
+            className='manga'
             style={{
                 backgroundImage: `url(${imageUrl()})`,
             }}
             key={props.title}
         >
-            <div className='anime-overlay'>
-                <p className='anime-title'>{props.title}</p>
+            <div className='manga-overlay'>
+                <p className='manga-title'>{props.title}</p>
             </div>
         </div>
     );
 }
 
-export default Anime;

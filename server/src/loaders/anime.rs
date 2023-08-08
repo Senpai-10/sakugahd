@@ -19,7 +19,7 @@ const MOVIES_DIR_NAME: &str = "movies";
 const OPENINGS_DIR_NAME: &str = "openings";
 const ENDINGS_DIR_NAME: &str = "endings";
 
-pub struct List {
+struct List {
     anime: Vec<NewAnime>,
     openings: Vec<NewOpening>,
     endings: Vec<NewEnding>,
@@ -27,7 +27,7 @@ pub struct List {
     movies: Vec<NewMovie>,
 }
 
-pub struct Loader<'a> {
+pub struct AnimeLoader<'a> {
     ffmpegthumbnailer_binary: String,
     anime_directory: &'a Path,
     db_connection: &'a mut PgConnection,
@@ -35,7 +35,7 @@ pub struct Loader<'a> {
     lists: List,
 }
 
-impl<'a> Loader<'a> {
+impl<'a> AnimeLoader<'a> {
     pub fn new(anime_directory: &'a Path, db_connection: &'a mut PgConnection) -> Self {
         let ffmpegthumbnailer_binary =
             env::var("FFMPEGTHUMBNAILER_BINARY").unwrap_or("ffmpegthumbnailer".into());

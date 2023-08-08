@@ -1,29 +1,29 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
-import Anime from './anime';
-import '/public/css/components/animeList.css';
-import { AnimeType } from '../types';
+import '/public/css/pages/manga.css';
+import { MangaType } from '../types';
+import { Manga } from '../components/manga';
 import { Link } from 'react-router-dom';
 
-function AnimeList() {
-    const [anime, setAnime] = useState<AnimeType[]>([]);
+export function Manga_page() {
+    const [manga, setManga] = useState<MangaType[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const inputRef = useRef(null);
 
-    const filteredAnimeList = useMemo(() => {
-        return anime.filter((a) => {
+    const filteredMangaList = useMemo(() => {
+        return manga.filter((a) => {
             return (
                 a.title.toLowerCase().includes(searchQuery) ||
                 a.description.toLowerCase().includes(searchQuery)
             );
         });
-    }, [anime, searchQuery]);
+    }, [manga, searchQuery]);
 
     useEffect(() => {
         axios
-            .get('/api/anime')
+            .get('/api/manga')
             .then((res) => res.data)
-            .then((data) => setAnime(data));
+            .then((data) => setManga(data));
     }, []);
 
     return (
@@ -35,16 +35,16 @@ function AnimeList() {
                     ref={inputRef}
                     type='text'
                     placeholder='Search'
-                    className='anime-searchbar'
+                    className='manga-searchbar'
                 />
             </div>
-            <div className='anime-list'>
-                {filteredAnimeList.map((anime_) => (
-                    <Link to={`/anime/${anime_.title}`}>
-                        <Anime
-                            key={anime_.title}
-                            title={anime_.title}
-                            cover={anime_.cover}
+            <div className='manga-list'>
+                {filteredMangaList.map((manga_) => (
+                    <Link to={`/manga/${manga_.title}`}>
+                        <Manga
+                            key={manga_.title}
+                            title={manga_.title}
+                            cover={manga_.cover}
                         />
                     </Link>
                 ))}
@@ -52,5 +52,3 @@ function AnimeList() {
         </>
     );
 }
-
-export default AnimeList;
