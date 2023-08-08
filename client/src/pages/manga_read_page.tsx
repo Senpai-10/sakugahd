@@ -133,6 +133,8 @@ export function MangaRead_page() {
                 <span>Page {currentPage.number}/{data.pages.length}</span>
 
                 <div className="btn-container">
+                    <button onClick={() => navigate(`/`)}>Home</button>
+                    <button onClick={() => navigate(`/manga/${title}`)}>Chapters list</button>
                     <button onClick={to_prev_chapter} disabled={data.prev_chapter == undefined}>Prev chapter</button>
                     <button onClick={to_next_chapter} disabled={data.next_chapter == undefined}>Next chapter</button>
                 </div>
