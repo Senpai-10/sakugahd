@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { ChapterType, PageType } from "../types";
 import "/public/css/pages/manga_read.css"
