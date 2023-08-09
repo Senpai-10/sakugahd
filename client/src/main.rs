@@ -1,7 +1,5 @@
-mod app;
-
-use app::App;
+use leptos::{mount_to_body, view};
 
 fn main() {
-    yew::Renderer::<App>::new().render();
+    mount_to_body(|cx| view! {cx, <h1>Hello from leptos!</h1>})
 }
