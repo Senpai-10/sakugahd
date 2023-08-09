@@ -46,3 +46,15 @@ MANGA DIRECTORY
     │
     ├── cover.png  ( cover image for the manga )
 ```
+
+### Setup web client dev env
+
+- Install trunk
+    ```
+    cargo install trunk
+    ```
+
+- Add the compilation target wasm32
+    ```
+    rustup target add wasm32-unknown-unknown
+    ```
