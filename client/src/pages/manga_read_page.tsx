@@ -95,37 +95,6 @@ export function MangaRead_page() {
         }
     }
 
-    const _handleClick = (e: any) => {
-        if (imgRef.current) {
-            const imgWidth = imgRef.current.getBoundingClientRect().width;
-            const halfImgWidth = imgWidth / 2;
-            const mouseXPos = e.nativeEvent.offsetX;
-
-            if (mouseXPos <= halfImgWidth) {
-                if (cursor == 0) {
-                    if (data.prev_chapter) {
-                        console.log("Prev chapter")
-                        to_prev_chapter()
-                    }
-                    return
-                }
-
-                setCursor(cursor - 1)
-            } else {
-                if (cursor == data.pages.length - 1) {
-                    // you are on last page
-                    if (data.next_chapter) {
-                        console.log("Next chapter")
-                        to_next_chapter()
-                    }
-                    return
-                }
-
-                setCursor(cursor + 1)
-            }
-        }
-    };
-
     return (
         <div>
             <div className="info-navbar">
@@ -139,7 +108,7 @@ export function MangaRead_page() {
                     <button onClick={to_next_chapter} disabled={data.next_chapter == undefined}>Next chapter</button>
                 </div>
             </div>
-            <div className="page-img-container" onClick={_handleClick}>
+            <div className="page-img-container">
                 <img ref={imgRef} className="page-img" src={`/api/page/${currentPage.id}`} />
             </div>
         </div>
