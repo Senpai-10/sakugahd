@@ -219,13 +219,23 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "client"
+version = "0.1.0"
+dependencies = [
+ "common",
+ "gloo-net",
+ "serde",
+ "wasm-bindgen-futures",
+ "yew",
+]
+
+[[package]]
 name = "common"
 version = "0.1.0"
 dependencies = [
  "bigdecimal",
  "diesel",
  "diesel-derive-enum",
- "rocket 0.5.0-rc.3",
  "serde",
 ]
 
@@ -2632,13 +2642,6 @@ dependencies = [
  "nom",
  "once_cell",
  "petgraph",
-]
-
-[[package]]
-name = "trunk-template"
-version = "0.1.0"
-dependencies = [
- "yew",
 ]
 
 [[package]]
