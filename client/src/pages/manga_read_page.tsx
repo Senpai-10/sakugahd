@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { ChapterType, PageType } from "../types";
+import { ReadingProgressbar } from "../components/readingProgressbar";
 import "/public/css/pages/manga_read.css"
 
 interface Data {
@@ -97,6 +98,10 @@ export function MangaRead_page() {
 
     return (
         <div>
+            <ReadingProgressbar cursor={cursor} pages={data.pages} setCursor={setCursor} />
+            <div className="page-img-container">
+                <img ref={imgRef} className="page-img" src={`/api/page/${currentPage.id}`} />
+            </div>
             <div className="info-navbar">
                 <span>Chapter {data.current_chapter.number} - {data.current_chapter.title}</span>
                 <span>Page {currentPage.number}/{data.pages.length}</span>
@@ -108,9 +113,6 @@ export function MangaRead_page() {
                     <button onClick={to_next_chapter} disabled={data.next_chapter == undefined}>Next chapter</button>
                 </div>
             </div>
-            <div className="page-img-container">
-                <img ref={imgRef} className="page-img" src={`/api/page/${currentPage.id}`} />
-            </div>
-        </div>
+        </div >
     )
 }
