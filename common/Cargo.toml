@@ -11,3 +11,6 @@ diesel = { version = "2.1.0", features = ["postgres", "numeric"] }
 serde = "1.0.171"
 diesel-derive-enum = { version = "2.1.0", features = ["postgres"] }
 bigdecimal = {version = "0.3.1", features = ["serde"]}
+
+[features]
+server = []

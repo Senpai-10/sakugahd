@@ -21,7 +21,7 @@ serde = "1.0.171"
 dirs = "5.0.1"
 log = "0.4.19"
 env_logger = "0.10"
-common = { path="../common" }
+common = { path="../common", features = ["server"]}
 urlencoding = "2.1.2"
 sha256 = "1.2.2"
 bigdecimal = {version = "0.3.1", features = ["serde"]}

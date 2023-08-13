@@ -11,3 +11,4 @@ license = "MIT"
 [dependencies]
 common = { path="../common" }
 leptos = { version = "0.4.8", features = ["csr", "nightly"] }
+reqwasm = "0.5.0"

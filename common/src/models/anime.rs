@@ -46,11 +46,13 @@ pub struct NewAnime {
     pub cover: Option<String>,
 }
 
-#[derive(
-    Debug, Queryable, AsChangeset, Identifiable, Selectable, PartialEq, Serialize, Deserialize,
+#[cfg_attr(
+    feature = "server",
+    derive(Queryable, AsChangeset, Identifiable, Selectable)
 )]
-#[diesel(primary_key(title))]
-#[diesel(table_name = anime)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "server", diesel(primary_key(title)))]
+#[cfg_attr(feature = "server", diesel(table_name = anime))]
 pub struct Anime {
     pub title: String,
     pub description: String,
