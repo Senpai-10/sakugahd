@@ -13,6 +13,10 @@ windows:
     - client:
           - cd client/
           - clear
+    - sass build:
+          - cd client/
+          - clear
+          - sass --watch src/sass:src/css/
     - bacon: bacon
     - git:
           - clear

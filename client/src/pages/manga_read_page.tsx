@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { ChapterType, PageType } from "../types";
 import { ReadingProgressbar } from "../components/readingProgressbar";
-import "/public/css/pages/manga_read.css"
+import "../css/pages/manga_read.css"
 
 interface Data {
     pages: PageType[]

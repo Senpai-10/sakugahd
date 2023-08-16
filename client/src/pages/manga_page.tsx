@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
-import '/public/css/pages/manga.css';
+import '../css/pages/manga.css';
 import { MangaType } from '../types';
 import { Manga } from '../components/manga';
 import { Link } from 'react-router-dom';

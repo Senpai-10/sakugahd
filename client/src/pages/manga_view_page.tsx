@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import { ChapterType } from "../types";
-import '/public/css/pages/manga_view.css';
+import '../css/pages/manga_view.css';
 
 export function MangaView_page() {
     const { title } = useParams();

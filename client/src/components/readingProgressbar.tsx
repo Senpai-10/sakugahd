@@ -1,5 +1,5 @@
 import { PageType } from '../types';
-import '/public/css/components/readingProgressbar.css';
+import '../css/components/readingProgressbar.css';
 import classNames from 'classnames';
 
 interface Props {

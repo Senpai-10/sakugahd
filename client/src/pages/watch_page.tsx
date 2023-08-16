@@ -2,7 +2,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
-import '/public/css/pages/watch.css';
+import '../css/pages/watch.css';
 import { EpisodeType, MovieType, OpeningType, EndingType } from '../types';
 
 interface VideoProgress {

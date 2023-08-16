@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
-import '/public/css/pages/anime.css';
+import '../css/pages/anime.css';
 import { Episode } from "../components/episode"
 import { Movie } from "../components/movie"
 import { Opening } from "../components/opening"

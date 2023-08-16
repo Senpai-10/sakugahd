@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { AnimeType } from '../types';
 import Anime from '../components/anime';
 import axios from 'axios';
-import '/public/css/components/animeList.css';
+import '../css/components/animeList.css';
 
 export function Studio_page() {
     const { name } = useParams();

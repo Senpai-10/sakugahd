@@ -1,4 +1,4 @@
-import '/public/css/components/manga.css';
+import '../css/components/manga.css';
 
 interface Props {
     title: string;

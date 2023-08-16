@@ -1,0 +1,13 @@
+.home-container {
+  padding: 1rem; }
+
+.horizontal-list {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap; }
+
+.section {
+  padding: 2px;
+  cursor: pointer; }
+
+/*# sourceMappingURL=home.css.map */

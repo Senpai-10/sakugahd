@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import '/public/css/pages/home.css';
+import '../css/pages/home.css';
 import { AnimeType, MangaType } from '../types';
 import axios from 'axios';
 import Anime from '../components/anime';

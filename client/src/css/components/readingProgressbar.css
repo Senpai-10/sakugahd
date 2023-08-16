@@ -1,0 +1,21 @@
+.reading-progressbar {
+  display: flex;
+  width: 100vw;
+  height: 15px; }
+
+.reading-progressbar-block {
+  width: 10%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer; }
+
+.reading-progressbar-block:hover {
+  background-color: rgba(255, 255, 255, 0.3); }
+
+.reading-progressbar-block-active {
+  background-color: rgba(var(--primary), 1); }
+
+.reading-progressbar-done {
+  background-color: rgba(var(--primary), 0.5); }
+
+/*# sourceMappingURL=readingProgressbar.css.map */
