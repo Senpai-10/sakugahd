@@ -1,13 +1,16 @@
 .home-container {
-  padding: 1rem; }
+  padding: 1rem;
+}
 
 .horizontal-list {
   display: flex;
   gap: 20px;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+}
 
 .section {
   padding: 2px;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 /*# sourceMappingURL=home.css.map */

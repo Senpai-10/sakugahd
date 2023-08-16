@@ -16,7 +16,7 @@ windows:
     - sass build:
           - cd client/
           - clear
-          - sass --watch src/sass:src/css/
+          - sass --watch src/scss:src/css/
     - bacon: bacon -j clippy
     - git:
           - clear
