@@ -34,6 +34,7 @@ export function MangaRead_page() {
                 setData(data)
                 setCursor(0)
                 setCurrentPage(data.pages[cursor])
+                document.title = `${data.current_chapter.number} - ${data.current_chapter.title}`
             })
     }, [location])
 
