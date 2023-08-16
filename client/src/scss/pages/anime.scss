@@ -58,8 +58,8 @@
     border-radius: 3px;
     background: linear-gradient(
         0deg,
-        rgba(0, 0, 0, 0.8) 30%,
-        rgba(0, 0, 0, 0.2) 100%
+        rgba(#000000, 0.8) 30%,
+        rgba(#000000, 0.2) 100%
     );
 }
 
@@ -76,29 +76,30 @@
 }
 
 .anime-description {
-    background-color: #00000025;
+    background-color: rgba(#000000, 0.25);
     padding: 2rem;
     display: flex;
     gap: 2rem;
-}
 
-.anime-description img {
-    width: 240px;
-    height: 340px;
-    border-radius: 10px;
-}
+    img {
+        width: 240px;
+        height: 340px;
+        border-radius: 10px;
+    }
 
-.anime-description div h2 {
-    font-weight: bold;
-}
-
-.anime-description div p {
-    /* width: 800px; */
-    color: #ffffff60;
+    div {
+        h2 {
+            font-weight: bold;
+        }
+        p {
+            /* width: 800px; */
+            color: rgba(#ffffff, 0.60);
+        }
+    }
 }
 
 .anime-info {
-    background: #ffffff05;
+    background: rgba(#ffffff, .05);
     max-width: max-content;
     padding: 10px 60px 10px 20px;
 }
@@ -115,11 +116,12 @@
     display: inline-block;
     margin-right: 5px;
     cursor: pointer;
+
+    &:hover {
+        color: vars.$primary;
+    }
 }
 
-.info-value-list:hover {
-    color: vars.$primary;
-}
 
 @media only screen and (max-width: 600px) {
     .anime-description {

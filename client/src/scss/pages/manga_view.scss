@@ -1,4 +1,4 @@
-@use "../vars";
+@use '../vars';
 
 .manga-view-container {
     padding: 1rem;
@@ -12,12 +12,12 @@
 
 .ch {
     display: inline-flex;
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: rgba(#ffffff, 0.03);
     margin: 5px;
     padding: 10px;
     cursor: pointer;
-}
 
-.ch:hover {
-    background-color: rgba(vars.$primary, 0.05);
+    &:hover {
+        background-color: rgba(vars.$primary, 0.05);
+    }
 }

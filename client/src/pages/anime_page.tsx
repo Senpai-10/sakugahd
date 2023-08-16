@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
 import Anime from '../components/anime';
 import '../css/components/animeList.css';
+import '../css/components/navbar.css';
 import { AnimeType } from '../types';
 import { Link } from 'react-router-dom';
 

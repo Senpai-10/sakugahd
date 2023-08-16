@@ -1,5 +1,5 @@
 .video {
-  background-color: rgba(255, 255, 255, 0.0196078431);
+  background-color: rgba(255, 255, 255, 0.05);
   margin: 10px;
   padding: 5px;
   width: 300px;
@@ -18,7 +18,7 @@
   display: inline-block;
   vertical-align: top;
   margin-left: 20px;
-  background-color: rgba(0, 0, 0, 0.3764705882);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .videos-list {
@@ -30,7 +30,6 @@
 .link {
   margin: 10px;
 }
-
 .link:hover {
   color: #527fff;
   cursor: pointer;

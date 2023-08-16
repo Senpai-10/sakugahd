@@ -9,12 +9,12 @@
 .reading-progressbar-block {
     width: 10%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(#ffffff, 0.1);
     cursor: pointer;
-}
 
-.reading-progressbar-block:hover {
-    background-color: rgba(255, 255, 255, 0.3);
+    &:hover {
+        background-color: rgba(#ffffff, 0.3);
+    }
 }
 
 .reading-progressbar-block-active {

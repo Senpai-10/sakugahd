@@ -70,29 +70,26 @@
 }
 
 .anime-description {
-  background-color: rgba(0, 0, 0, 0.1450980392);
+  background-color: rgba(0, 0, 0, 0.25);
   padding: 2rem;
   display: flex;
   gap: 2rem;
 }
-
 .anime-description img {
   width: 240px;
   height: 340px;
   border-radius: 10px;
 }
-
 .anime-description div h2 {
   font-weight: bold;
 }
-
 .anime-description div p {
   /* width: 800px; */
-  color: rgba(255, 255, 255, 0.3764705882);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .anime-info {
-  background: rgba(255, 255, 255, 0.0196078431);
+  background: rgba(255, 255, 255, 0.05);
   max-width: max-content;
   padding: 10px 60px 10px 20px;
 }
@@ -110,7 +107,6 @@
   margin-right: 5px;
   cursor: pointer;
 }
-
 .info-value-list:hover {
   color: #527fff;
 }
