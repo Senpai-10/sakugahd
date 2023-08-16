@@ -1,3 +1,5 @@
+@use '../vars';
+
 .info-navbar {
     display: flex;
     gap: 10px;
@@ -5,7 +7,7 @@
     padding: 1rem;
     box-sizing: border-box;
     width: 100%;
-    background-color: rgba(var(--focused), 0.8);
+    background-color: rgba(vars.$focused, 0.8);
     justify-content: space-between;
 }
 

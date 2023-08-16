@@ -1,20 +1,12 @@
+@use 'vars';
+
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
 
-    color-scheme: light dark;
-    /* background-color: #242424; */
-    /* --primary: #527fff; */
-    --primary: 52, 127, 255;
-    --filler: #a14a40;
-    /* --focused: #1a1a1e; */
-    --focused: 26, 26, 30;
-    --button-label: #f8feff;
-    --text: #f1f1f1;
-    --background: #171b23;
     color: #f1f1f1;
-    background-color: var(--background);
+    background-color: vars.$background;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -30,3 +22,4 @@ body {
 a {
     all: unset;
 }
+

@@ -1,3 +1,5 @@
+@use "../vars";
+
 .video {
     background-color: #ffffff05;
     margin: 10px;
@@ -7,11 +9,11 @@
 }
 
 .active-video {
-    background-color: rgb(var(--primary));
+    background-color: vars.$primary;
 }
 
 .filler {
-    outline: 2px solid var(--filler);
+    outline: 2px solid vars.$filler;
 }
 
 .videos-list-container {
@@ -32,6 +34,6 @@
 }
 
 .link:hover {
-    color: rgb(var(--primary));
+    color: vars.$primary;
     cursor: pointer;
 }

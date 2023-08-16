@@ -1,3 +1,5 @@
+@use '../vars';
+
 .content {
     padding: 2rem;
 }
@@ -28,7 +30,7 @@
 }
 
 .filler-video {
-    outline: 2px solid var(--filler);
+    outline: 2px solid vars.$filler;
 }
 
 .video-title {
@@ -44,7 +46,7 @@
     position: absolute;
     top: 0px;
     right: 10px;
-    background-color: var(--filler);
+    background-color: vars.$filler;
     color: #b0b0b0;
     padding: 2px;
     border-radius: 3px;
@@ -70,7 +72,7 @@
 }
 
 .active-tab-button {
-    border-bottom: 3px solid rgb(var(--primary));
+    border-bottom: 3px solid vars.$primary;
 }
 
 .anime-description {
@@ -116,7 +118,7 @@
 }
 
 .info-value-list:hover {
-    color: rgb(var(--primary));
+    color: vars.$primary;
 }
 
 @media only screen and (max-width: 600px) {

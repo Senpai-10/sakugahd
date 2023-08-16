@@ -1,7 +1,1 @@
-{
-"version": 3,
-"mappings": "AAAA,oBAAqB;EACjB,OAAO,EAAE,IAAI;EACb,KAAK,EAAE,KAAK;EACZ,MAAM,EAAE,IAAI;;AAGhB,0BAA2B;EACvB,KAAK,EAAE,GAAG;EACV,MAAM,EAAE,IAAI;EACZ,UAAU,EAAE,wBAAwB;EACpC,MAAM,EAAE,OAAO;;AAGnB,gCAAiC;EAC7B,gBAAgB,EAAE,wBAAwB;;AAG9C,iCAAkC;EAC9B,gBAAgB,EAAE,uBAAuB;;AAG7C,yBAA0B;EACtB,gBAAgB,EAAE,yBAAyB",
-"sources": ["../../sass/components/readingProgressbar.scss"],
-"names": [],
-"file": "readingProgressbar.css"
-}
+{"version":3,"sourceRoot":"","sources":["../../sass/components/readingProgressbar.scss"],"names":[],"mappings":"AAEA;EACI;EACA;EACA;;;AAGJ;EACI;EACA;EACA;EACA;;;AAGJ;EACI;;;AAGJ;EACI;;;AAGJ;EACI","file":"readingProgressbar.css"}

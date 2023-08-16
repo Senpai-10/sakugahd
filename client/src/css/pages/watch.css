@@ -1,32 +1,39 @@
 .video {
-  background-color: #ffffff05;
+  background-color: rgba(255, 255, 255, 0.0196078431);
   margin: 10px;
   padding: 5px;
   width: 300px;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .active-video {
-  background-color: rgb(var(--primary)); }
+  background-color: #527fff;
+}
 
 .filler {
-  outline: 2px solid var(--filler); }
+  outline: 2px solid #a14a40;
+}
 
 .videos-list-container {
   display: inline-block;
   vertical-align: top;
   margin-left: 20px;
-  background-color: #00000060; }
+  background-color: rgba(0, 0, 0, 0.3764705882);
+}
 
 .videos-list {
   height: 360px;
   overflow: hidden;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+}
 
 .link {
-  margin: 10px; }
+  margin: 10px;
+}
 
 .link:hover {
-  color: rgb(var(--primary));
-  cursor: pointer; }
+  color: #527fff;
+  cursor: pointer;
+}
 
 /*# sourceMappingURL=watch.css.map */

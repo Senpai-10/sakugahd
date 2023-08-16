@@ -5,22 +5,27 @@
   padding: 1rem;
   box-sizing: border-box;
   width: 100%;
-  background-color: rgba(var(--focused), 0.8);
-  justify-content: space-between; }
+  background-color: rgba(26, 26, 30, 0.8);
+  justify-content: space-between;
+}
 
 .info-navbar button {
   border: none;
-  padding: 4px; }
+  padding: 4px;
+}
 
 .btn-container {
   display: flex;
-  gap: 5px; }
+  gap: 5px;
+}
 
 .page-img-container {
   display: flex;
-  justify-content: center; }
+  justify-content: center;
+}
 
 .page-img {
-  height: 100vh; }
+  height: 100vh;
+}
 
 /*# sourceMappingURL=manga_read.css.map */

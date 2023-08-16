@@ -1,3 +1,5 @@
+@use "../vars";
+
 .reading-progressbar {
     display: flex;
     width: 100vw;
@@ -16,9 +18,9 @@
 }
 
 .reading-progressbar-block-active {
-    background-color: rgba(var(--primary), 1);
+    background-color: rgba(vars.$primary, 1);
 }
 
 .reading-progressbar-done {
-    background-color: rgba(var(--primary), 0.5);
+    background-color: rgba(vars.$primary, 0.5);
 }

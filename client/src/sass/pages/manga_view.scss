@@ -1,3 +1,5 @@
+@use "../vars";
+
 .manga-view-container {
     padding: 1rem;
 }
@@ -17,5 +19,5 @@
 }
 
 .ch:hover {
-    background-color: rgba(var(--primary), 0.05);
+    background-color: rgba(vars.$primary, 0.05);
 }

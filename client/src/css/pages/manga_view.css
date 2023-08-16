@@ -1,19 +1,23 @@
 .manga-view-container {
-  padding: 1rem; }
+  padding: 1rem;
+}
 
 .chapters-list {
   display: flex;
   flex-direction: column;
-  padding-top: 5px; }
+  padding-top: 5px;
+}
 
 .ch {
   display: inline-flex;
   background-color: rgba(255, 255, 255, 0.03);
   margin: 5px;
   padding: 10px;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .ch:hover {
-  background-color: rgba(var(--primary), 0.05); }
+  background-color: rgba(82, 127, 255, 0.05);
+}
 
 /*# sourceMappingURL=manga_view.css.map */

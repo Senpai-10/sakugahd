@@ -1,17 +1,21 @@
 .content {
-  padding: 2rem; }
+  padding: 2rem;
+}
 
 .active-tab {
   display: block;
-  margin-top: 30px; }
+  margin-top: 30px;
+}
 
 .inactive-tab {
-  display: none; }
+  display: none;
+}
 
 .videos {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px; }
+  gap: 30px;
+}
 
 .thumbnail {
   width: 256px;
@@ -20,10 +24,12 @@
   background-repeat: no-repeat;
   border-radius: 4px;
   cursor: pointer;
-  position: relative; }
+  position: relative;
+}
 
 .filler-video {
-  outline: 2px solid var(--filler); }
+  outline: 2px solid #a14a40;
+}
 
 .video-title {
   font-size: 16px;
@@ -31,72 +37,88 @@
   user-select: none;
   position: absolute;
   bottom: 0px;
-  left: 15px; }
+  left: 15px;
+}
 
 .video-filler {
   position: absolute;
   top: 0px;
   right: 10px;
-  background-color: var(--filler);
+  background-color: #a14a40;
   color: #b0b0b0;
   padding: 2px;
-  border-radius: 3px; }
+  border-radius: 3px;
+}
 
 .overlay {
   width: 256px;
   height: 144px;
   border-radius: 3px;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.2) 100%); }
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.2) 100%);
+}
 
 .tab {
   font-size: 20px;
   border: none;
   background: none;
   cursor: pointer;
-  margin: 1rem; }
+  margin: 1rem;
+}
 
 .active-tab-button {
-  border-bottom: 3px solid rgb(var(--primary)); }
+  border-bottom: 3px solid #527fff;
+}
 
 .anime-description {
-  background-color: #00000025;
+  background-color: rgba(0, 0, 0, 0.1450980392);
   padding: 2rem;
   display: flex;
-  gap: 2rem; }
+  gap: 2rem;
+}
 
 .anime-description img {
   width: 240px;
   height: 340px;
-  border-radius: 10px; }
+  border-radius: 10px;
+}
 
 .anime-description div h2 {
-  font-weight: bold; }
+  font-weight: bold;
+}
 
 .anime-description div p {
   /* width: 800px; */
-  color: #ffffff60; }
+  color: rgba(255, 255, 255, 0.3764705882);
+}
 
 .anime-info {
-  background: #ffffff05;
+  background: rgba(255, 255, 255, 0.0196078431);
   max-width: max-content;
-  padding: 10px 60px 10px 20px; }
+  padding: 10px 60px 10px 20px;
+}
 
 .info-title {
-  color: #a6a6a6; }
+  color: #a6a6a6;
+}
 
 .info-value {
-  color: gray; }
+  color: gray;
+}
 
 .info-value-list {
   display: inline-block;
   margin-right: 5px;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .info-value-list:hover {
-  color: rgb(var(--primary)); }
+  color: #527fff;
+}
 
 @media only screen and (max-width: 600px) {
   .anime-description {
-    flex-wrap: wrap; } }
+    flex-wrap: wrap;
+  }
+}
 
 /*# sourceMappingURL=anime.css.map */

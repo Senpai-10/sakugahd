@@ -1,3 +1,5 @@
+@use "../vars";
+
 .anime-list {
     display: flex;
     flex-wrap: wrap;
@@ -16,7 +18,7 @@
 }
 
 .anime-searchbar:focus {
-    outline: 1px solid rgb(var(--primary));
+    outline: 1px solid vars.$primary;
 }
 
 .topnav {
